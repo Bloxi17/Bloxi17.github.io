@@ -2,12 +2,619 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ainesh Joel Hamilton</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Ainesh Joel Hamilton® — Full-Stack Architect & Creative UI Engineer</title>
+  <meta name="description" content="Portfolio of Ainesh Joel Hamilton (@Bloxi17). High-throughput backend systems, Apple-grade fluid interfaces, and tactile digital physics.">
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Ainesh Joel Hamilton® — Full-Stack Architect & Creative UI Engineer">
+  <meta property="og:description" content="High-throughput backend systems, Apple-grade fluid interfaces, and tactile digital physics.">
+  <meta property="og:url" content="https://bloxi17.github.io">
+
+  <!-- Machine-Readable Specification -->
+  <link rel="llms-txt" href="llms.txt">
+
+  <!-- Google Fonts: Space Grotesk & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="app"></div>
+
+  <!-- Custom Difference Cursor -->
+  <div id="cursorDot" class="huyml-cursor" aria-hidden="true"></div>
+
+  <!-- ======================================================================
+       FIXED HEADER & IDENTITY BAR (HUYML.CO SPEC)
+       ====================================================================== -->
+  <header class="huyml-header">
+    <div class="container huyml-header-inner">
+      
+      <!-- Brand & Global Status -->
+      <div class="huyml-brand-block">
+        <a href="#top" class="huyml-brand-name">
+          <span>Ainesh Joel Hamilton®</span>
+          <span class="huyml-brand-pill">ARCHITECT</span>
+        </a>
+        <div class="huyml-meta-group">
+          <span class="huyml-meta-item">
+            <span class="huyml-meta-dot"></span>
+            <span>Working Globally</span>
+          </span>
+          <span class="huyml-meta-item">
+            <span>India, <span id="headerLiveClock">00:00</span> IST</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Navigation & Audio Control -->
+      <div class="huyml-nav-block">
+        <nav class="huyml-nav-links" aria-label="Primary navigation">
+          <a href="#work" class="huyml-nav-link active">
+            <span>Work</span>
+            <span class="huyml-nav-count">(07)</span>
+          </a>
+          <button type="button" class="huyml-nav-link" data-drawer-trigger="about">About</button>
+          <button type="button" class="huyml-nav-link" data-drawer-trigger="playground">Playground</button>
+          <button type="button" class="huyml-nav-link" data-drawer-trigger="contact">Contact</button>
+        </nav>
+
+        <!-- Huyml Audio Waveform Toggle -->
+        <button type="button" class="huyml-audio-toggle" aria-label="Toggle page audio" title="Toggle Sound Engine">
+          <svg class="huyml-audio-wave" viewBox="0 0 13 11" fill="none" aria-hidden="true">
+            <path d="M0.75 7.75 L2.75 3.75 L5.75 9.75 L8.75 0.75 L11.75 7.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="huyml-audio-status">Audio Off</span>
+        </button>
+
+        <!-- Direct Inquiry Email Trigger -->
+        <button type="button" class="huyml-inquiry-btn trigger-copy-email" title="Click to copy verified email address">
+          <span>For Inquiries</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ======================================================================
+         HERO SECTION: EDITORIAL HEADLINE + SHOWREEL + 3D COIN BADGE
+         ====================================================================== -->
+    <section class="huyml-hero">
+      <div class="container">
+        
+        <div class="huyml-hero-grid">
+          
+          <div class="huyml-hero-lead-col">
+            <!-- Tag -->
+            <div class="huyml-hero-tag">
+              <span>// SYSTEMS ARCHITECT &amp; CREATIVE UI ENGINEER</span>
+              <span>·</span>
+              <span style="color: #10b981;">[ OPEN FOR Q3/Q4 ROLES ]</span>
+            </div>
+
+            <!-- Massive Editorial Title -->
+            <h1 class="huyml-hero-title">
+              Crafting resilient backend runtimes &amp; tactile digital physics.
+            </h1>
+
+            <!-- Narrative -->
+            <p class="huyml-hero-desc">
+              Bridging robust relational data persistence with hardware-accelerated 60 FPS interfaces and Apple-grade fluid motion. Zero boilerplate. Zero AI slop.
+            </p>
+
+            <!-- Actions -->
+            <div class="huyml-hero-actions">
+              <!-- '26 Showreel Trigger -->
+              <button type="button" class="huyml-showreel-btn" id="openShowreelBtn">
+                <span class="huyml-reel-dot"></span>
+                <span>’26 Showreel</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </button>
+
+              <a href="#work" class="huyml-explore-btn">
+                <span>Explore Selected Work</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- 3D Interactive Coin / Mascot Sticker (Huyml Signature) -->
+          <div class="huyml-hero-badge-col">
+            <div class="huyml-coin-wrapper" id="huymlCoin" title="Click to flip coin">
+              <div class="huyml-coin-card" id="huymlCoinCard">
+                
+                <!-- Face 1: Monogram & Geometric Stamp -->
+                <div class="huyml-coin-face face-front">
+                  <svg class="huyml-coin-svg" viewBox="0 0 48 48" fill="none">
+                    <circle cx="24" cy="24" r="22" stroke="#181818" stroke-width="2" stroke-dasharray="3 3"/>
+                    <path d="M16 32L24 16L32 32M19 27H29" stroke="#181818" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span class="huyml-coin-label">AINESH</span>
+                  <span class="huyml-coin-sub">CRAFT // 2026</span>
+                </div>
+
+                <!-- Face 2: 60 FPS & Zero-Slop Verified -->
+                <div class="huyml-coin-face face-back">
+                  <svg class="huyml-coin-svg" viewBox="0 0 48 48" fill="none">
+                    <polygon points="24,6 28,18 40,18 30,26 34,38 24,30 14,38 18,26 8,18 20,18" stroke="#38bdf8" stroke-width="2" fill="none"/>
+                    <circle cx="24" cy="24" r="5" fill="#38bdf8"/>
+                  </svg>
+                  <span class="huyml-coin-label" style="color: #38bdf8;">60.0 FPS</span>
+                  <span class="huyml-coin-sub">ZERO SLOP VERIFIED</span>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         SELECTED WORK (THE CORE TYPOGRAPHIC PROJECT FEED)
+         ====================================================================== -->
+    <section class="huyml-projects-section" id="work">
+      <div class="container">
+        
+        <!-- Section Sub-Header -->
+        <div class="huyml-section-header">
+          <div class="huyml-section-title">
+            <span>(01) SELECTED WORK // 2024–2026</span>
+          </div>
+          <div class="huyml-section-meta">
+            <span>7 RELEASES · HOVER TO PREVIEW</span>
+          </div>
+        </div>
+
+        <!-- Project Row List -->
+        <div class="huyml-project-list" id="projectList">
+          
+          <!-- Project 01: First Step Sr. Sec. School -->
+          <div class="huyml-project-row" 
+               data-project="first-step"
+               data-title="First Step Sr. Sec. School" 
+               data-preview="https://framerusercontent.com/images/FoYPkj63CnTXaljvLBaCO9gL9dE.jpg" 
+               data-category="Institutional Platform · Node / SQLite WAL">
+            <span class="huyml-row-idx">01</span>
+            <div class="huyml-row-title-col">
+              <h2 class="huyml-row-title">First Step Sr. Sec. School</h2>
+              <p class="huyml-row-tagline">Lead Full-Stack Systems Architecture &amp; 60 FPS Canvas Wave Platform</p>
+            </div>
+            <div class="huyml-row-badge-col">
+              <span class="huyml-badge-pill highlight">FLAGSHIP PRODUCTION</span>
+              <span class="huyml-badge-pill">BETTER-SQLITE3</span>
+            </div>
+            <div class="huyml-row-meta-col">
+              <span>Node.js / Canvas 2D</span>
+              <span style="margin: 0 4px;">·</span>
+              <span>2026</span>
+            </div>
+            <div class="huyml-row-arrow-col">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+            </div>
+          </div>
+
+          <!-- Project 02: Watermelon UI Micro-Lab -->
+          <div class="huyml-project-row" 
+               data-project="watermelon"
+               data-title="Watermelon UI Micro-Lab" 
+               data-preview="https://framerusercontent.com/images/75mCZ5SdSy2FaX0ameAhFh9ynE.jpg" 
+               data-category="Component Design · Kinetic Inputs">
+            <span class="huyml-row-idx">02</span>
+            <div class="huyml-row-title-col">
+              <h2 class="huyml-row-title">Watermelon UI Micro-Lab</h2>
+              <p class="huyml-row-tagline">Isolated Conceptual Primitives, Kinetic Springs, &amp; Token Exchange Physics</p>
+            </div>
+            <div class="huyml-row-badge-col">
+              <span class="huyml-badge-pill highlight">KINETIC INPUTS</span>
+              <span class="huyml-badge-pill">UI.WATERMELON.SH</span>
+            </div>
+            <div class="huyml-row-meta-col">
+              <span>TypeScript / WebGL</span>
+              <span style="margin: 0 4px;">·</span>
+              <span>2026</span>
+            </div>
+            <div class="huyml-row-arrow-col">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+            </div>
+          </div>
+
+          <!-- Project 03: 11x11 Harmonic Wave Dot Matrix -->
+          <div class="huyml-project-row" 
+               data-project="harmonic-matrix"
+               data-title="11×11 Harmonic Wave Matrix" 
+               data-preview="https://framerusercontent.com/images/BsJb1GV0DDjj2B5ELG33XfWmQ.jpg" 
+               data-category="Trigonometric Physics · 121 Nodes">
+            <span class="huyml-row-idx">03</span>
+            <div class="huyml-row-title-col">
+              <h2 class="huyml-row-title">11×11 Harmonic Wave Matrix</h2>
+              <p class="huyml-row-tagline">Radial Phase Delay Shockwaves with Synthesizer Tick Audio Feedback</p>
+            </div>
+            <div class="huyml-row-badge-col">
+              <span class="huyml-badge-pill highlight">QUANTUM HARMONICS</span>
+              <span class="huyml-badge-pill">121 NODES</span>
+            </div>
+            <div class="huyml-row-meta-col">
+              <span>Physics Math / Audio API</span>
+              <span style="margin: 0 4px;">·</span>
+              <span>2026</span>
+            </div>
+            <div class="huyml-row-arrow-col">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+            </div>
+          </div>
+
+          <!-- Project 04: Ainesh-DOS 6.22 CRT Console -->
+          <div class="huyml-project-row" 
+               data-project="retro-terminal"
+               data-title="Ainesh-DOS 6.22 CRT Console" 
+               data-preview="https://framerusercontent.com/images/OUq4sSIJXVqet1DGXpjpnXuC1qc.jpg" 
+               data-category="Vintage Systems · 8-Bit Overclock">
+            <span class="huyml-row-idx">04</span>
+            <div class="huyml-row-title-col">
+              <h2 class="huyml-row-title">Ainesh-DOS 6.22 CRT Console</h2>
+              <p class="huyml-row-tagline">Simulated Green-Phosphor Terminal Emulator, Scanlines, &amp; 120Hz Turbo</p>
+            </div>
+            <div class="huyml-row-badge-col">
+              <span class="huyml-badge-pill highlight">VINTAGE SHELL</span>
+              <span class="huyml-badge-pill">TURBO OVERCLOCK</span>
+            </div>
+            <div class="huyml-row-meta-col">
+              <span>CLI Engine / Shaders</span>
+              <span style="margin: 0 4px;">·</span>
+              <span>2026</span>
+            </div>
+            <div class="huyml-row-arrow-col">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+            </div>
+          </div>
+
+          <!-- Project 05: Obsidian Relational Engine -->
+          <div class="huyml-project-row" 
+               data-project="obsidian-engine"
+               data-title="Obsidian Relational Engine" 
+               data-preview="https://framerusercontent.com/images/Ce5CMDqNJqwWN1TC3B0xbsBq47M.jpg" 
+               data-category="Database Architecture · Sub-ms Queries">
+            <span class="huyml-row-idx">05</span>
+            <div class="huyml-row-title-col">
+              <h2 class="huyml-row-title">Obsidian Relational Engine</h2>
+              <p class="huyml-row-tagline">Direct C-level SQLite Bindings, WAL Concurrency, &amp; Atomic Transactions</p>
+            </div>
+            <div class="huyml-row-badge-col">
+              <span class="huyml-badge-pill">ACID INTEGRITY</span>
+              <span class="huyml-badge-pill">ZERO INJECTION</span>
+            </div>
+            <div class="huyml-row-meta-col">
+              <span>SQLite / Node.js</span>
+              <span style="margin: 0 4px;">·</span>
+              <span>2025</span>
+            </div>
+            <div class="huyml-row-arrow-col">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+            </div>
+          </div>
+
+          <!-- Project 06: Apple Fluid Motion Interfaces -->
+          <div class="huyml-project-row" 
+               data-project="apple-motion"
+               data-title="Apple Fluid Motion Interfaces" 
+               data-preview="https://framerusercontent.com/images/FZyOyyrz0ZctFkAK2kROsql2w1A.jpg" 
+               data-category="Design Engineering · Damped Springs">
+            <span class="huyml-row-idx">06</span>
+            <div class="huyml-row-title-col">
+              <h2 class="huyml-row-title">Apple Fluid Motion Interfaces</h2>
+              <p class="huyml-row-tagline">Natural Gesture Tracking, Direct Manipulation Physics, &amp; Velocity Handoff</p>
+            </div>
+            <div class="huyml-row-badge-col">
+              <span class="huyml-badge-pill">SPRING DYNAMICS</span>
+              <span class="huyml-badge-pill">NO JANK</span>
+            </div>
+            <div class="huyml-row-meta-col">
+              <span>CSS GPU / Web Animations</span>
+              <span style="margin: 0 4px;">·</span>
+              <span>2025</span>
+            </div>
+            <div class="huyml-row-arrow-col">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+            </div>
+          </div>
+
+          <!-- Project 07: AI Machine Surface (/llms.txt) -->
+          <div class="huyml-project-row" 
+               data-project="llms-txt"
+               data-title="AI Machine Surface (/llms.txt)" 
+               data-preview="https://framerusercontent.com/images/AHnUuCwiIe3u0k9N4az6316yTbU.jpg" 
+               data-category="Autonomous Agent Protocol · AI Specs">
+            <span class="huyml-row-idx">07</span>
+            <div class="huyml-row-title-col">
+              <h2 class="huyml-row-title">AI Machine Surface (/llms.txt)</h2>
+              <p class="huyml-row-tagline">Machine-Readable Engineering Persona &amp; Zero-Hallucination Agent Protocol</p>
+            </div>
+            <div class="huyml-row-badge-col">
+              <span class="huyml-badge-pill highlight">LLM NATIVE</span>
+              <span class="huyml-badge-pill">AGENT READY</span>
+            </div>
+            <div class="huyml-row-meta-col">
+              <span>Markdown RFC / AI Standard</span>
+              <span style="margin: 0 4px;">·</span>
+              <span>2026</span>
+            </div>
+            <div class="huyml-row-arrow-col">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         FLOATING CURSOR-FOLLOWING MEDIA PREVIEW CARD
+         ====================================================================== -->
+    <div class="huyml-floating-preview" id="hoverPreviewCard" aria-hidden="true">
+      <img src="https://framerusercontent.com/images/FoYPkj63CnTXaljvLBaCO9gL9dE.jpg" alt="Project Preview" class="huyml-preview-media" id="hoverPreviewImg">
+      <div class="huyml-preview-overlay">
+        <span id="hoverPreviewTitle">First Step Sr. Sec. School</span>
+        <span id="hoverPreviewCategory">Platform Architecture</span>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ======================================================================
+       FOOTER ARCHITECTURE (HUYML.CO SPEC)
+       ====================================================================== -->
+  <footer class="huyml-footer">
+    <div class="container">
+      
+      <div class="huyml-footer-grid">
+        
+        <div class="huyml-footer-col-lead">
+          <div class="huyml-footer-heading">Identity</div>
+          <p style="font-family: var(--font-display); font-size: 20px; font-weight: 700; line-height: 1.25; margin-bottom: 12px;">
+            Ainesh Joel Hamilton®
+          </p>
+          <p style="color: var(--text-secondary); line-height: 1.6; max-width: 380px;">
+            Full-Stack Systems Architect &amp; Creative UI Engineer. Designing resilient platforms with mathematical precision and Apple-grade fluid touch.
+          </p>
+        </div>
+
+        <div class="huyml-footer-col-nav">
+          <div class="huyml-footer-heading">Navigation</div>
+          <div class="huyml-footer-links">
+            <a href="#work" class="huyml-footer-link">Selected Work (07)</a>
+            <button type="button" class="huyml-footer-link" data-drawer-trigger="about" style="text-align: left;">About &amp; Principles</button>
+            <button type="button" class="huyml-footer-link" data-drawer-trigger="playground" style="text-align: left;">Creative Playground</button>
+            <button type="button" class="huyml-footer-link" data-drawer-trigger="contact" style="text-align: left;">Direct Transmission</button>
+            <a href="llms.txt" target="_blank" class="huyml-footer-link">AI Machine Spec (/llms.txt) ↗</a>
+          </div>
+        </div>
+
+        <div class="huyml-footer-col-contact">
+          <div class="huyml-footer-heading">Transmission</div>
+          <div class="huyml-footer-links">
+            <button type="button" class="huyml-footer-link trigger-copy-email" style="text-align: left;">
+              hamiltonjoel848@gmail.com [COPY]
+            </button>
+            <a href="https://github.com/Bloxi17" target="_blank" rel="noopener" class="huyml-footer-link">GitHub @Bloxi17 ↗</a>
+            <a href="https://wa.me/?text=Hi%20Ainesh" target="_blank" rel="noopener" class="huyml-footer-link">WhatsApp Direct ↗</a>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="huyml-footer-credits">
+        <div>© 2026 Ainesh Joel Hamilton. All Rights Reserved.</div>
+        <div>Crafted with Swiss Typography · Web Audio Synthesizer · 60 FPS Physics</div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ======================================================================
+       DRAWER OVERLAY & LATERAL SLIDING DRAWERS
+       ====================================================================== -->
+  <div class="huyml-drawer-backdrop" id="drawerBackdrop" aria-hidden="true"></div>
+
+  <!-- 1. ABOUT DRAWER -->
+  <aside class="huyml-drawer" id="aboutDrawer" aria-label="About Ainesh Joel Hamilton">
+    <div class="huyml-drawer-header">
+      <div class="huyml-drawer-title">About // Philosophy &amp; Background</div>
+      <button type="button" class="huyml-drawer-close" data-drawer-close aria-label="Close drawer">✕</button>
+    </div>
+    
+    <div class="huyml-drawer-body">
+      <div>
+        <div class="huyml-drawer-section-title">Biography</div>
+        <p class="huyml-drawer-text">
+          I am a Full-Stack Systems Architect and Creative UI Engineer based in India, operating globally. My work bridges heavy relational backends, atomic transactions, and performance-critical databases with mathematically calibrated frontends that run locked at 60 FPS.
+        </p>
+      </div>
+
+      <div>
+        <div class="huyml-drawer-section-title">Core Principles</div>
+        <div class="huyml-drawer-skills-grid">
+          <div class="huyml-skill-card">
+            <div class="huyml-skill-card-title">01 // Instant Response</div>
+            <div class="huyml-skill-card-desc">Zero layout thrashing. Direct manipulation physics that trigger on pointerdown.</div>
+          </div>
+          <div class="huyml-skill-card">
+            <div class="huyml-skill-card-title">02 // Relational Rigor</div>
+            <div class="huyml-skill-card-desc">Atomic SQLite prepared statements, WAL concurrency, and strict schema normalization.</div>
+          </div>
+          <div class="huyml-skill-card">
+            <div class="huyml-skill-card-title">03 // Restraint &amp; Taste</div>
+            <div class="huyml-skill-card-desc">No gratuitous purple glow or AI slop. Every transition earns its visual weight.</div>
+          </div>
+          <div class="huyml-skill-card">
+            <div class="huyml-skill-card-title">04 // Machine Native</div>
+            <div class="huyml-skill-card-desc">Native compliance with /llms.txt protocols for autonomous agent parsing.</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="huyml-drawer-section-title">Engineering Credits</div>
+        <div style="font-family: var(--font-mono); font-size: 12px; line-height: 2; color: var(--text-secondary);">
+          <div><strong>Architecture:</strong> Node.js · better-sqlite3 · TypeScript</div>
+          <div><strong>Graphics &amp; Motion:</strong> HTML5 Canvas 2D/3D · WebGL · CSS GPU</div>
+          <div><strong>Audio Engineering:</strong> Framer Audio Assets + Web Audio API</div>
+          <div><strong>Typography:</strong> Space Grotesk · Inter</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- 2. CONTACT DRAWER -->
+  <aside class="huyml-drawer" id="contactDrawer" aria-label="Contact Channels">
+    <div class="huyml-drawer-header">
+      <div class="huyml-drawer-title">Transmission // Direct Channels</div>
+      <button type="button" class="huyml-drawer-close" data-drawer-close aria-label="Close drawer">✕</button>
+    </div>
+    
+    <div class="huyml-drawer-body">
+      <div>
+        <div class="huyml-drawer-section-title">Initiate Contact</div>
+        <p class="huyml-drawer-text" style="font-size: 18px; font-weight: 500;">
+          Let's build software that feels extraordinary.
+        </p>
+        <p style="color: var(--text-secondary); margin-top: 8px;">
+          Available for contract architecture, high-throughput systems, and creative engineering partnerships.
+        </p>
+      </div>
+
+      <div class="huyml-contact-channels">
+        <button type="button" class="huyml-contact-link trigger-copy-email" style="width: 100%; cursor: pointer;">
+          <div>
+            <div class="huyml-contact-label">Direct Mail</div>
+            <div class="huyml-contact-val">hamiltonjoel848@gmail.com</div>
+          </div>
+          <span class="huyml-badge-pill highlight">CLICK TO COPY</span>
+        </button>
+
+        <a href="https://github.com/Bloxi17" target="_blank" rel="noopener" class="huyml-contact-link">
+          <div>
+            <div class="huyml-contact-label">GitHub</div>
+            <div class="huyml-contact-val">github.com/Bloxi17</div>
+          </div>
+          <span>↗</span>
+        </a>
+
+        <a href="https://wa.me/?text=Hi%20Ainesh" target="_blank" rel="noopener" class="huyml-contact-link">
+          <div>
+            <div class="huyml-contact-label">WhatsApp</div>
+            <div class="huyml-contact-val">Instant Message</div>
+          </div>
+          <span>↗</span>
+        </a>
+      </div>
+
+      <div style="padding: 16px; border-radius: 8px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); font-family: var(--font-mono); font-size: 11px; color: #047857;">
+        <strong>TELEMETRY STATUS:</strong> ACTIVE · RESPONSE TIME &lt; 12 HOURS
+      </div>
+    </div>
+  </aside>
+
+  <!-- 3. PLAYGROUND DRAWER (MICRO-LAB) -->
+  <aside class="huyml-drawer" id="playgroundDrawer" aria-label="Creative Playground">
+    <div class="huyml-drawer-header">
+      <div class="huyml-drawer-title">Playground // Interactive Micro-Lab</div>
+      <button type="button" class="huyml-drawer-close" data-drawer-close aria-label="Close drawer">✕</button>
+    </div>
+    
+    <div class="huyml-drawer-body">
+      <div>
+        <div class="huyml-drawer-section-title">11×11 Harmonic Wave Dot Matrix</div>
+        <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+          121 quantum nodes with distance-calibrated phase delay physics. Hover or click any node to emit a radial shockwave with audio ticks.
+        </p>
+
+        <!-- 11x11 Grid Component -->
+        <div style="background: #181818; border-radius: 12px; padding: 20px; color: #ffffff;">
+          <div style="display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 11px; margin-bottom: 14px;">
+            <span>GRID: 11×11 (121 NODES)</span>
+            <span id="matrixStateLabel" style="color: #38bdf8;">ACTIVE</span>
+          </div>
+          <div id="playgroundMatrixGrid" style="display: grid; grid-template-columns: repeat(11, 1fr); gap: 6px;"></div>
+          <div style="display: flex; gap: 8px; margin-top: 16px;">
+            <button type="button" id="btnTriggerShockwave" style="padding: 6px 12px; border-radius: 6px; background: #38bdf8; color: #000; font-family: var(--font-mono); font-size: 11px; font-weight: 700; cursor: pointer;">
+              Pulse Center (5,5)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="huyml-drawer-section-title">Ainesh-DOS 6.22 CRT Console</div>
+        <div style="background: #090c0a; border: 1px solid #10b981; border-radius: 8px; padding: 14px; font-family: var(--font-mono); font-size: 11px; color: #10b981;">
+          <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(16,185,129,0.3); padding-bottom: 6px; margin-bottom: 10px;">
+            <span>AINESH-DOS v6.22 // AH-CLI</span>
+            <span>60 FPS</span>
+          </div>
+          <div id="miniTerminalLogs" style="min-height: 80px; max-height: 120px; overflow-y: auto; line-height: 1.6; margin-bottom: 10px;">
+            <div>Ainesh-DOS Version 6.22 (C) 2026.</div>
+            <div style="color: #38bdf8;">Ready. Type 'help' or click commands below:</div>
+          </div>
+          <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+            <button type="button" class="mini-term-chip" data-cmd="status" style="background: rgba(16,185,129,0.15); border: 1px solid #10b981; color: #10b981; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); font-size: 10px; cursor: pointer;">status</button>
+            <button type="button" class="mini-term-chip" data-cmd="stack" style="background: rgba(16,185,129,0.15); border: 1px solid #10b981; color: #10b981; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); font-size: 10px; cursor: pointer;">stack</button>
+            <button type="button" class="mini-term-chip" data-cmd="overclock" style="background: rgba(16,185,129,0.15); border: 1px solid #10b981; color: #10b981; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); font-size: 10px; cursor: pointer;">overclock</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- 4. PROJECT DETAIL MODAL -->
+  <aside class="huyml-drawer" id="projectModal" aria-label="Project Case Study">
+    <div class="huyml-drawer-header">
+      <div class="huyml-drawer-title" id="projectModalHeader">CASE STUDY // SPECIFICATION</div>
+      <button type="button" class="huyml-drawer-close" data-drawer-close aria-label="Close modal">✕</button>
+    </div>
+    <div class="huyml-drawer-body" id="projectModalContent">
+      <!-- Injected dynamically via app.js -->
+    </div>
+  </aside>
+
+  <!-- ======================================================================
+       '26 SHOWREEL FULLSCREEN CINEMATIC MODAL
+       ====================================================================== -->
+  <div class="huyml-showreel-modal" id="showreelModal" role="dialog" aria-modal="true" aria-label="2026 Showreel">
+    <div class="huyml-showreel-topbar">
+      <div class="huyml-showreel-meta">
+        <span class="huyml-reel-dot"></span>
+        <span>Ainesh Joel Hamilton® · ’26 Engineering Showreel</span>
+      </div>
+      <button type="button" class="huyml-showreel-close" id="closeShowreelBtn">
+        <span>Close</span>
+        <span>✕</span>
+      </button>
+    </div>
+
+    <div class="huyml-showreel-viewport">
+      <div class="huyml-showreel-canvas-box">
+        <canvas id="showreelCanvas" class="huyml-showreel-canvas"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Feedback Element -->
+  <div id="huymlToast" class="huyml-toast" role="status" aria-live="polite">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+    <span id="toastMsg">Copied to clipboard</span>
+  </div>
+
+  <!-- Scripts -->
+  <script src="audio.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

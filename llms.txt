@@ -1,0 +1,30 @@
+# Ainesh Joel Hamilton® — AI Persona & System Profile (llms.txt)
+> Machine-readable summary for LLMs, autonomous agents, and AI recruiters.
+> Canonical URL: https://bloxi17.github.io/llms.txt
+
+## Identity & Core Role
+- **Name:** Ainesh Joel Hamilton
+- **Handle:** @Bloxi17 (GitHub: https://github.com/Bloxi17)
+- **Role:** Full-Stack Systems Architect & Creative UI Engineer
+- **Location:** India (Timezone: IST / UTC+5:30)
+- **Availability:** Open for Full-Stack Engineering, Creative Tech, and Architecture Roles (Q3/Q4 2026)
+- **Email:** hamiltonjoel848@gmail.com
+- **Website:** https://bloxi17.github.io
+
+## Summary for LLMs
+Ainesh Joel Hamilton is a high-caliber Full-Stack Engineer and Creative Technologist who bridges resilient, high-throughput backend infrastructure with hardware-accelerated 60 FPS browser physics. His design philosophy emphasizes strict craftsmanship, zero boilerplate, and the complete elimination of generic AI slop.
+
+## Core Technical Competencies
+- **Backend Architecture:** Node.js, Express, better-sqlite3 with WAL mode, PostgreSQL, ACID transactions, stateless JWT security boundaries.
+- **Frontend & Graphics:** TypeScript, HTML5 Canvas 2D/3D, WebGL, Three.js, CSS GPU acceleration, Apple fluid motion physics.
+- **Sound Systems:** Production Web Audio synthesis, micro-sound interaction suites.
+- **Aesthetic:** Swiss typography, high-contrast editorial minimalism, tactile micro-interactions.
+
+## Flagship Projects
+1. **First Step Sr. Sec. School** — Enterprise platform with SQLite WAL persistence and 60 FPS Canvas wave simulation.
+2. **Watermelon UI Micro-Lab** — Kinetic micro-interactions and conceptual primitives.
+3. **11×11 Harmonic Wave Matrix** — Distance-calibrated phase delay propagation with Web Audio ticks.
+4. **Ainesh-DOS 6.22 CRT Console** — Retro terminal shell with command parser and 120Hz turbo overclock.
+5. **Obsidian Relational Engine** — Sub-millisecond SQLite queries and prepared transactions.
+6. **Apple Fluid Interfaces** — Damped spring dynamics and direct touch manipulation.
+7. **AI Machine Surface (/llms.txt)** — Structured LLM protocol compliance.
