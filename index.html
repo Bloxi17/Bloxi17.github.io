@@ -537,72 +537,74 @@
        MAGNIFICATION DOCK (MACOS DOCK INTEGRATION)
        ============================================================ -->
   <div class="magnification-dock-wrapper" id="magnificationDock" aria-label="Application Dock">
-    <div class="dock-panel" role="toolbar">
-      
-      <!-- Home Item -->
-      <div class="dock-item" data-action="home" tabindex="0" role="button" aria-haspopup="true">
-        <div class="dock-icon">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        </div>
-        <div class="dock-label">Home</div>
-      </div>
+    <div class="dock-hit-area">
+      <div class="dock-panel" role="toolbar" aria-label="Quick Navigation">
+        
+        <!-- Home Item -->
+        <button type="button" class="dock-item" data-action="home" aria-label="Navigate to Home">
+          <span class="dock-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </span>
+          <span class="dock-label">Home</span>
+        </button>
 
-      <!-- Projects Item -->
-      <div class="dock-item" data-action="projects" tabindex="0" role="button" aria-haspopup="true">
-        <div class="dock-icon">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
-        </div>
-        <div class="dock-label">Projects</div>
-      </div>
+        <!-- Projects Item -->
+        <button type="button" class="dock-item" data-action="projects" aria-label="Navigate to Projects">
+          <span class="dock-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          </span>
+          <span class="dock-label">Projects</span>
+        </button>
 
-      <!-- Capabilities Item -->
-      <div class="dock-item" data-action="capabilities" tabindex="0" role="button" aria-haspopup="true">
-        <div class="dock-icon">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
-        </div>
-        <div class="dock-label">Capabilities</div>
-      </div>
+        <!-- Capabilities Item -->
+        <button type="button" class="dock-item" data-action="capabilities" aria-label="Navigate to Capabilities">
+          <span class="dock-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
+          </span>
+          <span class="dock-label">Capabilities</span>
+        </button>
 
-      <!-- 3D Playground Item -->
-      <div class="dock-item" data-action="playground" tabindex="0" role="button" aria-haspopup="true">
-        <div class="dock-icon">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-        </div>
-        <div class="dock-label">3D Engine</div>
-      </div>
+        <!-- 3D Playground Item -->
+        <button type="button" class="dock-item" data-action="playground" aria-label="Navigate to 3D Engine Playground">
+          <span class="dock-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          </span>
+          <span class="dock-label">3D Engine</span>
+        </button>
 
-      <!-- About / Philosophy Item -->
-      <div class="dock-item" data-action="about" tabindex="0" role="button" aria-haspopup="true">
-        <div class="dock-icon">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-        </div>
-        <div class="dock-label">Philosophy</div>
-      </div>
+        <!-- About / Philosophy Item -->
+        <button type="button" class="dock-item" data-action="about" aria-label="Navigate to Philosophy">
+          <span class="dock-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          </span>
+          <span class="dock-label">Philosophy</span>
+        </button>
 
-      <!-- Contact Item -->
-      <div class="dock-item" data-action="contact" tabindex="0" role="button" aria-haspopup="true">
-        <div class="dock-icon">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        </div>
-        <div class="dock-label">Contact</div>
-      </div>
+        <!-- Contact Item -->
+        <button type="button" class="dock-item" data-action="contact" aria-label="Navigate to Contact">
+          <span class="dock-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </span>
+          <span class="dock-label">Contact</span>
+        </button>
 
-      <!-- GitHub Item -->
-      <div class="dock-item" data-action="github" tabindex="0" role="button" aria-haspopup="true">
-        <div class="dock-icon">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-        </div>
-        <div class="dock-label">GitHub</div>
-      </div>
+        <!-- GitHub Item -->
+        <button type="button" class="dock-item" data-action="github" aria-label="Open GitHub Profile">
+          <span class="dock-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          </span>
+          <span class="dock-label">GitHub</span>
+        </button>
 
-      <!-- Search / Cmd+K Item -->
-      <div class="dock-item" data-action="search" tabindex="0" role="button" aria-haspopup="true">
-        <div class="dock-icon">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        </div>
-        <div class="dock-label">Search (⌘K)</div>
-      </div>
+        <!-- Search / Cmd+K Item -->
+        <button type="button" class="dock-item" data-action="search" aria-label="Open Command Search">
+          <span class="dock-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </span>
+          <span class="dock-label">Search (⌘K)</span>
+        </button>
 
+      </div>
     </div>
   </div>
 

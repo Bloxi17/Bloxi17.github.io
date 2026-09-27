@@ -377,47 +377,66 @@ a, button, input, select, textarea, [data-interactive="true"] {
   right: 0;
   display: flex;
   justify-content: center;
-  z-index: 1000;
+  z-index: 10000;
   pointer-events: none;
 }
 
-.dock-panel {
+.dock-hit-area {
   pointer-events: auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding-top: 50px;
+  margin-top: -50px;
+}
+
+.dock-panel {
   display: flex;
   align-items: flex-end;
   gap: 12px;
   height: 68px;
-  padding: 0 16px 8px 16px;
+  padding: 0 16px 10px 16px;
   border-radius: 28px;
-  background: rgba(15, 23, 42, 0.72);
+  background: rgba(15, 23, 42, 0.78);
   backdrop-filter: blur(28px) saturate(180%);
   -webkit-backdrop-filter: blur(28px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-top: 1px solid rgba(255, 255, 255, 0.28);
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75);
   transition: transform 0.2s ease, background 0.3s ease;
   user-select: none;
 }
 
 .dock-item {
+  flex-shrink: 0;
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: rgba(30, 41, 59, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(30, 41, 59, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   position: relative;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
   color: #f8fafc;
   will-change: width, height, transform;
   outline: none;
+  font: inherit;
+  padding: 0;
+  margin: 0;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.dock-item:hover,
+.dock-item:focus-visible {
+  border-color: rgba(96, 165, 250, 0.6);
+  background: rgba(30, 41, 59, 1);
 }
 
 .dock-item:active {
-  filter: brightness(1.2);
+  filter: brightness(1.25);
 }
 
 .dock-icon {
@@ -435,7 +454,7 @@ a, button, input, select, textarea, [data-interactive="true"] {
   left: 50%;
   transform: translateX(-50%) translateY(0);
   background: rgba(15, 23, 42, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   color: #ffffff;
   padding: 4px 10px;
   border-radius: 6px;
@@ -443,13 +462,14 @@ a, button, input, select, textarea, [data-interactive="true"] {
   font-size: 11px;
   font-weight: 500;
   white-space: pre;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.18s ease, transform 0.18s var(--ease-out-smooth);
 }
 
-.dock-item:hover .dock-label {
+.dock-item:hover .dock-label,
+.dock-item:focus-visible .dock-label {
   opacity: 1;
   transform: translateX(-50%) translateY(-6px);
 }
@@ -458,14 +478,26 @@ a, button, input, select, textarea, [data-interactive="true"] {
   .magnification-dock-wrapper {
     bottom: 12px;
   }
+  .dock-hit-area {
+    padding-top: 0;
+    margin-top: 0;
+  }
   .dock-panel {
-    gap: 8px;
-    padding: 0 10px 6px 10px;
-    height: 58px;
+    gap: 6px;
+    padding: 0 8px 6px 8px;
+    height: 56px;
+    border-radius: 20px;
   }
   .dock-item {
-    width: 42px !important;
-    height: 42px !important;
+    width: 40px !important;
+    height: 40px !important;
+  }
+  .dock-item svg {
+    width: 18px;
+    height: 18px;
+  }
+  .dock-label {
+    display: none;
   }
 }
 

@@ -230,6 +230,7 @@ function copyEmailToClipboard() {
     showToast('hamiltonjoel848@gmail.com');
   });
 }
+window.copyEmailToClipboard = copyEmailToClipboard;
 
 function showToast(message) {
   let toast = document.getElementById('appToast');

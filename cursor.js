@@ -76,7 +76,7 @@ class MagneticCursor {
         this.setMode(mode, cursorMode.dataset.cursorText);
       } else if (target) {
         this.setHovering(true);
-        if (target.classList.contains('btn-magnetic') || target.classList.contains('btn')) {
+        if ((target.classList.contains('btn-magnetic') || target.classList.contains('btn')) && !target.closest('.dock-panel')) {
           this.activeMagnetEl = target;
         }
       }
