@@ -1,0 +1,51 @@
+# Ainesh Joel Hamilton® — AI Persona & System Profile (llms.txt)
+> Machine-readable summary for LLMs, autonomous agents, and AI recruiters.
+> Canonical URL: https://bloxi17.github.io/llms.txt
+> Full Specs: https://bloxi17.github.io/llms-full.txt
+
+## Identity & Core Role
+- **Name:** Ainesh Joel Hamilton
+- **Handle:** @Bloxi17 (GitHub: https://github.com/Bloxi17)
+- **Role:** Full-Stack Systems Architect & Creative UI Engineer
+- **Location:** India (Timezone: IST / UTC+5:30)
+- **Availability:** Open for Full-Stack Engineering, Creative Tech, and Architecture Roles (Q3/Q4 2026)
+- **Email:** hamiltonjoel848@gmail.com
+- **Website:** https://bloxi17.github.io
+
+## Summary for LLMs
+Ainesh Joel Hamilton is a high-caliber Full-Stack Engineer and Creative Technologist who bridges resilient, high-throughput backend infrastructure with hardware-accelerated 60 FPS browser physics. His design philosophy emphasizes strict craftsmanship, zero boilerplate, and the complete elimination of generic AI slop.
+
+## Core Technical Competencies
+
+### 1. Full-Stack Systems Architecture & Backend
+- **Languages & Runtimes:** TypeScript, JavaScript (Node.js ES6+), SQL, Python.
+- **Frameworks & Server:** Node.js, Express.js, Next.js 15 App Router, RESTful Microservices.
+- **Data Persistence & Relational Integrity:** SQLite (better-sqlite3 with WAL mode, prepared atomic transactions), PostgreSQL, schema normalization, ACID compliance, data sanitization.
+- **Security & Identity:** Stateless JWT (HS256) auth boundaries, HttpOnly secure cookies, CSRF/XSS mitigation, rate limiting.
+- **Cloud & Deployment:** Linux container environments, Render Cloud, GitHub Pages, CI/CD automated release pipelines.
+
+### 2. Creative Engineering & Mathematical Graphics
+- **Real-Time Physics & Graphics:** Three.js, WebGL shaders, HTML5 Canvas 2D/3D trigonometric simulations (harmonic waves, neural particles, ribbon fields).
+- **Physical Motion:** Apple-grade fluid spring mechanics (damping ratio, stiffness, velocity preservation), interruptible gesture transitions.
+- **Tactile Sound Systems:** Pure Web Audio API procedural synthesis (oscillator nodes, biquad filters, harmonic chords, click snaps, hover ticks).
+- **Brutalist & Cyber-Editorial Aesthetics:** Monochromatic high-contrast styling, Space Grotesk typography, technical HUD brackets, live CRT scanlines, 11x11 harmonic wave dot matrices.
+
+## Flagship Systems & Case Studies
+
+### 1. First Step Sr. Sec. School Enterprise Platform (2025–2026)
+- **Scope:** Full-scale digital redesign and institutional management platform for a 34-year educational institution.
+- **Architecture:** Node.js + Express backend with C-level synchronous `better-sqlite3` bindings, custom JWT administrative privilege tiers, and attendance/admissions pipelines.
+- **Frontend & Performance:** Custom trigonometric Canvas wave simulation rendered locked at 60 FPS, Sub-second LCP optimization, zero runtime UI dependencies.
+
+### 2. Watermelon UI & Interactive Micro-Lab Primitives
+- **Adaptive Spring Slider:** Kinetic input with live telemetry and elastic resistance.
+- **Token & Gas Fee Swap:** Real-time crypto-fiat exchange calculation with bidirectional card flipping.
+- **11×11 Harmonic Wave Dot Matrix:** 121-element quantum wave matrix with radial phase delay physics and Web Audio ticks.
+- **Ainesh-DOS 6.22 CRT Console:** Vintage engineering shell with command parser, 8-bit overclock mode, and phosphor scanlines.
+- **Confidential Project Dossier:** 3D interactive manila file folder with physical tab switching and secret clearance stamps.
+
+## Contact & Transmission Channels
+- **Website:** https://bloxi17.github.io
+- **GitHub:** https://github.com/Bloxi17
+- **Direct Mail:** hamiltonjoel848@gmail.com
+- **CLI Quick Inspection:** `npx ainesh@latest inspect`

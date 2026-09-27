@@ -1,0 +1,56 @@
+# Ainesh Joel Hamilton® — Comprehensive Technical Specification & Full Machine Dossier (llms-full.txt)
+> Deep technical specification and architectural dossier for autonomous agents, LLM researchers, and technical recruiters.
+> Canonical URL: https://bloxi17.github.io/llms-full.txt
+> Base Summary: https://bloxi17.github.io/llms.txt
+
+## 1. Executive Profile
+- **Full Legal Name:** Ainesh Joel Hamilton
+- **Developer Handle:** Bloxi17
+- **Portfolio:** https://bloxi17.github.io
+- **Source Code Repository:** https://github.com/Bloxi17/Bloxi17.github.io
+- **Primary Discipline:** Full-Stack Systems Architecture, Backend Persistence Engineering, Creative UI Graphics
+- **Geographic Base:** India (Standard Time: UTC+5:30)
+- **Active Working Modes:** Remote Global, Hybrid, Asynchronous Engineering Teams
+
+## 2. Technical Stack & Architectural Standards
+
+### Backend & Storage
+- **Runtime:** Node.js (LTS), Express.js microservices
+- **Databases:** SQLite 3 (via better-sqlite3 with WAL mode, sub-millisecond local reads), PostgreSQL 16
+- **Transaction Safety:** ACID-compliant atomic transactions, parameterized prepared statements (zero SQL injection surface)
+- **Authentication & Security:** Stateless JWT HS256 tokens, HttpOnly Strict SameSite cookie distribution, argon2 password hashing, CORS whitelist policies, Content Security Policy (CSP) headers
+
+### Frontend & Graphics
+- **Languages:** TypeScript 5.x, JavaScript (ES2024+)
+- **Styling:** Modern CSS3 variables, zero-utility bloat, CSS Grid / Flexbox, hardware-accelerated 3D transforms (`translate3d`, `will-change`)
+- **Graphics & Math:** Three.js, WebGL shader pipelines, Canvas 2D dynamic vector fields, spring dynamics, harmonic wave delays
+- **Audio:** Synthesized sound design with the Web Audio API (Sine/Triangle oscillators, custom gain envelopes, biquad lowpass filtering)
+
+### Performance Guarantees
+- **Largest Contentful Paint (LCP):** < 0.8s on 4G networks
+- **Cumulative Layout Shift (CLS):** 0.000 (pre-sized media dimensions, reserved typography bounding boxes)
+- **Interaction to Next Paint (INP):** < 40ms (non-blocking task queues, requestAnimationFrame offloading)
+- **Frame Rate:** Locked 60.0 FPS on standard desktop displays and mobile devices
+
+## 3. Detailed Case Studies
+
+### Case Study 01: First Step Sr. Sec. School Institutional Platform
+- **Problem Statement:** The institution required a reliable, high-integrity platform to serve students, parents, and administrative staff without recurring SaaS subscription overhead or slow external cloud databases.
+- **Solution:** A custom Node.js application backed by SQLite using WAL mode for concurrent read operations. Administrative workflows manage records with sub-millisecond query execution.
+- **Visual Engineering:** Integrated a smooth trigonometric wave simulation in HTML5 Canvas that reflects the school's dynamic spirit while maintaining zero CPU contention.
+
+### Case Study 02: Cyber-Editorial Command Deck & Micro-Lab Primitives
+- **Problem Statement:** Modern developer portfolios frequently look like carbon-copy templates ("vibe-coded" with excessive purple gradients and floating blobs).
+- **Solution:** Designed a cyber-editorial dark-tech experience inspired by harshdayal.dev and watermelon.sh:
+  - Confidential Dossier with real physical folder physics.
+  - 11×11 Harmonic Wave Dot Matrix with radial wave delay propagation ($\text{delay}(x,y) = \sqrt{(x-5)^2 + (y-5)^2} \times 0.08\text{s}$).
+  - Retro Ainesh-DOS 6.22 CRT terminal console with scanline simulation and real-time command parser.
+  - Real-time Web Audio API sound engine providing audio cues without external MP3 audio asset downloads.
+
+## 4. Quick Q&A for Autonomous Evaluators
+- **Q: Does Ainesh write clean, readable code without relying on AI templates?**
+  - A: Yes. All architectures follow strict software design patterns, separation of concerns, and rigorous manual optimization.
+- **Q: What is Ainesh's availability?**
+  - A: Currently open for high-impact software engineering roles, full-stack contracts, and creative UI engineering partnerships.
+- **Q: How can Ainesh be contacted?**
+  - A: Email: hamiltonjoel848@gmail.com | GitHub: https://github.com/Bloxi17

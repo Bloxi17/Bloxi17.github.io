@@ -2424,3 +2424,289 @@ html[data-mode="brief"] .dossier-sheet.active {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
+/* =============================================================
+   ADVANCED HARSH DAYAL INTERACTIVE SYSTEMS
+   1. Live Broadcast Continuous Ticker Rail
+   2. ASCII Brutalist Dividers
+   3. 11x11 Harmonic Wave Dot Matrix
+   4. Retro CRT Engineering Console (Ainesh-DOS 6.22)
+   ============================================================= */
+
+/* 1. Live Continuous Marquee Ticker Rail */
+.marquee-ticker-rail {
+  position: relative;
+  width: 100%;
+  height: 30px;
+  background: rgba(5, 7, 11, 0.96);
+  border-bottom: 1px solid var(--border-subtle);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  z-index: 1001;
+  user-select: none;
+}
+
+.ticker-track {
+  display: inline-flex;
+  align-items: center;
+  gap: 24px;
+  white-space: nowrap;
+  will-change: transform;
+  animation: ticker-slide 42s linear infinite;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+}
+
+.marquee-ticker-rail:hover .ticker-track {
+  animation-play-state: paused;
+}
+
+.ticker-sep {
+  color: var(--accent-cyan);
+  opacity: 0.7;
+  font-size: 8px;
+}
+
+@keyframes ticker-slide {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* 2. ASCII Brutalist Dividers */
+.ascii-divider {
+  width: 100%;
+  max-width: 1240px;
+  margin: 3.5rem auto;
+  overflow: hidden;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  color: rgba(255, 255, 255, 0.16);
+  text-align: center;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* 3. 11x11 Harmonic Wave Dot Matrix */
+.dot-matrix-widget {
+  background: rgba(10, 14, 23, 0.85);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.dot-matrix-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.dot-matrix-grid {
+  display: grid;
+  grid-template-columns: repeat(11, 1fr);
+  gap: 8px;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  cursor: crosshair;
+}
+
+.dm-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--color-text-faint);
+  transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+  will-change: transform, background-color;
+}
+
+.dm-dot.active, .dm-dot:hover {
+  background-color: var(--accent-cyan);
+  transform: scale(1.6);
+  box-shadow: 0 0 8px var(--accent-cyan);
+}
+
+.dot-matrix-footer {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--color-text-muted);
+}
+
+/* 4. Retro CRT Engineering Console (Ainesh-DOS 6.22) */
+.retro-terminal-card {
+  background: #080c0a;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), inset 0 0 30px rgba(0, 0, 0, 0.8);
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  font-family: var(--font-mono);
+}
+
+.retro-terminal-card.overclocked {
+  border-color: #38bdf8;
+  box-shadow: 0 0 30px rgba(56, 189, 248, 0.35), inset 0 0 40px rgba(56, 189, 248, 0.15);
+}
+
+.terminal-crt-scanlines {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(0, 0, 0, 0.35) 51%
+  );
+  background-size: 100% 4px;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0.85;
+}
+
+.terminal-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(16, 185, 129, 0.12);
+  border-bottom: 1px solid rgba(16, 185, 129, 0.25);
+  padding: 8px 14px;
+  font-size: 11px;
+  color: #10b981;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.terminal-window-body {
+  padding: 1.25rem;
+  min-height: 240px;
+  max-height: 340px;
+  overflow-y: auto;
+  color: #34d399;
+  font-size: 12px;
+  line-height: 1.6;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(16, 185, 129, 0.3) transparent;
+}
+
+.terminal-log-row {
+  margin-bottom: 4px;
+  word-break: break-word;
+}
+
+.terminal-log-row.cmd-echo {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.terminal-log-row.accent-cyan {
+  color: #38bdf8;
+}
+
+.terminal-log-row.accent-gold {
+  color: #e2b340;
+}
+
+.terminal-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: rgba(0, 0, 0, 0.5);
+  border-top: 1px solid rgba(16, 185, 129, 0.2);
+  position: relative;
+  z-index: 6;
+}
+
+.terminal-prompt-sym {
+  color: #10b981;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.terminal-cmd-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  caret-color: #10b981;
+}
+
+.terminal-quick-chips {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 8px 14px;
+  background: rgba(0, 0, 0, 0.7);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  position: relative;
+  z-index: 6;
+}
+
+.terminal-chip {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  color: #34d399;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.terminal-chip:hover {
+  background: rgba(16, 185, 129, 0.25);
+  border-color: #34d399;
+  color: #ffffff;
+}
+
+.terminal-chip:active {
+  transform: scale(0.96);
+}
+
+.overclock-badge-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(226, 179, 64, 0.15);
+  border: 1px solid rgba(226, 179, 64, 0.4);
+  color: #e2b340;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.overclock-badge-btn:hover {
+  background: rgba(226, 179, 64, 0.3);
+  box-shadow: 0 0 10px rgba(226, 179, 64, 0.4);
+  transform: translateY(-1px);
+}
+
+

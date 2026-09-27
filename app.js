@@ -16,6 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initFolderDossier();
   initLetsTalkPopover();
   initWatermelonShowcase();
+  initDotMatrix();
+  initRetroTerminal();
 });
 
 /* -------------------------------------------------------------
@@ -511,3 +513,246 @@ function initLetsTalkPopover() {
     }
   });
 }
+
+/* -------------------------------------------------------------
+   HARMONIC WAVE DOT MATRIX (11x11 Grid, 121 Nodes)
+   Inspired by Harsh Dayal & Watermelon UI
+   ------------------------------------------------------------- */
+function initDotMatrix() {
+  const grid = document.getElementById('harmonicDotMatrix');
+  const waveCountEl = document.getElementById('matrixWaveCount');
+  const pulseBtn = document.getElementById('btnPulseMatrix');
+  const invertBtn = document.getElementById('btnInvertMatrix');
+  if (!grid) return;
+
+  grid.innerHTML = '';
+  let isInverted = false;
+  const dots = [];
+
+  // Create 11x11 = 121 dots
+  for (let r = 0; r < 11; r++) {
+    for (let c = 0; c < 11; c++) {
+      const dot = document.createElement('div');
+      dot.className = 'dm-dot';
+      dot.dataset.r = r;
+      dot.dataset.c = c;
+      
+      // Calculate radial delay from center (5, 5)
+      const dist = Math.sqrt((r - 5) ** 2 + (c - 5) ** 2);
+      dot.style.animationDelay = `${(dist * 0.08).toFixed(2)}s`;
+      
+      // Hover effect: scale up dot and sound tick
+      dot.addEventListener('mouseenter', () => {
+        dot.classList.add('active');
+        if (window.soundEngine?.isEnabled) {
+          window.soundEngine.playHoverTick();
+        }
+        setTimeout(() => dot.classList.remove('active'), 250);
+      });
+
+      // Click effect: radial shockwave radiating from this dot
+      dot.addEventListener('click', (e) => {
+        e.stopPropagation();
+        triggerShockwave(r, c);
+      });
+
+      grid.appendChild(dot);
+      dots.push({ el: dot, r, c });
+    }
+  }
+
+  function triggerShockwave(originR, originC) {
+    if (waveCountEl) waveCountEl.textContent = 'WAVE: PROPAGATING';
+    if (window.soundEngine?.isEnabled) {
+      window.soundEngine.playChirp(440, 880, 0.1, 'sine', 0.05);
+    }
+
+    dots.forEach(({ el, r, c }) => {
+      const dist = Math.sqrt((r - originR) ** 2 + (c - originC) ** 2);
+      const delayMs = dist * 38;
+      setTimeout(() => {
+        el.classList.add('active');
+        setTimeout(() => el.classList.remove('active'), 220);
+      }, delayMs);
+    });
+
+    const maxDist = Math.sqrt(10 ** 2 + 10 ** 2);
+    setTimeout(() => {
+      if (waveCountEl) waveCountEl.textContent = 'WAVE: ACTIVE';
+    }, maxDist * 38 + 250);
+  }
+
+  if (pulseBtn) {
+    pulseBtn.addEventListener('click', () => {
+      triggerShockwave(5, 5);
+      if (window.showToast) window.showToast('Shockwave Propagated from Center Node (5,5)');
+    });
+  }
+
+  if (invertBtn) {
+    invertBtn.addEventListener('click', () => {
+      isInverted = !isInverted;
+      dots.forEach(({ el, r, c }) => {
+        const dist = Math.sqrt((r - 5) ** 2 + (c - 5) ** 2);
+        const computedDist = isInverted ? (7.07 - dist) : dist;
+        el.style.animationDelay = `${Math.max(0, computedDist * 0.08).toFixed(2)}s`;
+      });
+      if (window.showToast) {
+        window.showToast(isInverted ? 'Harmonic Phase Inverted (Reverse Radial)' : 'Harmonic Phase Reset to Normal');
+      }
+      if (window.soundEngine?.isEnabled) {
+        window.soundEngine.playClickSnap();
+      }
+    });
+  }
+}
+
+/* -------------------------------------------------------------
+   RETRO CRT ENGINEERING CONSOLE (Ainesh-DOS 6.22 / AH-CLI)
+   ------------------------------------------------------------- */
+function initRetroTerminal() {
+  const terminal = document.getElementById('retroTerminalCard');
+  const body = document.getElementById('terminalWindowBody');
+  const form = document.getElementById('terminalForm');
+  const input = document.getElementById('terminalInput');
+  const overclockBtn = document.getElementById('terminalOverclockBtn');
+  const chips = document.querySelectorAll('.terminal-chip');
+  if (!terminal || !body || !input) return;
+
+  let isOverclocked = false;
+
+  function appendLog(text, className = '') {
+    const row = document.createElement('div');
+    row.className = `terminal-log-row ${className}`.trim();
+    row.textContent = text;
+    body.appendChild(row);
+    body.scrollTop = body.scrollHeight;
+  }
+
+  function handleCommand(rawCmd) {
+    const cmd = rawCmd.trim().toLowerCase();
+    if (!cmd) return;
+
+    appendLog(`A:\\> ${rawCmd}`, 'cmd-echo');
+    if (window.soundEngine?.isEnabled) {
+      window.soundEngine.playClickSnap();
+    }
+
+    switch (cmd) {
+      case 'help':
+        appendLog('AVAILABLE SYSTEM ROUTINES:', 'accent-cyan');
+        appendLog('  help       - Print this command list');
+        appendLog('  status     - Show architecture telemetry and frame rate');
+        appendLog('  stack      - Display core backend and creative graphics tech stack');
+        appendLog('  overclock  - Toggle 8-bit overclock CPU accelerator mode');
+        appendLog('  matrix     - Trigger 11x11 quantum dot matrix shockwave');
+        appendLog('  sound      - Toggle Web Audio API synthesizer');
+        appendLog('  dossier    - Inspect First Step Sr. Sec. School case study');
+        appendLog('  contact    - Open transmission channels');
+        appendLog('  clear      - Clear terminal buffer');
+        break;
+
+      case 'status':
+        appendLog('TELEMETRY STATUS REPORT:', 'accent-cyan');
+        appendLog('  [HOST] bloxi17.github.io');
+        appendLog('  [CPU] 60.0 FPS LOCKED (Hardware Accelerated Canvas)');
+        appendLog('  [MEMORY] Zero-Leak Heap (Garbage Collector Optimized)');
+        appendLog('  [ARCH] Resilient Full-Stack + Apple Fluid Motion');
+        appendLog('  [CLEARANCE] LEVEL-4 ARCHITECT');
+        break;
+
+      case 'stack':
+        appendLog('PRODUCTION ARCHITECTURAL STACK:', 'accent-gold');
+        appendLog('  Backend:  Node.js · Express · better-sqlite3 (WAL) · PostgreSQL');
+        appendLog('  Frontend: Next.js 15 · TypeScript · Tailwind CSS · GSAP');
+        appendLog('  Graphics: Three.js · HTML5 Canvas 2D/3D · WebGL Shaders');
+        appendLog('  Sound:    Procedural Web Audio API Synthesizer (0 KB mp3)');
+        appendLog('  Machine:  /llms.txt & /llms-full.txt Spec Compliant');
+        break;
+
+      case 'overclock':
+        toggleOverclock();
+        break;
+
+      case 'matrix':
+        appendLog('Emitting quantum shockwave from node (5,5)...', 'accent-cyan');
+        const pulseBtn = document.getElementById('btnPulseMatrix');
+        if (pulseBtn) pulseBtn.click();
+        break;
+
+      case 'sound':
+        if (window.soundEngine) {
+          const state = window.soundEngine.toggle();
+          appendLog(`Synthesizer Audio is now: ${state ? 'ENABLED' : 'MUTED'}`, state ? 'accent-cyan' : '');
+        }
+        break;
+
+      case 'dossier':
+        appendLog('Navigating to Confidential Dossier Archive...', 'accent-gold');
+        const dossierSection = document.getElementById('projects');
+        if (dossierSection) {
+          dossierSection.scrollIntoView({ behavior: 'smooth' });
+        }
+        break;
+
+      case 'contact':
+        appendLog('Opening direct transmission modal...', 'accent-cyan');
+        if (window.toggleLetsTalkPopover) {
+          window.toggleLetsTalkPopover(true);
+        }
+        break;
+
+      case 'clear':
+      case 'cls':
+        body.innerHTML = '';
+        appendLog('Ainesh-DOS Version 6.22 (C) Copyright Ainesh Joel Hamilton 2026.');
+        break;
+
+      default:
+        appendLog(`'${cmd}' is not recognized as an internal or external command.`, 'accent-gold');
+        appendLog("Type 'help' for a list of valid commands.", 'accent-cyan');
+        break;
+    }
+  }
+
+  function toggleOverclock() {
+    isOverclocked = !isOverclocked;
+    terminal.classList.toggle('overclocked', isOverclocked);
+    if (overclockBtn) {
+      overclockBtn.innerHTML = `<span class="radar-dot" style="width: 5px; height: 5px; background: ${isOverclocked ? '#38bdf8' : '#e2b340'};"></span><span>OVERCLOCK: ${isOverclocked ? 'TURBO 120Hz' : '8-BIT'}</span>`;
+    }
+    appendLog(isOverclocked ? '>>> OVERCLOCK ENGAGED: 120Hz TURBO PIPELINE ACTIVE <<<' : '>>> OVERCLOCK RETURNED TO STANDARD 8-BIT RUNTIME <<<', isOverclocked ? 'accent-cyan' : 'accent-gold');
+    if (window.soundEngine?.isEnabled) {
+      window.soundEngine.playChirp(isOverclocked ? 400 : 800, isOverclocked ? 1200 : 300, 0.15, 'triangle', 0.08);
+    }
+    if (window.showToast) {
+      window.showToast(isOverclocked ? 'Terminal Overclock: TURBO ENGAGED' : 'Terminal Overclock: STANDARD');
+    }
+  }
+
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const val = input.value;
+      input.value = '';
+      handleCommand(val);
+    });
+  }
+
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      const cmd = chip.dataset.cmd;
+      if (cmd) {
+        input.value = '';
+        handleCommand(cmd);
+      }
+    });
+  });
+
+  if (overclockBtn) {
+    overclockBtn.addEventListener('click', () => {
+      toggleOverclock();
+    });
+  }
+}
+
