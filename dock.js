@@ -139,6 +139,9 @@ class MagnificationDock {
       case 'projects':
         this.scrollTo('projects');
         break;
+      case 'laboratory':
+        this.scrollTo('laboratory');
+        break;
       case 'capabilities':
         this.scrollTo('capabilities');
         break;

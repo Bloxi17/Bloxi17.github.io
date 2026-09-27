@@ -4,28 +4,50 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Ainesh Joel Hamilton® — Full-Stack Developer & Creative UI Engineer</title>
-  <meta name="description" content="Portfolio of Ainesh Joel Hamilton (@Bloxi17). Minimalist editorial engineering, full-stack Node.js architectures, interactive 3D WebGL, and fluid Apple-grade physical motion.">
+  <meta name="description" content="Portfolio of Ainesh Joel Hamilton (@Bloxi17). Conceptual dark-tech engineering, resilient backend systems, interactive component laboratory, and fluid Apple-grade physical motion.">
   
   <!-- Open Graph -->
   <meta property="og:title" content="Ainesh Joel Hamilton® — Full-Stack Developer & Creative UI Engineer">
-  <meta property="og:description" content="A minimalist, high-end cinematic portfolio featuring Instrument Serif typography, full-bleed video hero, and interactive WebGL motion.">
+  <meta property="og:description" content="Conceptual dark-tech engineering, resilient backend systems, interactive component laboratory, and fluid Apple-grade physical motion.">
   <meta property="og:url" content="https://bloxi17.github.io">
   <meta property="og:type" content="website">
 
-  <!-- Google Fonts: Space Grotesk (Primary Typographic System) & Caveat -->
+  <!-- Google Fonts: Space Grotesk -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Custom 12px Black Circle Cursor (mix-blend-mode: difference) -->
+  <!-- Custom 12px Circle Cursor (mix-blend-mode: difference) -->
   <div id="cursorDot" class="custom-difference-cursor" aria-hidden="true"></div>
 
   <!-- Top Scroll Progress Line -->
   <div id="scrollProgressBar" class="scroll-progress-line" aria-hidden="true"></div>
+
+  <!-- ============================================================
+       ATMOSPHERIC BACKDROP STACK (WATERMELON UI & CREATIVE DEV)
+       ============================================================ -->
+  <div class="atmospheric-backdrop" aria-hidden="true">
+    <!-- 1. Ambient Floating Aurora Luminescence -->
+    <div class="aurora-orb aurora-orb-1"></div>
+    <div class="aurora-orb aurora-orb-2"></div>
+    <div class="aurora-orb aurora-orb-3"></div>
+
+    <!-- 2. Technical Blueprint Grid -->
+    <div class="technical-grid-base"></div>
+
+    <!-- 3. Dynamic Cursor Spotlight Grid Beam -->
+    <div class="spotlight-grid-beam"></div>
+
+    <!-- 4. HTML5 Ambient Canvas Particle Simulation -->
+    <canvas id="ambientCanvas" class="ambient-particle-canvas"></canvas>
+
+    <!-- 5. Analog Film Grain -->
+    <div class="noise-overlay"></div>
+  </div>
 
   <!-- ============================================================
        CONTENT WRAPPER
@@ -34,58 +56,59 @@
     <main>
 
       <!-- ============================================================
-           MONOCHROMATIC PHYSICS-BASED PARTICLE TEXT HERO
-           (Fixed-frame layout with central interaction zone)
+           HERO SECTION — WATERMELON UI CONCEPTUAL TECH
            ============================================================ -->
-      <section class="particle-hero-frame" id="home">
-        
-        <!-- Fixed Header at top: 48px from screen edge, 48px padding on sides -->
-        <header class="frame-header">
-          <div class="header-meta-left">
-            <span class="meta-tag">AINESH HAMILTON // CREATIVE ENGINEER • ARCHIVE '26</span>
-          </div>
-
-          <div class="header-stack-right">
-            <input 
-              type="text" 
-              id="promptInput" 
-              class="prompt-input-field interactive-text" 
-              value="AINESH" 
-              placeholder="TYPE PROMPT..." 
-              maxlength="16" 
-              autocomplete="off" 
-              spellcheck="false"
-              aria-label="Particle text generator prompt input"
-            >
-            <span class="prompt-sub-label">INPUT PROMPT TO REGENERATE</span>
-          </div>
-        </header>
-
-        <!-- Central Interaction Zone -->
-        <div class="central-interaction-zone">
+      <section class="hero-section" id="home">
+        <div class="container hero-content interactive-zone">
           
-          <!-- Large Display Text (14vw, Space Grotesk, font-weight 500, letter-spacing -0.05em) -->
-          <h1 id="heroDisplayText" class="hero-display-silhouette" aria-label="Ainesh">
-            AINESH
+          <!-- Radar Status Capsule -->
+          <div class="hero-status-capsule">
+            <div class="radar-beacon" aria-hidden="true">
+              <div class="radar-pulse"></div>
+              <div class="radar-dot"></div>
+            </div>
+            <span class="status-text">AVAILABLE FOR FULL-STACK &amp; CREATIVE ENG</span>
+            <span class="status-clock" id="liveClock">00:00:00 IST</span>
+          </div>
+
+          <!-- Display Title -->
+          <h1 class="hero-title">
+            Crafting resilient systems &amp; <span class="hero-title-gradient">tactile digital physics</span>.
           </h1>
 
-          <!-- Invisible Trigger Overlay (z-index: 30) spanning text dimensions -->
-          <div id="heroTriggerOverlay" class="hero-trigger-overlay" aria-hidden="true"></div>
+          <!-- Lead Narrative -->
+          <p class="hero-lead">
+            Full-Stack Architect &amp; Creative UI Engineer. Bridging robust relational backends with hardware-accelerated interfaces and Apple-grade fluid motion. Zero boilerplate. Zero AI slop.
+          </p>
 
-          <!-- Full Viewport Particle Canvas (z-index: 10) -->
-          <canvas id="particleCanvas" class="particle-canvas" aria-label="Interactive typographic particle simulation"></canvas>
+          <!-- Watermelon-Style CLI Command Capsule -->
+          <div class="hero-cli-capsule">
+            <span class="cli-prompt-symbol">$</span>
+            <code class="cli-command-code" id="cliCommandText">npx ainesh@latest inspect</code>
+            <button type="button" class="cli-copy-btn" id="copyCliBtn" title="Copy CLI Command">
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <span id="copyCliText">Copy</span>
+            </button>
+          </div>
+
+          <!-- Hero Actions -->
+          <div class="hero-actions-row">
+            <a href="#projects" class="btn-primary-glow">
+              <span>Explore Confidential Case Study</span>
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <a href="#laboratory" class="btn-secondary-glass">
+              <span>Interactive Component Lab</span>
+              <span style="color: var(--accent-cyan); font-family: monospace;">✦</span>
+            </a>
+          </div>
+
         </div>
-
-        <!-- Fixed Footer at bottom: 48px from screen edge -->
-        <footer class="frame-footer">
-          <div class="footer-divider" aria-hidden="true"></div>
-          <span class="footer-instruction-label">HOVER TO DISPERSE // TYPE TO TRANSFORM // SCROLL FOR ARCHIVE</span>
-        </footer>
-
       </section>
 
       <!-- ============================================================
            FEATURED CASE STUDY: FIRST STEP SENIOR SECONDARY SCHOOL
+           (3D Confidential Project Dossier Manila Folder)
            ============================================================ -->
       <section class="section" id="projects">
         <div class="container">
@@ -94,26 +117,26 @@
             <span class="section-kicker">Case Study // 01</span>
             <h2 class="section-title">First Step Senior Secondary School</h2>
             <p class="section-lead">
-              A modern, full-stack educational web platform custom-architected for a premier 34-year educational institution in Chhindwara, M.P.
+              A mission-critical educational web platform custom-architected for a premier 34-year educational institution in Chhindwara, M.P.
             </p>
           </div>
 
           <!-- 3D "Confidential Project Dossier" Manila Folder Component -->
-          <div class="dossier-wrapper interactive-zone" data-cursor="view" data-cursor-text="DOSSIER">
+          <div class="dossier-wrapper interactive-zone">
             
             <!-- Folder Tab, Steel Binder Clip & Handwritten Stamp -->
             <div class="dossier-tab-row">
               <div class="dossier-tab">
                 <span class="dossier-tab-id">DOSSIER // ARCH-2026-01</span>
-                <span class="">•</span>
-                <span class="dossier-tab-title">FIRST STEP SR. SEC. SCHOOL</span>
+                <span>•</span>
+                <span>FIRST STEP SR. SEC. SCHOOL</span>
               </div>
               <div class="dossier-binder-clip" aria-hidden="true" title="Brushed Steel Binder Clip">
                 <div class="clip-wire-loop"></div>
                 <div class="clip-solid-body"></div>
               </div>
-              <div class="handwritten-stamp" style="margin-left: auto;">
-                <span>verified in production ✓</span>
+              <div style="margin-left: auto; font-family: var(--font-mono); font-size: 11px; color: var(--accent-emerald);">
+                <span>[ verified in production ✓ ]</span>
               </div>
             </div>
 
@@ -123,7 +146,7 @@
               <!-- Red Confidential Rubber Stamp -->
               <div class="confidential-seal" aria-hidden="true">
                 <span>CONFIDENTIAL</span>
-                <span class="text-[9px] tracking-widest block font-mono">PRODUCTION VERIFIED // 2026</span>
+                <span style="font-size: 9px; letter-spacing: 0.15em; display: block; font-family: var(--font-mono);">PRODUCTION VERIFIED // 2026</span>
               </div>
 
               <!-- Interactive Layered Sheets inside Folder -->
@@ -133,9 +156,9 @@
                 <article class="dossier-sheet sheet-1 active" id="sheet-1" data-sheet="1">
                   <div>
                     <div class="sheet-tab-header">
-                      <div class="flex items-center gap-2">
+                      <div style="display: flex; align-items: center; gap: 8px;">
                         <span class="sheet-index-pill">DOC 01/03</span>
-                        <span class="sheet-tab-name">ARCHITECTURE & SQL ENGINE</span>
+                        <span class="sheet-tab-name">ARCHITECTURE &amp; SQL ENGINE</span>
                       </div>
                       <span class="sheet-status-badge">DEPLOYED • RENDER CLOUD</span>
                     </div>
@@ -168,7 +191,7 @@
                       <div class="sheet-features-row">
                         <div class="sheet-feature-box">
                           <strong>Embedded SQLite Persistence</strong>
-                          <p>Direct atomic disk writes with <code class="">better-sqlite3</code> for ultra-low read latency without external database network hops.</p>
+                          <p>Direct atomic disk writes with <code>better-sqlite3</code> for ultra-low read latency without external database network hops.</p>
                         </div>
                         <div class="sheet-feature-box">
                           <strong>Admissions Workflow Pipeline</strong>
@@ -202,9 +225,9 @@
                 <article class="dossier-sheet sheet-2" id="sheet-2" data-sheet="2">
                   <div>
                     <div class="sheet-tab-header">
-                      <div class="flex items-center gap-2">
+                      <div style="display: flex; align-items: center; gap: 8px;">
                         <span class="sheet-index-pill">DOC 02/03</span>
-                        <span class="sheet-tab-name">CANVAS 3D WAVE ENGINE & TOUCH UX</span>
+                        <span class="sheet-tab-name">CANVAS 3D WAVE ENGINE &amp; TOUCH UX</span>
                       </div>
                       <span class="sheet-status-badge">60 FPS LOCKED</span>
                     </div>
@@ -218,11 +241,11 @@
                       <div class="sheet-features-row">
                         <div class="sheet-feature-box">
                           <strong>Mathematical Wave Simulation</strong>
-                          <p>Layered trigonometric waves with dynamic phase modulation rendering school crest tones (Gold, Navy, Crimson) with zero layout thrash.</p>
+                          <p>Layered trigonometric waves with dynamic phase modulation rendering school crest tones with zero layout thrash.</p>
                         </div>
                         <div class="sheet-feature-box">
                           <strong>Touch Gesture Velocity Handoff</strong>
-                          <p>Zero-jank drawer navigation responding directly to touchstart with momentum scrolling and Apple spring resistance curves.</p>
+                          <p>Zero-jank drawer navigation responding directly to pointerdown with momentum scrolling and Apple spring resistance curves.</p>
                         </div>
                       </div>
                     </div>
@@ -232,7 +255,6 @@
                     <div class="tech-pills">
                       <span class="tech-pill">HTML5 Canvas</span>
                       <span class="tech-pill">Math Simulations</span>
-                      <span class="tech-pill">GSAP</span>
                       <span class="tech-pill">Touch UX</span>
                     </div>
                     <div class="sheet-actions">
@@ -247,9 +269,9 @@
                 <article class="dossier-sheet sheet-3" id="sheet-3" data-sheet="3">
                   <div>
                     <div class="sheet-tab-header">
-                      <div class="flex items-center gap-2">
+                      <div style="display: flex; align-items: center; gap: 8px;">
                         <span class="sheet-index-pill">DOC 03/03</span>
-                        <span class="sheet-tab-name">PRODUCTION TELEMETRY & VITALS</span>
+                        <span class="sheet-tab-name">PRODUCTION TELEMETRY &amp; VITALS</span>
                       </div>
                       <span class="sheet-status-badge">LIGHTHOUSE: 98/100</span>
                     </div>
@@ -273,14 +295,14 @@
                           <span class="metric-lbl">Render Refresh Rate (Hz)</span>
                         </div>
                       </div>
-                      <p class="sheet-body-text mt-4">
+                      <p class="sheet-body-text" style="margin-top: 1rem;">
                         Audited across mobile 4G throttled connections to ensure seamless accessibility for families and students in tier-2 regions.
                       </p>
                     </div>
                   </div>
 
                   <div class="sheet-footer">
-                    <span class="font-mono text-xs">Audited via Chrome DevTools & Google PageSpeed Insights</span>
+                    <span style="font-family: var(--font-mono); font-size: 11px; color: var(--color-text-muted);">Audited via Chrome DevTools &amp; Google PageSpeed Insights</span>
                     <a href="https://github.com/Bloxi17/FIRSTSTEP" target="_blank" rel="noopener" class="sheet-btn sheet-btn-secondary">
                       <span>View GitHub Spec</span>
                     </a>
@@ -310,83 +332,137 @@
       </section>
 
       <!-- ============================================================
-           LABORATORY: BLUEPRINT GRID & PERFORATED STAMP CARDS
-           (Sakthi-inspired physical stamp aesthetic)
+           INTERACTIVE COMPONENT SHOWCASE & MICRO-LAB
+           (Inspired by Watermelon UI — ui.watermelon.sh)
            ============================================================ -->
-      <section class="section blueprint-grid-section" id="laboratory">
+      <section class="section" id="laboratory">
         <div class="container">
           
           <div class="section-header interactive-zone">
-            <div class="flex items-center gap-3">
-              <span class="section-kicker">Laboratory // 02</span>
-              <span class="handwritten-accent">perforated experiments ✦</span>
-            </div>
-            <h2 class="section-title">Specialized Modules & Standalone Systems</h2>
+            <span class="section-kicker">Showcase // 02</span>
+            <h2 class="section-title">Interactive Component Showcase &amp; Micro-Lab</h2>
             <p class="section-lead">
-              Focused algorithmic components, math physics simulations, and backend micro-frameworks crafted for latency-critical applications.
+              Isolated conceptual UI primitives inspired by Watermelon UI and modern design engineering. Fully interactive, tactile, and zero-jank.
             </p>
           </div>
 
-          <!-- Stamp Cards Grid -->
-          <div class="stamp-grid interactive-zone">
+          <div class="showcase-grid interactive-zone">
             
-            <!-- Stamp 1 -->
-            <div class="stamp-card" data-cursor="view" data-cursor-text="INSPECT">
-              <div class="stamp-header">
-                <span class="stamp-pill">PROD // '26</span>
-                <span class="stamp-postmark">AUTH 01</span>
+            <!-- Widget 1: Adaptive Spring Slider -->
+            <div class="showcase-card col-span-6" data-tilt="true">
+              <div>
+                <div class="showcase-card-header">
+                  <span class="showcase-pill">MICRO-WIDGET</span>
+                  <span style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-cyan);">KINETIC INPUT</span>
+                </div>
+                <h3 class="showcase-card-title">Adaptive Spring Slider</h3>
+                <p class="showcase-card-desc">
+                  Kinetic drag physics with live numerical telemetry readout and dynamic spring resistance for high-precision parameters.
+                </p>
               </div>
-              <div class="stamp-icon-box">
-                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" class=""><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
-              </div>
-              <h3 class="stamp-title">Canvas 3D Ribbon Math Engine</h3>
-              <p class="stamp-desc">
-                High-performance procedural trigonometric ribbon simulation running at 60 FPS across desktop & mobile. Zero external 3D engine overhead.
-              </p>
-              <div class="stamp-footer">
-                <span class="stamp-tag">HTML5 Canvas</span>
-                <span class="stamp-tag">Trigonometry</span>
-                <span class="stamp-tag">60 FPS</span>
+
+              <div class="slider-demo-widget">
+                <div class="slider-readout-row">
+                  <span class="slider-metric-label">Spring Calibration Level</span>
+                  <span class="slider-metric-number" id="demoSliderVal">78</span>
+                </div>
+                <input type="range" min="0" max="100" value="78" class="watermelon-range-slider" id="demoSlider" aria-label="Spring calibration slider">
               </div>
             </div>
 
-            <!-- Stamp 2 -->
-            <div class="stamp-card" data-cursor="view" data-cursor-text="INSPECT">
-              <div class="stamp-header">
-                <span class="stamp-pill">CORE // '25</span>
-                <span class="stamp-postmark">AUTH 02</span>
+            <!-- Widget 2: Token / Gas Fee Swap Micro-Interaction -->
+            <div class="showcase-card col-span-6" data-tilt="true">
+              <div>
+                <div class="showcase-card-header">
+                  <span class="showcase-pill">FINANCIAL TECH</span>
+                  <span style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-emerald);">REAL-TIME</span>
+                </div>
+                <h3 class="showcase-card-title">Token &amp; Gas Swap Micro-Interaction</h3>
+                <p class="showcase-card-desc">
+                  Direct input conversion between crypto assets and fiat currency with instantaneous recalculation and smooth token flipping.
+                </p>
               </div>
-              <div class="stamp-icon-box">
-                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" class=""><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
-              </div>
-              <h3 class="stamp-title">Atomic SQLite & JWT Auth Gateway</h3>
-              <p class="stamp-desc">
-                Prepared statement persistence layer with zero SQL injection vulnerability, token-based authorization, and atomic transaction pipelines.
-              </p>
-              <div class="stamp-footer">
-                <span class="stamp-tag">better-sqlite3</span>
-                <span class="stamp-tag">Express</span>
-                <span class="stamp-tag">Security</span>
+
+              <div class="swap-demo-widget">
+                <div class="swap-input-row">
+                  <input type="number" step="0.1" value="1.5" class="swap-amount-input" id="swapFromAmount" aria-label="From Amount">
+                  <span class="swap-token-badge">ETH</span>
+                </div>
+                <button type="button" class="swap-divider-btn" id="swapTriggerBtn" title="Invert Currency Direction">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4m6 4v12m0 0l4-4m-4 4l-4-4"/></svg>
+                </button>
+                <div class="swap-input-row">
+                  <input type="text" value="$4,875.00" class="swap-amount-input" id="swapToAmount" readonly aria-label="To Amount">
+                  <span class="swap-token-badge">USD</span>
+                </div>
               </div>
             </div>
 
-            <!-- Stamp 3 -->
-            <div class="stamp-card" data-cursor="view" data-cursor-text="INSPECT">
-              <div class="stamp-header">
-                <span class="stamp-pill">WEBGL // '26</span>
-                <span class="stamp-postmark">AUTH 03</span>
+            <!-- Widget 3: Architecture Disclosure Accordion -->
+            <div class="showcase-card col-span-6" data-tilt="true">
+              <div>
+                <div class="showcase-card-header">
+                  <span class="showcase-pill">LAYOUT COMPONENT</span>
+                  <span style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-indigo);">EXPANDABLE</span>
+                </div>
+                <h3 class="showcase-card-title">Architecture Disclosure Accordion</h3>
+                <p class="showcase-card-desc">
+                  Fluid expanding disclosures with hardware-accelerated height transitions, chevron rotations, and isolated focus states.
+                </p>
               </div>
-              <div class="stamp-icon-box">
-                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" class=""><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+
+              <div class="disclosure-accordion">
+                <div class="disclosure-item open">
+                  <button type="button" class="disclosure-trigger">
+                    <span>01 // Atomic SQLite Prepared Transactions</span>
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                  </button>
+                  <div class="disclosure-content">
+                    Direct C-level synchronous bindings via better-sqlite3 with WAL mode enabled. Sub-millisecond reads with zero network overhead.
+                  </div>
+                </div>
+                <div class="disclosure-item">
+                  <button type="button" class="disclosure-trigger">
+                    <span>02 // Hardware-Accelerated Canvas Pipelines</span>
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                  </button>
+                  <div class="disclosure-content">
+                    Zero layout thrash trigonometric ribbon simulations executed inside a locked 60 FPS requestAnimationFrame loop with device pixel ratio scaling.
+                  </div>
+                </div>
+                <div class="disclosure-item">
+                  <button type="button" class="disclosure-trigger">
+                    <span>03 // Stateless JWT Authentication Boundary</span>
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                  </button>
+                  <div class="disclosure-content">
+                    Cryptographically signed HS256 authentication tokens stored in secure HttpOnly cookies, protecting endpoints against CSRF and XSS injection vectors.
+                  </div>
+                </div>
               </div>
-              <h3 class="stamp-title">Procedural Gyroscopic 3D Core</h3>
-              <p class="stamp-desc">
-                Real-time WebGL wireframe polyhedron with momentum flick deceleration, cursor orbit coupling, and scroll timeline synchronization.
-              </p>
-              <div class="stamp-footer">
-                <span class="stamp-tag">Three.js</span>
-                <span class="stamp-tag">Shaders</span>
-                <span class="stamp-tag">Momentum</span>
+            </div>
+
+            <!-- Widget 4: Procedural Gyroscopic 3D Tilt & Specular Glare -->
+            <div class="showcase-card col-span-6" data-tilt="true">
+              <div>
+                <div class="showcase-card-header">
+                  <span class="showcase-pill">CREATIVE PHYSICS</span>
+                  <span style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-cyan);">3D GYROSCOPE</span>
+                </div>
+                <h3 class="showcase-card-title">Gyroscopic 3D Tilt &amp; Specular Glare</h3>
+                <p class="showcase-card-desc">
+                  Pointer-relative 3D perspective distortion with dynamic specular light glare reflection calculated in real time across cards.
+                </p>
+              </div>
+
+              <div style="background: rgba(10, 14, 23, 0.85); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 1.25rem; display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                  <span style="display: block; font-family: var(--font-mono); font-size: 11px; color: var(--color-text-muted); text-transform: uppercase;">Surface State</span>
+                  <span style="font-family: var(--font-mono); font-size: 16px; font-weight: 600; color: var(--accent-emerald);">Locked • 60 FPS</span>
+                </div>
+                <div style="font-family: var(--font-mono); font-size: 12px; color: var(--color-text-secondary); background: rgba(255,255,255,0.05); padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+                  Hover &amp; Tilt Active
+                </div>
               </div>
             </div>
 
@@ -401,8 +477,8 @@
         <div class="container">
           
           <div class="section-header interactive-zone">
-            <span class="section-kicker">Index // 02</span>
-            <h2 class="section-title">Engineered Capabilities & Core Paradigms</h2>
+            <span class="section-kicker">Index // 03</span>
+            <h2 class="section-title">Engineered Capabilities &amp; Core Paradigms</h2>
             <p class="section-lead">
               A balanced mastery bridging heavy backend architectures, relational data modeling, and mathematical creative frontends.
             </p>
@@ -410,13 +486,13 @@
 
           <div class="bento-grid interactive-zone">
             
-            <!-- Card 1: Backend Architecture (Span 8) -->
-            <div class="bento-card bento-span-8">
+            <!-- Card 1: Backend Architecture (col-span-8) -->
+            <div class="bento-card col-span-8" data-tilt="true">
               <div>
-                <div class="bento-icon">
+                <div class="bento-icon-box">
                   <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
                 </div>
-                <h3 class="bento-title">Backend Architecture & Data Integrity</h3>
+                <h3 class="bento-title">Backend Architecture &amp; Data Integrity</h3>
                 <p class="bento-desc">
                   Designing robust server runtimes with Node.js and Express. Authoring high-performance SQL schemas with SQLite and PostgreSQL, sanitizing input with prepared statements, and securing microservices with JWT stateless auth.
                 </p>
@@ -429,7 +505,7 @@
                 </div>
                 <div class="bento-subitem">
                   <div class="bento-subitem-title">Relational SQL</div>
-                  <div class="bento-subitem-detail">SQLite / better-sqlite3</div>
+                  <div class="bento-subitem-detail">better-sqlite3</div>
                 </div>
                 <div class="bento-subitem">
                   <div class="bento-subitem-title">Auth Pipelines</div>
@@ -438,13 +514,13 @@
               </div>
             </div>
 
-            <!-- Card 2: 3D WebGL (Span 4) -->
-            <div class="bento-card bento-span-4">
+            <!-- Card 2: 3D WebGL (col-span-4) -->
+            <div class="bento-card col-span-4" data-tilt="true">
               <div>
-                <div class="bento-icon">
+                <div class="bento-icon-box">
                   <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
                 </div>
-                <h3 class="bento-title">3D WebGL & Physics</h3>
+                <h3 class="bento-title">3D WebGL &amp; Physics</h3>
                 <p class="bento-desc">
                   Translating mathematical geometry into interactive Three.js and HTML5 Canvas simulations running locked at 60 FPS.
                 </p>
@@ -453,19 +529,19 @@
               <div class="bento-subgrid">
                 <div class="bento-subitem">
                   <div class="bento-subitem-title">Three.js / WebGL</div>
-                  <div class="bento-subitem-detail">Shaders & Meshes</div>
+                  <div class="bento-subitem-detail">Shaders &amp; Meshes</div>
                 </div>
                 <div class="bento-subitem">
                   <div class="bento-subitem-title">Canvas 2D/3D</div>
-                  <div class="bento-subitem-detail">Wave & Ribbon Math</div>
+                  <div class="bento-subitem-detail">Wave &amp; Ribbon Math</div>
                 </div>
               </div>
             </div>
 
-            <!-- Card 3: Apple Fluid Motion (Span 4) -->
-            <div class="bento-card bento-span-4">
+            <!-- Card 3: Apple Fluid Motion (col-span-4) -->
+            <div class="bento-card col-span-4" data-tilt="true">
               <div>
-                <div class="bento-icon">
+                <div class="bento-icon-box">
                   <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
                 </div>
                 <h3 class="bento-title">Apple Fluid Interfaces</h3>
@@ -477,7 +553,7 @@
               <div class="bento-subgrid">
                 <div class="bento-subitem">
                   <div class="bento-subitem-title">Spring Physics</div>
-                  <div class="bento-subitem-detail">Damping 1.0 & 0.8</div>
+                  <div class="bento-subitem-detail">Damping 1.0 &amp; 0.8</div>
                 </div>
                 <div class="bento-subitem">
                   <div class="bento-subitem-title">Zero Latency</div>
@@ -486,13 +562,13 @@
               </div>
             </div>
 
-            <!-- Card 4: Performance Engineering (Span 8) -->
-            <div class="bento-card bento-span-8">
+            <!-- Card 4: Performance Engineering (col-span-8) -->
+            <div class="bento-card col-span-8" data-tilt="true">
               <div>
-                <div class="bento-icon">
+                <div class="bento-icon-box">
                   <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
                 </div>
-                <h3 class="bento-title">Performance Engineering & Tooling</h3>
+                <h3 class="bento-title">Performance Engineering &amp; Tooling</h3>
                 <p class="bento-desc">
                   Optimizing Critical Rendering Paths (CRP), asset compression, GPU layer compositing, and Git CI/CD deployment pipelines on Linux cloud platforms like Render and GitHub Pages.
                 </p>
@@ -504,7 +580,7 @@
                   <div class="bento-subitem-detail">Sub-Second LCP / 0 CLS</div>
                 </div>
                 <div class="bento-subitem">
-                  <div class="bento-subitem-title">Git & CI/CD</div>
+                  <div class="bento-subitem-title">Git &amp; CI/CD</div>
                   <div class="bento-subitem-detail">Automated Releases</div>
                 </div>
                 <div class="bento-subitem">
@@ -520,30 +596,30 @@
       </section>
 
       <!-- ============================================================
-           PHYSICS PARTICLE ENGINE CALIBRATION & PLAYGROUND
+           ATMOSPHERIC PHYSICS CALIBRATION & TELEMETRY DECK
            ============================================================ -->
       <section class="section" id="playground">
         <div class="container">
           
           <div class="section-header interactive-zone">
-            <span class="section-kicker">Simulation // 03</span>
-            <h2 class="section-title">Particle Physics Calibration</h2>
+            <span class="section-kicker">Simulation // 04</span>
+            <h2 class="section-title">Atmospheric Physics Calibration</h2>
             <p class="section-lead">
-              Tune the real-time typographic particle engine dynamics. Calibrate radial dispersion force, return friction, and interaction radius directly.
+              Tune the real-time background neural particle dynamics. Calibrate radial dispersion force, return friction, and interaction radius directly.
             </p>
           </div>
 
-          <div class="playground-deck interactive-zone">
+          <div class="telemetry-deck interactive-zone">
             
             <div class="control-group">
-              <span class="meta-tag">Kinetics & Forces</span>
+              <span style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-cyan); text-transform: uppercase;">Kinetics &amp; Repulsion Forces</span>
 
               <div class="control-item">
                 <div class="control-label">
                   <span>DISPERSION FORCE</span>
                   <span id="playForceVal">15 N</span>
                 </div>
-                <input id="playForce" type="range" min="5" max="35" step="1" value="15" class="slider-input" aria-label="Particle dispersion force">
+                <input id="playForce" type="range" min="5" max="35" step="1" value="15" class="watermelon-range-slider" aria-label="Particle dispersion force">
               </div>
 
               <div class="control-item">
@@ -551,19 +627,19 @@
                   <span>RETURN FRICTION</span>
                   <span id="playFrictionVal">0.95</span>
                 </div>
-                <input id="playFriction" type="range" min="0.85" max="0.98" step="0.01" value="0.95" class="slider-input" aria-label="Particle friction coefficient">
+                <input id="playFriction" type="range" min="0.85" max="0.98" step="0.01" value="0.95" class="watermelon-range-slider" aria-label="Particle friction coefficient">
               </div>
             </div>
 
             <div class="control-group">
-              <span class="meta-tag">Primitives & Space</span>
+              <span style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-cyan); text-transform: uppercase;">Field &amp; Radius Presets</span>
 
               <div class="control-item">
                 <div class="control-label">
                   <span>INTERACTION RADIUS</span>
                   <span id="playRadiusVal">200px</span>
                 </div>
-                <input id="playRadius" type="range" min="100" max="350" step="10" value="200" class="slider-input" aria-label="Interaction radius in pixels">
+                <input id="playRadius" type="range" min="100" max="350" step="10" value="200" class="watermelon-range-slider" aria-label="Interaction radius in pixels">
               </div>
 
               <div class="control-item">
@@ -585,17 +661,13 @@
 
       <!-- ============================================================
            TIMELINE JOURNEY RAIL: MILESTONES & SKILL STOPS
-           (Sakthi-inspired vertical railway timeline)
            ============================================================ -->
       <section class="section" id="journey">
         <div class="container">
           
           <div class="section-header interactive-zone">
-            <div class="flex items-center gap-3">
-              <span class="section-kicker">Trajectory // 04</span>
-              <span class="handwritten-accent">the timeline ✦</span>
-            </div>
-            <h2 class="section-title">Engineering Milestones & Journey Rail</h2>
+            <span class="section-kicker">Trajectory // 05</span>
+            <h2 class="section-title">Engineering Milestones &amp; Journey Rail</h2>
             <p class="section-lead">
               A chronological trajectory across backend persistence architecture, real-time math graphics, and responsive systems engineering.
             </p>
@@ -617,7 +689,7 @@
                   <span class="station-badge">CURRENT FOCUS</span>
                   <span class="station-time">2026 — PRESENT</span>
                 </div>
-                <h3 class="station-title">Full-Stack Web Architect & Creative UI Engineer</h3>
+                <h3 class="station-title">Full-Stack Web Architect &amp; Creative UI Engineer</h3>
                 <p class="station-desc">
                   Designing resilient web applications, hardware-accelerated 3D WebGL experiences, and high-performance client systems. Specializing in sub-second LCP optimization, relational SQL integrity, and Apple fluid physics.
                 </p>
@@ -664,14 +736,13 @@
                   <span class="station-badge">FOUNDATIONAL LABS</span>
                   <span class="station-time">2024 — 2025</span>
                 </div>
-                <h3 class="station-title">Real-Time Canvas & Motion Design Research</h3>
+                <h3 class="station-title">Real-Time Canvas &amp; Motion Design Research</h3>
                 <p class="station-desc">
                   Authored procedural graphics experiments, algorithmic geometry solvers, and explored spring dynamics with zero runtime overhead and hardware-accelerated transforms.
                 </p>
                 <div class="station-skills">
                   <span class="tech-pill">JavaScript ES6+</span>
                   <span class="tech-pill">Trigonometry</span>
-                  <span class="tech-pill">GSAP</span>
                   <span class="tech-pill">Git / Linux</span>
                 </div>
               </div>
@@ -689,35 +760,35 @@
         <div class="container">
           
           <div class="section-header interactive-zone">
-            <span class="section-kicker">Philosophy // 04</span>
+            <span class="section-kicker">Philosophy // 06</span>
             <h2 class="section-title">Craft Over Cliché</h2>
             <p class="section-lead">
               The invisible details that separate boilerplate templates from software that feels alive.
             </p>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 interactive-zone">
+          <div class="bento-grid interactive-zone">
             
-            <div class="bento-card">
-              <span class="text-xs font-mono mb-2 block">01 // LATENCY</span>
-              <h3 class="text-lg font-semibold mb-2">Instant Response</h3>
-              <p class="text-sm leading-relaxed">
+            <div class="bento-card col-span-4" data-tilt="true">
+              <span style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-cyan); margin-bottom: 0.5rem; display: block;">01 // LATENCY</span>
+              <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem;">Instant Response</h3>
+              <p style="font-size: 14px; color: var(--color-text-secondary); line-height: 1.6;">
                 The feeling of direct manipulation collapses the millisecond lag is introduced. Every button, drawer, and input responds on pointerdown with hardware-accelerated GPU transforms.
               </p>
             </div>
 
-            <div class="bento-card">
-              <span class="text-xs font-mono mb-2 block">02 // ARCHITECTURE</span>
-              <h3 class="text-lg font-semibold mb-2">Relational Rigor</h3>
-              <p class="text-sm leading-relaxed">
+            <div class="bento-card col-span-4" data-tilt="true">
+              <span style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-emerald); margin-bottom: 0.5rem; display: block;">02 // ARCHITECTURE</span>
+              <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem;">Relational Rigor</h3>
+              <p style="font-size: 14px; color: var(--color-text-secondary); line-height: 1.6;">
                 A flashy frontend without dependable data architecture is a facade. I write disciplined SQL, secure authentication boundaries, and clean Node.js backend controllers.
               </p>
             </div>
 
-            <div class="bento-card">
-              <span class="text-xs font-mono mb-2 block">03 // RESTRAINT</span>
-              <h3 class="text-lg font-semibold mb-2">Restraint & Taste</h3>
-              <p class="text-sm leading-relaxed">
+            <div class="bento-card col-span-4" data-tilt="true">
+              <span style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-indigo); margin-bottom: 0.5rem; display: block;">03 // RESTRAINT</span>
+              <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem;">Restraint &amp; Taste</h3>
+              <p style="font-size: 14px; color: var(--color-text-secondary); line-height: 1.6;">
                 Rejection of AI slop: no gratuitous glowing purple gradients, no emoji clutter, no decorative animation without tactile purpose. Every element earns its place.
               </p>
             </div>
@@ -734,7 +805,7 @@
         <div class="container">
           
           <div class="contact-terminal interactive-zone">
-            <div class="text-xs font-mono tracking-wider mb-2">TRANSMISSION // DIRECT CONTACT</div>
+            <div style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; color: var(--accent-cyan); margin-bottom: 0.5rem;">TRANSMISSION // DIRECT CONTACT</div>
             <h2 class="contact-headline">Initiate Collaboration</h2>
             <p class="contact-body">
               Interested in collaborating on high-throughput full-stack platforms, bespoke 3D web applications, or software engineering roles? I'd love to connect.
@@ -742,24 +813,26 @@
 
             <!-- Tactile Copy Email Pill -->
             <div>
-              <button class="pill-btn pill-btn-hero trigger-copy-email mb-6" style="margin-top:0;" title="Click to copy verified email address">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" class="mr-2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <button class="email-copy-pill trigger-copy-email" type="button" title="Click to copy verified email address">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                 <span>hamiltonjoel848@gmail.com</span>
-                <span class="text-[10px] font-mono ml-2">[COPY]</span>
+                <span style="font-size: 10px; color: var(--accent-cyan); margin-left: 4px;">[COPY]</span>
               </button>
             </div>
 
             <!-- Alternative Links -->
-            <div class="flex items-center justify-center gap-4 flex-wrap">
-              <a href="https://github.com/Bloxi17" target="_blank" rel="noopener" class="pill-btn pill-btn-sm pill-btn-secondary">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 1rem;">
+              <a href="https://github.com/Bloxi17" target="_blank" rel="noopener" class="btn-secondary-glass" style="font-size: 13px; padding: 0.6rem 1.2rem;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
                 <span>GitHub @Bloxi17</span>
               </a>
-              <a href="mailto:hamiltonjoel848@gmail.com" class="pill-btn pill-btn-sm">
+              <a href="mailto:hamiltonjoel848@gmail.com" class="btn-primary-glow" style="font-size: 13px; padding: 0.6rem 1.2rem;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                 <span>Send Mail Directly</span>
               </a>
             </div>
 
-            <div class="mt-8 pt-6 border-t text-xs font-mono flex items-center justify-center gap-4 flex-wrap">
+            <div style="margin-top: 2rem; pt: 1.5rem; border-top: 1px solid var(--border-subtle); font-family: var(--font-mono); font-size: 11px; color: var(--color-text-muted); display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;">
               <span>LOCATION: INDIA</span>
               <span>•</span>
               <span>TIMEZONE: UTC+5:30</span>
@@ -776,12 +849,12 @@
     <!-- Footer -->
     <footer class="footer">
       <div class="container footer-content interactive-zone">
-        <div class="flex items-center gap-2">
-          <span class="font-mono text-xs font-bold px-2 py-1 border rounded">AH</span>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-family: var(--font-mono); font-size: 11px; font-weight: 700; padding: 2px 8px; border: 1px solid var(--border-medium); border-radius: 6px;">AH</span>
           <span>Ainesh Joel Hamilton® • Portfolio</span>
         </div>
-        <div class="font-mono text-xs">
-          SPACE GROTESK // MONOCHROMATIC PARTICLES // ARCHIVE '26
+        <div style="font-family: var(--font-mono); font-size: 11px; color: var(--color-text-muted);">
+          OBSIDIAN DEEP TECH // WATERMELON UI SHOWCASE // ARCHIVE '26
         </div>
       </div>
     </footer>
@@ -810,6 +883,14 @@
           <span class="dock-label">Projects</span>
         </button>
 
+        <!-- Laboratory Item -->
+        <button type="button" class="dock-item" data-action="laboratory" aria-label="Navigate to Component Lab">
+          <span class="dock-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.31L4.14 18.2A2 2 0 0 0 5.86 21h12.28a2 2 0 0 0 1.72-2.8L14 9.31V2"/></svg>
+          </span>
+          <span class="dock-label">Lab</span>
+        </button>
+
         <!-- Capabilities Item -->
         <button type="button" class="dock-item" data-action="capabilities" aria-label="Navigate to Capabilities">
           <span class="dock-icon">
@@ -818,12 +899,12 @@
           <span class="dock-label">Capabilities</span>
         </button>
 
-        <!-- 3D Playground Item -->
-        <button type="button" class="dock-item" data-action="playground" aria-label="Navigate to Particle Simulation">
+        <!-- Playground Item -->
+        <button type="button" class="dock-item" data-action="playground" aria-label="Navigate to Simulation">
           <span class="dock-icon">
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
           </span>
-          <span class="dock-label">Particles</span>
+          <span class="dock-label">Physics</span>
         </button>
 
         <!-- About / Philosophy Item -->
@@ -866,9 +947,9 @@
   <div id="cmdPaletteModal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Command Palette">
     <div class="cmd-palette-box interactive-zone">
       <div class="cmd-input-row">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class=""><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input type="text" id="cmdInput" placeholder="Type a command or jump to section..." autocomplete="off">
-        <kbd class="text-[10px] font-mono px-1.5 py-0.5 rounded border" id="closeCmdModal">ESC</kbd>
+        <kbd class="cmd-shortcut" id="closeCmdModal">ESC</kbd>
       </div>
       <ul id="cmdResultsList" class="cmd-results-list">
         <!-- Injected via JavaScript -->
@@ -878,12 +959,11 @@
 
   <!-- ============================================================
        FLOATING "LET'S TALK" POPOVER
-       (Sakthi-inspired floating quick-connect card)
        ============================================================ -->
   <div id="letsTalkPopover" class="lets-talk-popover interactive-zone" role="dialog" aria-modal="false" aria-label="Quick Contact Channels">
     <div class="popover-header">
-      <div class="flex items-center gap-2">
-        <span class="live-pulse-dot"></span>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span class="radar-dot" style="background: var(--accent-emerald);"></span>
         <span class="popover-status-text">AVAILABLE FOR WORK</span>
       </div>
       <button type="button" id="closeLetsTalkBtn" class="popover-close-btn" aria-label="Close dialog">✕</button>
@@ -919,19 +999,7 @@
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" class="channel-arrow"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
 
-        <!-- LinkedIn -->
-        <a href="https://linkedin.com" target="_blank" rel="noopener" class="channel-chip channel-linkedin">
-          <div class="channel-icon">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.68 1.68 0 1 0 0-3.36 1.68 1.68 0 0 0 0 3.36m1.39 9.74v-8.37H5.07v8.37h2.78z"/></svg>
-          </div>
-          <div class="channel-info">
-            <span class="channel-name">LinkedIn</span>
-            <span class="channel-action">Connect Professionally</span>
-          </div>
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" class="channel-arrow"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-
-        <!-- Copy Email -->
+        <!-- Direct Email -->
         <button type="button" class="channel-chip channel-email trigger-copy-email">
           <div class="channel-icon">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
@@ -951,7 +1019,7 @@
 
   <!-- JavaScript Modules -->
   <script src="cursor.js"></script>
-  <script src="particle-text.js"></script>
+  <script src="background.js"></script>
   <script src="dock.js"></script>
   <script src="app.js"></script>
 </body>

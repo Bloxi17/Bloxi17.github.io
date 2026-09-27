@@ -1,6 +1,8 @@
 /**
  * app.js — Main Application Controller
- * Handles scroll observer, command palette (Cmd+K), toast feedback, and playground controls
+ * Handles scroll progress, command palette (⌘K), toast feedback,
+ * 3D confidential folder dossier, Watermelon UI showcase widgets,
+ * and physics playground controls.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -13,11 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
   initKeyboardShortcuts();
   initFolderDossier();
   initLetsTalkPopover();
-  initStampTilt();
+  initWatermelonShowcase();
 });
 
 /* -------------------------------------------------------------
-   LIVE UTC & IST CLOCK
+   LIVE IST CLOCK (UTC+5:30)
    ------------------------------------------------------------- */
 function initClock() {
   const clockEl = document.getElementById('liveClock');
@@ -25,7 +27,6 @@ function initClock() {
 
   function update() {
     const now = new Date();
-    // Indian Standard Time (UTC+5:30)
     const istOptions = { 
       timeZone: 'Asia/Kolkata', 
       hour: '2-digit', 
@@ -61,6 +62,7 @@ function initScrollProgress() {
 function initNavObserver() {
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('.nav-link');
+  if (!sections.length || !navLinks.length) return;
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -95,19 +97,19 @@ function initCommandPalette() {
   if (!modal || !input || !list) return;
 
   const commands = [
-    { title: 'Navigate: Hero / Intro', category: 'Navigation', shortcut: '#home', action: () => scrollToSection('home') },
-    { title: 'Navigate: Featured Project (3D Dossier)', category: 'Case Study', shortcut: '#projects', action: () => scrollToSection('projects') },
-    { title: 'Navigate: Laboratory & Stamp Modules', category: 'Modules', shortcut: '#laboratory', action: () => scrollToSection('laboratory') },
-    { title: 'Navigate: Technical Stack & Capabilities', category: 'Skills', shortcut: '#capabilities', action: () => scrollToSection('capabilities') },
-    { title: 'Navigate: Particle Physics Calibration', category: 'Simulation', shortcut: '#playground', action: () => scrollToSection('playground') },
+    { title: 'Navigate: Hero / Radar Status', category: 'Navigation', shortcut: '#home', action: () => scrollToSection('home') },
+    { title: 'Navigate: Confidential Case Study (3D Dossier)', category: 'Case Study', shortcut: '#projects', action: () => scrollToSection('projects') },
+    { title: 'Navigate: Watermelon Interactive Component Lab', category: 'Showcase', shortcut: '#laboratory', action: () => scrollToSection('laboratory') },
+    { title: 'Navigate: Engineered Capabilities & Stack', category: 'Skills', shortcut: '#capabilities', action: () => scrollToSection('capabilities') },
+    { title: 'Navigate: Atmospheric Physics Calibration', category: 'Simulation', shortcut: '#playground', action: () => scrollToSection('playground') },
     { title: 'Navigate: Milestones & Journey Rail', category: 'Career', shortcut: '#journey', action: () => scrollToSection('journey') },
     { title: 'Navigate: Engineering Philosophy', category: 'About', shortcut: '#about', action: () => scrollToSection('about') },
-    { title: 'Navigate: Get in Touch / Terminal', category: 'Contact', shortcut: '#contact', action: () => scrollToSection('contact') },
-    { title: 'Action: Open Let\'s Talk Floating Popover', category: 'Connect', shortcut: 'T', action: () => window.toggleLetsTalkPopover(true) },
+    { title: 'Navigate: Direct Transmission / Contact', category: 'Contact', shortcut: '#contact', action: () => scrollToSection('contact') },
+    { title: 'Action: Open Let\'s Talk Floating Channels', category: 'Connect', shortcut: 'T', action: () => window.toggleLetsTalkPopover(true) },
     { title: 'Action: Copy Verified Email', category: 'Clipboard', shortcut: 'E', action: () => copyEmailToClipboard() },
+    { title: 'Action: Copy Terminal CLI Command', category: 'Clipboard', shortcut: 'CLI', action: () => copyCliCommand() },
     { title: 'Link: Open GitHub Profile (@Bloxi17)', category: 'External', shortcut: 'GH', action: () => window.open('https://github.com/Bloxi17', '_blank') },
-    { title: 'Link: Open First Step School Live App', category: 'External', shortcut: 'LIVE', action: () => window.open('https://firststepschool-kbp6.onrender.com', '_blank') },
-    { title: 'Toggle: Pause Particle Simulation', category: 'Simulation', shortcut: 'P', action: () => toggleParticleEngine() }
+    { title: 'Link: Open First Step School Live App', category: 'External', shortcut: 'LIVE', action: () => window.open('https://firststepschool-kbp6.onrender.com', '_blank') }
   ];
 
   function renderCommands(filterText = '') {
@@ -119,7 +121,7 @@ function initCommandPalette() {
     );
 
     if (filtered.length === 0) {
-      list.innerHTML = `<li class="cmd-item-empty">No commands matching "${filterText}"</li>`;
+      list.innerHTML = `<li class="cmd-item-empty" style="padding:1rem;color:var(--color-text-muted);font-size:13px;text-align:center;">No commands matching "${filterText}"</li>`;
       return;
     }
 
@@ -206,21 +208,11 @@ function scrollToSection(id) {
   }
 }
 
-let isParticlePaused = false;
-function toggleParticleEngine() {
-  const canvas = document.getElementById('particleCanvas');
-  if (!canvas) return;
-
-  isParticlePaused = !isParticlePaused;
-  canvas.style.opacity = isParticlePaused ? '0.1' : '1';
-  showToast(isParticlePaused ? 'Particle Simulation Paused (Low-Power)' : 'Particle Simulation Active');
-}
-
 /* -------------------------------------------------------------
    CLIPBOARD & TOAST NOTIFICATION
    ------------------------------------------------------------- */
 function initClipboardToast() {
-  const copyPills = document.querySelectorAll('.trigger-copy-email');
+  const copyPills = document.querySelectorAll('.trigger-copy-email, .email-copy-pill');
   copyPills.forEach(pill => {
     pill.addEventListener('click', () => {
       copyEmailToClipboard();
@@ -231,12 +223,27 @@ function initClipboardToast() {
 function copyEmailToClipboard() {
   const email = 'hamiltonjoel848@gmail.com';
   navigator.clipboard.writeText(email).then(() => {
-    showToast('✓ Email copied to clipboard');
+    showToast('✓ Email copied: hamiltonjoel848@gmail.com');
   }).catch(() => {
     showToast('hamiltonjoel848@gmail.com');
   });
 }
 window.copyEmailToClipboard = copyEmailToClipboard;
+
+function copyCliCommand() {
+  const command = 'npx ainesh@latest inspect';
+  navigator.clipboard.writeText(command).then(() => {
+    const copyBtn = document.getElementById('copyCliBtn');
+    const copyText = document.getElementById('copyCliText');
+    if (copyText) copyText.textContent = 'Copied! ✓';
+    showToast('✓ Command copied: npx ainesh@latest inspect');
+    setTimeout(() => {
+      if (copyText) copyText.textContent = 'Copy';
+    }, 2000);
+  }).catch(() => {
+    showToast('npx ainesh@latest inspect');
+  });
+}
 
 function showToast(message) {
   let toast = document.getElementById('appToast');
@@ -257,7 +264,83 @@ function showToast(message) {
 }
 
 /* -------------------------------------------------------------
-   PLAYGROUND CONTROLS
+   WATERMELON UI SHOWCASE WIDGET CONTROLLERS
+   ------------------------------------------------------------- */
+function initWatermelonShowcase() {
+  // 1. Hero CLI Copy Button
+  const cliBtn = document.getElementById('copyCliBtn');
+  if (cliBtn) {
+    cliBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      copyCliCommand();
+    });
+  }
+
+  // 2. Adaptive Spring Slider
+  const slider = document.getElementById('demoSlider');
+  const sliderVal = document.getElementById('demoSliderVal');
+  if (slider && sliderVal) {
+    slider.addEventListener('input', (e) => {
+      const val = e.target.value;
+      sliderVal.textContent = val;
+    });
+  }
+
+  // 3. Token & Gas Swap Widget
+  const swapFrom = document.getElementById('swapFromAmount');
+  const swapTo = document.getElementById('swapToAmount');
+  const swapBtn = document.getElementById('swapTriggerBtn');
+  const ethRate = 3250; // $3,250 USD per 1 ETH
+  let isEthToUsd = true;
+
+  function calculateSwap() {
+    if (!swapFrom || !swapTo) return;
+    const inputVal = parseFloat(swapFrom.value) || 0;
+    if (isEthToUsd) {
+      const usdVal = (inputVal * ethRate).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      swapTo.value = `$${usdVal}`;
+    } else {
+      const ethVal = (inputVal / ethRate).toFixed(4);
+      swapTo.value = `${ethVal} ETH`;
+    }
+  }
+
+  if (swapFrom) {
+    swapFrom.addEventListener('input', calculateSwap);
+  }
+
+  if (swapBtn) {
+    swapBtn.addEventListener('click', () => {
+      isEthToUsd = !isEthToUsd;
+      const badges = document.querySelectorAll('.swap-token-badge');
+      if (badges.length >= 2) {
+        const temp = badges[0].textContent;
+        badges[0].textContent = badges[1].textContent;
+        badges[1].textContent = temp;
+      }
+      calculateSwap();
+      showToast(isEthToUsd ? 'Swapping ETH → USD' : 'Swapping USD → ETH');
+    });
+  }
+
+  // 4. Architecture Disclosure Accordion
+  const disclosureItems = document.querySelectorAll('.disclosure-item');
+  disclosureItems.forEach(item => {
+    const trigger = item.querySelector('.disclosure-trigger');
+    if (trigger) {
+      trigger.addEventListener('click', () => {
+        const isOpen = item.classList.contains('open');
+        disclosureItems.forEach(i => i.classList.remove('open'));
+        if (!isOpen) {
+          item.classList.add('open');
+        }
+      });
+    }
+  });
+}
+
+/* -------------------------------------------------------------
+   ATMOSPHERIC PHYSICS CALIBRATION DECK
    ------------------------------------------------------------- */
 function initPlaygroundControls() {
   const forceSlider = document.getElementById('playForce');
@@ -271,13 +354,17 @@ function initPlaygroundControls() {
   const btnExplosive = document.getElementById('btnPresetExplosive');
   const btnFloating = document.getElementById('btnPresetFloating');
 
+  function updateAtmosphere(force, friction, radius) {
+    if (window.atmosphericBackground) {
+      window.atmosphericBackground.setPhysics(force, friction, radius);
+    }
+  }
+
   if (forceSlider && forceVal) {
     forceSlider.addEventListener('input', (e) => {
       const val = parseFloat(e.target.value);
       forceVal.textContent = `${val} N`;
-      if (window.particleTextEngine) {
-        window.particleTextEngine.dispersionForce = val;
-      }
+      updateAtmosphere(val, parseFloat(frictionSlider?.value || 0.95), parseInt(radiusSlider?.value || 200, 10));
     });
   }
 
@@ -285,9 +372,7 @@ function initPlaygroundControls() {
     frictionSlider.addEventListener('input', (e) => {
       const val = parseFloat(e.target.value);
       frictionVal.textContent = val.toFixed(2);
-      if (window.particleTextEngine) {
-        window.particleTextEngine.friction = val;
-      }
+      updateAtmosphere(parseFloat(forceSlider?.value || 15), val, parseInt(radiusSlider?.value || 200, 10));
     });
   }
 
@@ -295,9 +380,7 @@ function initPlaygroundControls() {
     radiusSlider.addEventListener('input', (e) => {
       const val = parseInt(e.target.value, 10);
       radiusVal.textContent = `${val}px`;
-      if (window.particleTextEngine) {
-        window.particleTextEngine.interactionRadius = val;
-      }
+      updateAtmosphere(parseFloat(forceSlider?.value || 15), parseFloat(frictionSlider?.value || 0.95), val);
     });
   }
 
@@ -306,15 +389,11 @@ function initPlaygroundControls() {
     if (frictionSlider) { frictionSlider.value = friction; frictionVal.textContent = friction.toFixed(2); }
     if (radiusSlider) { radiusSlider.value = radius; radiusVal.textContent = `${radius}px`; }
 
-    if (window.particleTextEngine) {
-      window.particleTextEngine.dispersionForce = force;
-      window.particleTextEngine.friction = friction;
-      window.particleTextEngine.interactionRadius = radius;
-    }
+    updateAtmosphere(force, friction, radius);
 
     [btnDefault, btnExplosive, btnFloating].forEach(b => b && b.classList.remove('active'));
     if (activeBtn) activeBtn.classList.add('active');
-    showToast(`Physics: ${force}N force, ${friction} friction, ${radius}px radius`);
+    showToast(`Physics Preset: ${force}N force, ${friction} friction, ${radius}px radius`);
   }
 
   if (btnDefault) btnDefault.addEventListener('click', () => applyPreset(15, 0.95, 200, btnDefault));
@@ -327,7 +406,7 @@ function initPlaygroundControls() {
    ------------------------------------------------------------- */
 function initKeyboardShortcuts() {
   window.addEventListener('keydown', (e) => {
-    // Cmd+K or Ctrl+K
+    // ⌘K or Ctrl+K
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
       e.preventDefault();
       if (window.openCommandPalette) window.openCommandPalette();
@@ -426,35 +505,5 @@ function initLetsTalkPopover() {
     if (e.key === 'Escape' && popover.classList.contains('open')) {
       window.toggleLetsTalkPopover(false);
     }
-  });
-}
-
-/* -------------------------------------------------------------
-   PERFORATED STAMP CARDS 3D TILT
-   ------------------------------------------------------------- */
-function initStampTilt() {
-  const cards = document.querySelectorAll('.stamp-card');
-  if (!cards.length) return;
-
-  // Only tilt on fine pointers (desktop)
-  if (window.matchMedia('(pointer: coarse)').matches) return;
-
-  cards.forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-      
-      const rotateX = ((y - centerY) / centerY) * -6;
-      const rotateY = ((x - centerX) / centerX) * 6;
-
-      card.style.transform = `perspective(800px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-4px)`;
-    });
-
-    card.addEventListener('mouseleave', () => {
-      card.style.transform = '';
-    });
   });
 }
