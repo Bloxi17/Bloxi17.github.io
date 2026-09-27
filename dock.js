@@ -1,252 +1,199 @@
 /**
- * dock.js — macOS Magnification Dock Component
- * Fluid magnification effects, spring physics, and tooltips
- * Adapted from Framer Motion MagnificationDock implementation
+ * dock.js — Cyber-Editorial Command Deck Controller
+ * Inspired by huyml.co and harshdayal.dev
+ * Features:
+ * - Apple-grade sliding pill active indicator with spring interpolation
+ * - Dual-mode architecture switcher (Experience Mode vs Brief Mode)
+ * - Section navigation with smooth scroll and active state sync
+ * - Quick action cluster triggers (Let's Talk, Cmd+K, Copy Email)
  */
 
-class MagnificationDock {
-  constructor(options = {}) {
-    this.container = document.getElementById('magnificationDock');
-    if (!this.container) return;
+class CommandDeck {
+  constructor() {
+    this.deck = document.getElementById('commandDeck');
+    if (!this.deck) return;
 
-    this.hitArea = this.container.querySelector('.dock-hit-area') || this.container;
-    this.panel = this.container.querySelector('.dock-panel');
-    this.items = Array.from(this.container.querySelectorAll('.dock-item'));
-    if (!this.items.length) return;
+    this.navPills = Array.from(this.deck.querySelectorAll('.deck-nav-pill'));
+    this.indicator = this.deck.querySelector('.sliding-pill-indicator');
+    this.modeButtons = Array.from(this.deck.querySelectorAll('.mode-toggle-btn'));
+    
+    this.activePill = this.navPills[0] || null;
+    this.isBriefMode = false;
 
-    // Detect touch / coarse pointer
-    this.isTouch = window.matchMedia('(pointer: coarse)').matches;
-
-    // Configuration
-    this.distance = options.distance || 190;
-    this.panelHeight = options.panelHeight || 68;
-    this.baseItemSize = options.baseItemSize || 50;
-    this.magnification = options.magnification || 78;
-
-    // Spring Physics parameters: { mass: 0.1, stiffness: 150, damping: 12 }
-    this.stiffness = 150;
-    this.damping = 12;
-    this.mass = 0.1;
-
-    // State per item
-    this.itemStates = this.items.map(el => ({
-      el,
-      labelEl: el.querySelector('.dock-label'),
-      iconEl: el.querySelector('.dock-icon'),
-      currentSize: this.baseItemSize,
-      targetSize: this.baseItemSize,
-      velocity: 0
-    }));
-
-    this.mouseX = Infinity;
-    this.isHoveringDock = false;
-    this.animating = false;
-
-    this.bindEvents();
+    this.init();
   }
 
-  bindEvents() {
-    // On touch devices, skip hover magnification to ensure 100% reliable instant taps
-    if (!this.isTouch) {
-      // Use hitArea (with top padding) to prevent jitter when cursor reaches top of magnified icon
-      this.hitArea.addEventListener('pointerenter', () => {
-        this.isHoveringDock = true;
-        this.startLoop();
-      });
+  init() {
+    this.bindNavigation();
+    this.bindModeSwitcher();
+    this.bindScrollObserver();
+    this.bindActionButtons();
+    
+    // Position indicator initially after layout settles
+    requestAnimationFrame(() => {
+      this.updateIndicatorPosition(this.activePill, false);
+    });
 
-      this.hitArea.addEventListener('pointermove', (e) => {
-        this.mouseX = e.clientX;
-        this.calculateTargets();
-        if (!this.animating) {
-          this.startLoop();
-        }
-      });
+    window.addEventListener('resize', () => {
+      if (this.activePill) {
+        this.updateIndicatorPosition(this.activePill, false);
+      }
+    }, { passive: true });
+  }
 
-      this.hitArea.addEventListener('pointerleave', () => {
-        this.isHoveringDock = false;
-        this.mouseX = Infinity;
-        this.itemStates.forEach(item => {
-          item.targetSize = this.baseItemSize;
-        });
-      });
-    }
+  updateIndicatorPosition(targetPill, animate = true) {
+    if (!this.indicator || !targetPill) return;
 
-    // Direct, bulletproof click / tap handling on each item
-    this.items.forEach((item) => {
-      // Handle click
-      item.addEventListener('click', (e) => {
+    const navContainer = targetPill.parentElement;
+    const navRect = navContainer.getBoundingClientRect();
+    const pillRect = targetPill.getBoundingClientRect();
+
+    const left = pillRect.left - navRect.left;
+    const width = pillRect.width;
+
+    this.indicator.style.transition = animate ? 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)' : 'none';
+    this.indicator.style.transform = `translateX(${left}px)`;
+    this.indicator.style.width = `${width}px`;
+    this.indicator.style.opacity = '1';
+  }
+
+  bindNavigation() {
+    this.navPills.forEach(pill => {
+      pill.addEventListener('click', (e) => {
         e.preventDefault();
-        e.stopPropagation();
-        const action = item.dataset.action;
-        if (action) {
-          this.handleAction(action);
-        }
+        const targetId = pill.dataset.target;
+        if (!targetId) return;
+
+        this.setActivePill(pill);
+        this.scrollToSection(targetId);
       });
 
-      // Pointerdown feedback
-      item.addEventListener('pointerdown', () => {
-        item.style.transform = 'scale(0.92)';
-      });
-
-      const release = () => {
-        item.style.transform = '';
-      };
-      item.addEventListener('pointerup', release);
-      item.addEventListener('pointercancel', release);
-      item.addEventListener('mouseleave', release);
-
-      // Keyboard Accessibility (Enter / Space)
-      item.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          const action = item.dataset.action;
-          if (action) {
-            this.handleAction(action);
-          }
-        }
+      // Hover preview preview move
+      pill.addEventListener('pointerenter', () => {
+        this.updateIndicatorPosition(pill, true);
       });
     });
+
+    const navContainer = this.deck.querySelector('.deck-nav-cluster');
+    if (navContainer) {
+      navContainer.addEventListener('pointerleave', () => {
+        if (this.activePill) {
+          this.updateIndicatorPosition(this.activePill, true);
+        }
+      });
+    }
   }
 
-  calculateTargets() {
-    if (this.mouseX === Infinity) {
-      this.itemStates.forEach(item => {
-        item.targetSize = this.baseItemSize;
-      });
+  setActivePill(pill) {
+    if (!pill) return;
+    this.activePill = pill;
+    this.navPills.forEach(p => p.classList.toggle('active', p === pill));
+    this.updateIndicatorPosition(pill, true);
+  }
+
+  scrollToSection(id) {
+    if (id === 'home') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
-
-    this.itemStates.forEach(item => {
-      const rect = item.el.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const dist = Math.abs(this.mouseX - centerX);
-
-      if (dist < this.distance) {
-        // Cosine smooth bell-curve magnification from baseItemSize to magnification
-        const factor = Math.cos((dist / this.distance) * (Math.PI / 2));
-        item.targetSize = this.baseItemSize + (this.magnification - this.baseItemSize) * factor;
-      } else {
-        item.targetSize = this.baseItemSize;
-      }
-    });
-  }
-
-  handleAction(action) {
-    switch (action) {
-      case 'home':
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        break;
-      case 'projects':
-        this.scrollTo('projects');
-        break;
-      case 'laboratory':
-        this.scrollTo('laboratory');
-        break;
-      case 'capabilities':
-        this.scrollTo('capabilities');
-        break;
-      case 'playground':
-        this.scrollTo('playground');
-        break;
-      case 'about':
-        this.scrollTo('about');
-        break;
-      case 'contact':
-        if (window.toggleLetsTalkPopover) {
-          window.toggleLetsTalkPopover(true);
-        } else {
-          this.scrollTo('contact');
-        }
-        break;
-      case 'github':
-        window.open('https://github.com/Bloxi17', '_blank');
-        break;
-      case 'search':
-        if (window.openCommandPalette) {
-          window.openCommandPalette();
-        } else {
-          const btn = document.querySelector('.trigger-cmd-palette');
-          if (btn) btn.click();
-        }
-        break;
-      case 'email':
-        if (window.copyEmailToClipboard) {
-          window.copyEmailToClipboard();
-        } else {
-          navigator.clipboard?.writeText('hamiltonjoel848@gmail.com');
-          alert('Email copied: hamiltonjoel848@gmail.com');
-        }
-        break;
-    }
-  }
-
-  scrollTo(id) {
     const el = document.getElementById(id);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
     }
   }
 
-  startLoop() {
-    if (this.animating) return;
-    this.animating = true;
-    let lastTime = performance.now();
+  bindScrollObserver() {
+    const sections = this.navPills.map(p => document.getElementById(p.dataset.target)).filter(Boolean);
+    if (!sections.length) return;
 
-    const loop = (now) => {
-      const dt = Math.min((now - lastTime) / 1000, 0.032);
-      lastTime = now;
-
-      let stillMoving = false;
-
-      this.itemStates.forEach(item => {
-        // Spring physics: F = -k*(x - target) - c*v
-        const displacement = item.currentSize - item.targetSize;
-        const springForce = -this.stiffness * displacement;
-        const dampingForce = -this.damping * item.velocity;
-        const acceleration = (springForce + dampingForce) / this.mass;
-
-        item.velocity += acceleration * dt;
-        item.currentSize += item.velocity * dt;
-
-        // Apply width and height
-        item.el.style.width = `${item.currentSize.toFixed(1)}px`;
-        item.el.style.height = `${item.currentSize.toFixed(1)}px`;
-
-        // Scale icon inside
-        const scale = item.currentSize / this.baseItemSize;
-        if (item.iconEl) {
-          item.iconEl.style.transform = `scale(${Math.min(1.4, Math.max(1, scale * 0.95)).toFixed(2)})`;
-        }
-
-        if (Math.abs(item.velocity) > 0.05 || Math.abs(displacement) > 0.1) {
-          stillMoving = true;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          const matchingPill = this.navPills.find(p => p.dataset.target === id);
+          if (matchingPill && matchingPill !== this.activePill) {
+            this.setActivePill(matchingPill);
+          }
         }
       });
+    }, {
+      rootMargin: '-30% 0px -60% 0px'
+    });
 
-      if (stillMoving || this.isHoveringDock) {
-        requestAnimationFrame(loop);
-      } else {
-        this.animating = false;
-        // Settle cleanly to base size
-        this.itemStates.forEach(item => {
-          item.currentSize = this.baseItemSize;
-          item.el.style.width = `${this.baseItemSize}px`;
-          item.el.style.height = `${this.baseItemSize}px`;
-          if (item.iconEl) item.iconEl.style.transform = 'scale(1)';
-        });
-      }
-    };
+    sections.forEach(s => observer.observe(s));
+  }
 
-    requestAnimationFrame(loop);
+  bindModeSwitcher() {
+    this.modeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const mode = btn.dataset.mode;
+        this.setMode(mode);
+      });
+    });
+  }
+
+  setMode(mode) {
+    this.isBriefMode = mode === 'brief';
+    document.documentElement.setAttribute('data-mode', mode);
+
+    this.modeButtons.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.mode === mode);
+    });
+
+    if (window.soundEngine) {
+      window.soundEngine.playModeChime(this.isBriefMode);
+    }
+
+    if (window.showToast) {
+      window.showToast(this.isBriefMode 
+        ? '⚡ Brief Mode Active: Optimized for Fast Recruiter Scanning' 
+        : '✦ Experience Mode Active: 60 FPS Particle Mesh & Interactive Physics');
+    }
+
+    // In brief mode, reduce background particle canvas distraction
+    const canvas = document.getElementById('ambientCanvas');
+    if (canvas) {
+      canvas.style.transition = 'opacity 0.4s ease';
+      canvas.style.opacity = this.isBriefMode ? '0.08' : '1';
+    }
+  }
+
+  bindActionButtons() {
+    // Quick Connect / Talk button
+    const talkBtn = this.deck.querySelector('.deck-action-talk');
+    if (talkBtn) {
+      talkBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (window.toggleLetsTalkPopover) {
+          window.toggleLetsTalkPopover();
+        }
+      });
+    }
+
+    // Search button (Cmd+K)
+    const searchBtn = this.deck.querySelector('.deck-action-search');
+    if (searchBtn) {
+      searchBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (window.openCommandPalette) {
+          window.openCommandPalette();
+        }
+      });
+    }
+
+    // Email quick copy
+    const emailBtn = this.deck.querySelector('.deck-action-email');
+    if (emailBtn) {
+      emailBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (window.copyEmailToClipboard) {
+          window.copyEmailToClipboard();
+        }
+      });
+    }
   }
 }
 
-// Global initialization
 window.addEventListener('DOMContentLoaded', () => {
-  window.magnificationDock = new MagnificationDock({
-    distance: 190,
-    panelHeight: 68,
-    baseItemSize: 50,
-    magnification: 78
-  });
+  window.commandDeck = new CommandDeck();
 });

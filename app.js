@@ -262,6 +262,7 @@ function showToast(message) {
     toast.classList.remove('show');
   }, 2400);
 }
+window.showToast = showToast;
 
 /* -------------------------------------------------------------
    WATERMELON UI SHOWCASE WIDGET CONTROLLERS
