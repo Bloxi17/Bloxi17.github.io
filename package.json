@@ -1,0 +1,20 @@
+{
+  "name": "ainesh-portfolio",
+  "version": "2.4.0",
+  "description": "Personal developer portfolio and introduction website for Ainesh Joel Hamilton (@Bloxi17)",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx serve . -p 3000",
+    "start": "npx serve . -p 3000"
+  },
+  "keywords": [
+    "portfolio",
+    "developer",
+    "threejs",
+    "webgl",
+    "apple-design",
+    "minimalist"
+  ],
+  "author": "Ainesh Joel Hamilton",
+  "license": "MIT"
+}

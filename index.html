@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Ainesh Joel Hamilton — Full-Stack Developer & Creative UI Engineer</title>
+  <meta name="description" content="Portfolio of Ainesh Joel Hamilton (@Bloxi17). Full-stack web developer and creative UI engineer specializing in performant Node.js platforms, interactive 3D WebGL graphics, and fluid Apple-grade motion.">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Ainesh Joel Hamilton — Full-Stack Developer & Creative UI Engineer">
+  <meta property="og:description" content="Architecting resilient full-stack systems with Node.js & SQLite, coupled with hardware-accelerated 3D WebGL motion and tactile user interfaces.">
+  <meta property="og:url" content="https://bloxi17.github.io">
+  <meta property="og:type" content="website">
+
+  <!-- Typography Preconnects (Geist & JetBrains Mono) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&family=Geist:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Three.js Library -->
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+</head>
+<body>
+
+  <!-- Background Grain Texture -->
+  <div class="grain-overlay" aria-hidden="true"></div>
+
+  <!-- Interactive 3D WebGL Background Canvas -->
+  <canvas id="webgl-background" data-cursor="drag" data-cursor-text="ORBIT" aria-label="Interactive 3D WebGL Background"></canvas>
+
+  <!-- Top Scroll Progress Indicator -->
+  <div id="scrollProgressBar" class="scroll-progress-line" aria-hidden="true"></div>
+
+  <!-- Two-Tier Fluid Magnetic Cursor -->
+  <div id="cursorDot" class="cursor-dot is-hidden" aria-hidden="true"></div>
+  <div id="cursorRing" class="cursor-ring is-hidden" aria-hidden="true">
+    <span class="cursor-text"></span>
+  </div>
+
+  <!-- Apple-Grade Frosted Dock (Navbar) -->
+  <header class="navbar-dock-wrapper">
+    <nav class="navbar-dock" aria-label="Main Navigation">
+      <a href="#home" class="navbar-brand" aria-label="Ainesh Hamilton Home">
+        <span class="brand-monogram">AH</span>
+        <span class="brand-name">Ainesh Hamilton</span>
+      </a>
+
+      <ul class="nav-menu">
+        <li><a href="#home" class="nav-link active">Home</a></li>
+        <li><a href="#projects" class="nav-link">Projects</a></li>
+        <li><a href="#capabilities" class="nav-link">Capabilities</a></li>
+        <li><a href="#playground" class="nav-link">Playground</a></li>
+        <li><a href="#about" class="nav-link">About</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+      </ul>
+
+      <div class="nav-controls">
+        <button class="btn-cmd-palette trigger-cmd-palette" aria-label="Open Command Palette">
+          <span>Search</span>
+          <kbd>⌘K</kbd>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Content Layer (Pointer-through where empty) -->
+  <div class="content-wrapper">
+    <main>
+
+      <!-- ============================================================
+           HERO SECTION
+           ============================================================ -->
+      <section class="hero-section" id="home">
+        <div class="container hero-container">
+          <div class="hero-layout interactive-zone">
+            
+            <!-- Real-Time Telemetry Tag -->
+            <div class="telemetry-tag">
+              <span class="telemetry-dot"></span>
+              <span>SYSTEM: ONLINE</span>
+              <span class="text-dim">•</span>
+              <span id="liveClock">--:--:-- IST</span>
+              <span class="text-dim">•</span>
+              <span>CHHINDWARA / REMOTE</span>
+            </div>
+
+            <!-- Monumental Headline -->
+            <h1 class="hero-headline">
+              Full-Stack Software Engineer & <span class="text-gradient">Creative UI Architect.</span>
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="hero-subhead">
+              Hi, I'm <strong>Ainesh Joel Hamilton</strong> (<strong>@Bloxi17</strong>). I architect resilient full-stack platforms with Node.js and SQL, coupled with hardware-accelerated 3D WebGL motion, fluid Apple-grade physics, and zero-latency interfaces.
+            </p>
+
+            <!-- Actions -->
+            <div class="hero-actions">
+              <a href="#projects" class="btn btn-primary btn-magnetic" data-cursor="view" data-cursor-text="SHOWCASE">
+                <span>Inspect Flagship Work</span>
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+
+              <a href="https://github.com/Bloxi17" target="_blank" rel="noopener" class="btn btn-secondary btn-magnetic">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>GitHub @Bloxi17</span>
+              </a>
+
+              <button class="btn btn-secondary trigger-copy-email btn-magnetic" title="Click to copy email">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <span>Copy Email</span>
+              </button>
+            </div>
+
+            <!-- Tech Ticker Bar -->
+            <div class="tech-ticker-bar">
+              <span class="text-dim">PROVEN STACK //</span>
+              <div class="tech-ticker-items">
+                <span>Node.js</span>
+                <span>•</span>
+                <span>Express</span>
+                <span>•</span>
+                <span>SQLite</span>
+                <span>•</span>
+                <span>Three.js</span>
+                <span>•</span>
+                <span>HTML5 Canvas 3D</span>
+                <span>•</span>
+                <span>JavaScript (ES6+)</span>
+                <span>•</span>
+                <span>REST APIs</span>
+                <span>•</span>
+                <span>Git</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           FEATURED CASE STUDY: FIRST STEP SENIOR SECONDARY SCHOOL
+           ============================================================ -->
+      <section class="section" id="projects">
+        <div class="container">
+          
+          <div class="section-header interactive-zone">
+            <span class="section-kicker">Case Study // 01</span>
+            <h2 class="section-title">Flagship Engineering: First Step School</h2>
+            <p class="section-lead">
+              A modern, full-stack educational web platform custom-architected for a premier 34-year educational institution in Chhindwara, M.P.
+            </p>
+          </div>
+
+          <!-- Flagship Project Card -->
+          <div class="flagship-panel interactive-zone" data-cursor="view" data-cursor-text="CASE">
+            
+            <div class="flagship-badge-row">
+              <div class="flex items-center gap-2">
+                <span class="case-study-tag">FULL-STACK PRODUCTION PLATFORM</span>
+                <span class="case-status-badge">DEPLOYED ON RENDER</span>
+              </div>
+              <span class="text-xs font-mono text-[#71717a]">EST. 1990 • RE-ENGINEERED 2026</span>
+            </div>
+
+            <h3 class="flagship-title">First Step Senior Secondary School Digital Platform</h3>
+            
+            <p class="flagship-desc">
+              Replaced legacy infrastructure with a secure, high-framerate web platform featuring dynamic CMS content administration, real-time admissions pipeline handling, and an in-house hardware-accelerated 3D motion design system.
+            </p>
+
+            <!-- 4 Architectural Modules -->
+            <div class="flagship-breakdown-grid">
+              
+              <div class="breakdown-card">
+                <div class="breakdown-card-header">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" class="text-blue-400"><polygon points="12 2 2 7 12 12 22 7 12 2"/></svg>
+                  <span>3D Fluid Mesh Wave</span>
+                </div>
+                <p class="breakdown-card-text">
+                  Custom HTML5 Canvas rendering engine with layered, living ribbons in Gold, Navy & Crimson running at steady 60 FPS on mobile devices with zero DOM overhead.
+                </p>
+              </div>
+
+              <div class="breakdown-card">
+                <div class="breakdown-card-header">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" class="text-blue-400"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                  <span>Full-Stack Node.js CMS</span>
+                </div>
+                <p class="breakdown-card-text">
+                  Express backend powered by an embedded SQLite (<code class="text-blue-400">better-sqlite3</code>) database with JWT authentication and real-time admissions inquiry handling.
+                </p>
+              </div>
+
+              <div class="breakdown-card">
+                <div class="breakdown-card-header">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" class="text-blue-400"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                  <span>Touch-Optimized UX</span>
+                </div>
+                <p class="breakdown-card-text">
+                  Zero-glitch mobile drawer with dedicated touch event handling, spring momentum deceleration, and instantaneous pointerdown feedback.
+                </p>
+              </div>
+
+              <div class="breakdown-card">
+                <div class="breakdown-card-header">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" class="text-blue-400"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  <span>Sub-Second Performance</span>
+                </div>
+                <p class="breakdown-card-text">
+                  Sub-second LCP (Largest Contentful Paint), zero cumulative layout shifts (CLS), and modular asset bundling keeping cold loads under 200KB.
+                </p>
+              </div>
+
+            </div>
+
+            <!-- Footer Meta & Links -->
+            <div class="flagship-footer-bar">
+              <div class="tech-pills">
+                <span class="tech-pill">Node.js</span>
+                <span class="tech-pill">Express</span>
+                <span class="tech-pill">better-sqlite3</span>
+                <span class="tech-pill">HTML5 Canvas</span>
+                <span class="tech-pill">GSAP</span>
+                <span class="tech-pill">JWT Auth</span>
+                <span class="tech-pill">REST APIs</span>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <a href="https://firststepschool-kbp6.onrender.com" target="_blank" rel="noopener" class="btn btn-primary btn-sm btn-magnetic">
+                  <span>Visit Live Platform</span>
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+                </a>
+                <a href="https://github.com/Bloxi17/FIRSTSTEP" target="_blank" rel="noopener" class="btn btn-secondary btn-sm btn-magnetic">
+                  <span>View Repository</span>
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+                </a>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ============================================================
+           CAPABILITIES: ASYMMETRICAL BENTO GRID
+           ============================================================ -->
+      <section class="section" id="capabilities">
+        <div class="container">
+          
+          <div class="section-header interactive-zone">
+            <span class="section-kicker">Index // 02</span>
+            <h2 class="section-title">Engineered Capabilities & Core Paradigms</h2>
+            <p class="section-lead">
+              A balanced mastery bridging heavy backend architectures, relational data modeling, and mathematical creative frontends.
+            </p>
+          </div>
+
+          <div class="bento-grid interactive-zone">
+            
+            <!-- Card 1: Backend & Systems (Span 8) -->
+            <div class="bento-card bento-span-8">
+              <div>
+                <div class="bento-icon">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+                </div>
+                <h3 class="bento-title">Backend Architecture & Data Integrity</h3>
+                <p class="bento-desc">
+                  Designing robust server runtimes with Node.js and Express. Authoring high-performance SQL schemas with SQLite and PostgreSQL, sanitizing input with prepared statements, and securing microservices with JWT stateless auth.
+                </p>
+              </div>
+
+              <div class="bento-subgrid">
+                <div class="bento-subitem">
+                  <div class="bento-subitem-title">Node / Express</div>
+                  <div class="bento-subitem-detail">REST API Pipelines</div>
+                </div>
+                <div class="bento-subitem">
+                  <div class="bento-subitem-title">Relational SQL</div>
+                  <div class="bento-subitem-detail">SQLite / better-sqlite3</div>
+                </div>
+                <div class="bento-subitem">
+                  <div class="bento-subitem-title">Auth Pipelines</div>
+                  <div class="bento-subitem-detail">JWT / Session Security</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2: 3D & Creative Motion (Span 4) -->
+            <div class="bento-card bento-span-4">
+              <div>
+                <div class="bento-icon">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+                </div>
+                <h3 class="bento-title">3D WebGL & Physics</h3>
+                <p class="bento-desc">
+                  Translating mathematical geometry into interactive Three.js and HTML5 Canvas simulations running locked at 60 FPS.
+                </p>
+              </div>
+
+              <div class="bento-subgrid">
+                <div class="bento-subitem">
+                  <div class="bento-subitem-title">Three.js / WebGL</div>
+                  <div class="bento-subitem-detail">Shaders & Meshes</div>
+                </div>
+                <div class="bento-subitem">
+                  <div class="bento-subitem-title">Canvas 2D/3D</div>
+                  <div class="bento-subitem-detail">Wave & Fluid Math</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 3: Apple Fluid Motion (Span 4) -->
+            <div class="bento-card bento-span-4">
+              <div>
+                <div class="bento-icon">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                </div>
+                <h3 class="bento-title">Apple Fluid Interfaces</h3>
+                <p class="bento-desc">
+                  Spring physics, direct 1:1 manipulation, velocity handoff, and interruptible state transitions without layout jank.
+                </p>
+              </div>
+
+              <div class="bento-subgrid">
+                <div class="bento-subitem">
+                  <div class="bento-subitem-title">Spring Physics</div>
+                  <div class="bento-subitem-detail">Damping 1.0 & 0.8</div>
+                </div>
+                <div class="bento-subitem">
+                  <div class="bento-subitem-title">Zero Latency</div>
+                  <div class="bento-subitem-detail">Pointerdown response</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 4: Web Performance & Infrastructure (Span 8) -->
+            <div class="bento-card bento-span-8">
+              <div>
+                <div class="bento-icon">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                </div>
+                <h3 class="bento-title">Performance Engineering & Tooling</h3>
+                <p class="bento-desc">
+                  Optimizing Critical Rendering Paths (CRP), asset compression, GPU layer compositing, and Git CI/CD deployment pipelines on Linux cloud platforms like Render and GitHub Pages.
+                </p>
+              </div>
+
+              <div class="bento-subgrid">
+                <div class="bento-subitem">
+                  <div class="bento-subitem-title">Core Web Vitals</div>
+                  <div class="bento-subitem-detail">Sub-Second LCP / 0 CLS</div>
+                </div>
+                <div class="bento-subitem">
+                  <div class="bento-subitem-title">Git & CI/CD</div>
+                  <div class="bento-subitem-detail">Automated Releases</div>
+                </div>
+                <div class="bento-subitem">
+                  <div class="bento-subitem-title">Memory Profiling</div>
+                  <div class="bento-subitem-detail">Zero Leak Guarantees</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ============================================================
+           INTERACTIVE 3D & SHADER PLAYGROUND
+           ============================================================ -->
+      <section class="section" id="playground">
+        <div class="container">
+          
+          <div class="section-header interactive-zone">
+            <span class="section-kicker">Experiments // 03</span>
+            <h2 class="section-title">Live 3D Engine Playground</h2>
+            <p class="section-lead">
+              Calibrate the real-time procedural WebGL background core directly. Tweak rotation velocity, wireframe density, and mesh colors in real time.
+            </p>
+          </div>
+
+          <div class="playground-deck interactive-zone">
+            
+            <div class="control-group">
+              <span class="text-xs font-mono text-blue-400 uppercase tracking-wider">Parameters & Physics</span>
+
+              <div class="control-item">
+                <div class="control-label">
+                  <span>ORBIT VELOCITY</span>
+                  <span id="playSpeedVal">1.0x</span>
+                </div>
+                <input id="playSpeed" type="range" min="0" max="3" step="0.1" value="1.0" class="slider-input">
+              </div>
+
+              <div class="control-item">
+                <div class="control-label">
+                  <span>GEOMETRY TOGGLES</span>
+                </div>
+                <div class="toggle-group">
+                  <button id="playToggleWireframe" class="toggle-btn active">WIREFRAME</button>
+                  <button id="playToggleCore" class="toggle-btn active">INNER CORE</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <span class="text-xs font-mono text-blue-400 uppercase tracking-wider">Aesthetic Calibration</span>
+
+              <div class="control-item">
+                <div class="control-label">
+                  <span>EDGE ILLUMINATION COLOR</span>
+                </div>
+                <div class="flex items-center gap-2 pt-1">
+                  <button class="play-color-btn active w-6 h-6 rounded-full bg-blue-500 border-2 border-white transition-transform active:scale-95" data-color="3b82f6" title="Electric Cobalt"></button>
+                  <button class="play-color-btn w-6 h-6 rounded-full bg-cyan-400 border border-transparent transition-transform active:scale-95" data-color="06b6d4" title="Cyan"></button>
+                  <button class="play-color-btn w-6 h-6 rounded-full bg-emerald-400 border border-transparent transition-transform active:scale-95" data-color="10b981" title="Emerald"></button>
+                  <button class="play-color-btn w-6 h-6 rounded-full bg-zinc-200 border border-transparent transition-transform active:scale-95" data-color="e4e4e7" title="Titanium White"></button>
+                  <button class="play-color-btn w-6 h-6 rounded-full bg-amber-400 border border-transparent transition-transform active:scale-95" data-color="f59e0b" title="Amber"></button>
+                </div>
+              </div>
+
+              <div class="control-item pt-2 border-t border-[#27272a]">
+                <p class="text-xs text-[#a1a1aa] font-mono leading-relaxed">
+                  TIP: You can also click, drag, and flick the 3D core in the background anywhere to experience Apple momentum handoff.
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ============================================================
+           ENGINEERING PHILOSOPHY
+           ============================================================ -->
+      <section class="section" id="about">
+        <div class="container">
+          
+          <div class="section-header interactive-zone">
+            <span class="section-kicker">Philosophy // 04</span>
+            <h2 class="section-title">Craft Over Cliché</h2>
+            <p class="section-lead">
+              The invisible details that separate boilerplate templates from software that feels alive.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 interactive-zone">
+            
+            <div class="bento-card">
+              <span class="text-xs font-mono text-blue-400 mb-2 block">01 // LATENCY</span>
+              <h3 class="text-lg font-semibold mb-2">Instant Response</h3>
+              <p class="text-sm text-[#a1a1aa] leading-relaxed">
+                The feeling of direct manipulation collapses the millisecond lag is introduced. Every button, drawer, and input responds on pointerdown with hardware-accelerated GPU transforms.
+              </p>
+            </div>
+
+            <div class="bento-card">
+              <span class="text-xs font-mono text-blue-400 mb-2 block">02 // ARCHITECTURE</span>
+              <h3 class="text-lg font-semibold mb-2">Relational Rigor</h3>
+              <p class="text-sm text-[#a1a1aa] leading-relaxed">
+                A flashy frontend without dependable data architecture is a facade. I write disciplined SQL, secure authentication boundaries, and clean Node.js backend controllers.
+              </p>
+            </div>
+
+            <div class="bento-card">
+              <span class="text-xs font-mono text-blue-400 mb-2 block">03 // RESTRAINT</span>
+              <h3 class="text-lg font-semibold mb-2">Restraint & Taste</h3>
+              <p class="text-sm text-[#a1a1aa] leading-relaxed">
+                Rejection of AI slop: no gratuitous glowing purple gradients, no emoji clutter, no decorative animation without tactile purpose. Every element earns its place.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ============================================================
+           CONTACT TERMINAL & COMMAND CENTER
+           ============================================================ -->
+      <section class="section" id="contact">
+        <div class="container">
+          
+          <div class="contact-terminal interactive-zone">
+            <div class="terminal-header">TRANSMISSION // DIRECT CONTACT</div>
+            <h2 class="contact-headline">Initiate Collaboration</h2>
+            <p class="contact-body">
+              Interested in collaborating on high-throughput full-stack platforms, bespoke 3D web applications, or software engineering roles? I'd love to connect.
+            </p>
+
+            <!-- Tactile Copy Email Pill -->
+            <div>
+              <button class="email-copy-pill trigger-copy-email btn-magnetic" title="Click to copy verified email address">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" class="text-blue-400"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <span>hamiltonjoel848@gmail.com</span>
+                <span class="text-[10px] text-zinc-500 font-mono">[COPY]</span>
+              </button>
+            </div>
+
+            <!-- Alternative Links -->
+            <div class="flex items-center justify-center gap-4 flex-wrap">
+              <a href="https://github.com/Bloxi17" target="_blank" rel="noopener" class="btn btn-secondary btn-sm btn-magnetic">
+                <span>GitHub @Bloxi17</span>
+              </a>
+              <a href="mailto:hamiltonjoel848@gmail.com" class="btn btn-primary btn-sm btn-magnetic">
+                <span>Send Mail Directly</span>
+              </a>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-[#27272a] text-xs font-mono text-[#71717a] flex items-center justify-center gap-4 flex-wrap">
+              <span>LOCATION: INDIA</span>
+              <span>•</span>
+              <span>TIMEZONE: UTC+5:30</span>
+              <span>•</span>
+              <span>DOMAIN: BLOXI17.GITHUB.IO</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container footer-content interactive-zone">
+        <div class="flex items-center gap-2">
+          <span class="brand-monogram">AH</span>
+          <span>Ainesh Joel Hamilton • Portfolio</span>
+        </div>
+        <div class="font-mono text-xs text-[#71717a]">
+          DESIGNED WITH CRAFT • 60/120 FPS WEBGL • BUILD v2.4.0
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Command Palette Modal (Cmd + K) -->
+  <div id="cmdPaletteModal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Command Palette">
+    <div class="cmd-palette-box interactive-zone">
+      <div class="cmd-input-row">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="text-zinc-500"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="cmdInput" placeholder="Type a command or jump to section..." autocomplete="off">
+        <kbd class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#18181c] border border-[#27272a] text-zinc-400" id="closeCmdModal">ESC</kbd>
+      </div>
+      <ul id="cmdResultsList" class="cmd-results-list">
+        <!-- Injected via JavaScript -->
+      </ul>
+    </div>
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script src="cursor.js"></script>
+  <script src="three-scene.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
