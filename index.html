@@ -12,67 +12,20 @@
   <meta property="og:url" content="https://bloxi17.github.io">
   <meta property="og:type" content="website">
 
-  <!-- Google Fonts: Instrument Serif, Inter, JetBrains Mono, and Caveat -->
+  <!-- Google Fonts: Space Grotesk (Primary Typographic System) & Caveat -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="style.css">
-
-  <!-- Three.js Library -->
-  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
 </head>
 <body>
 
-  <!-- Film Grain Overlay -->
-  <div class="grain-overlay" aria-hidden="true"></div>
-
-  <!-- Interactive 3D WebGL Background Canvas (Scroll-linked across sections) -->
-  <canvas id="webgl-background" data-cursor="drag" data-cursor-text="ORBIT" aria-label="Interactive 3D WebGL Background"></canvas>
+  <!-- Custom 12px Black Circle Cursor (mix-blend-mode: difference) -->
+  <div id="cursorDot" class="custom-difference-cursor" aria-hidden="true"></div>
 
   <!-- Top Scroll Progress Line -->
   <div id="scrollProgressBar" class="scroll-progress-line" aria-hidden="true"></div>
-
-  <!-- Two-Tier Fluid Magnetic Cursor -->
-  <div id="cursorDot" class="cursor-dot is-hidden" aria-hidden="true"></div>
-  <div id="cursorRing" class="cursor-ring is-hidden" aria-hidden="true">
-    <span class="cursor-text"></span>
-  </div>
-
-  <!-- ============================================================
-       TOP NAVIGATION: 3-COLUMN DISTRIBUTED BAR (PER SPEC)
-       ============================================================ -->
-  <header class="top-nav-wrapper">
-    <div class="top-nav-container">
-      
-      <!-- Left Col: Brand logo using Instrument Serif at 30px with trademark -->
-      <a href="#home" class="nav-brand-logo" aria-label="Ainesh Joel Hamilton">
-        <span>Ainesh Hamilton</span><sup>®</sup>
-      </a>
-
-      <!-- Center Col: 4 Horizontal Links in Inter 14px Medium (Hidden on mobile) -->
-      <nav class="nav-center-links" aria-label="Main Navigation">
-        <a href="#projects">Projects</a>
-        <a href="#capabilities">Capabilities</a>
-        <a href="#playground">Playground</a>
-        <a href="#about">Philosophy</a>
-      </nav>
-
-      <!-- Right Col: Pill-shaped CTA button in solid black with white text -->
-      <div class="nav-right-cta">
-        <button class="pill-btn pill-btn-sm trigger-cmd-palette" aria-label="Quick search">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" class="mr-1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <span class="font-mono text-xs">⌘K</span>
-        </button>
-
-        <button class="pill-btn pill-btn-sm trigger-lets-talk" aria-label="Quick contact popover">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" class="mr-1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          <span>Let's Talk</span>
-        </button>
-      </div>
-
-    </div>
-  </header>
 
   <!-- ============================================================
        CONTENT WRAPPER
@@ -81,67 +34,53 @@
     <main>
 
       <!-- ============================================================
-           HERO SECTION: FULL-BLEED VIDEO & INSTRUMENT SERIF
+           MONOCHROMATIC PHYSICS-BASED PARTICLE TEXT HERO
+           (Fixed-frame layout with central interaction zone)
            ============================================================ -->
-      <section class="hero-editorial-section" id="home">
+      <section class="particle-hero-frame" id="home">
         
-        <!-- Full-Bleed Video Background Layer -->
-        <div class="hero-video-container" aria-hidden="true">
-          <video class="hero-bg-video" autoplay muted loop playsinline preload="auto">
-            <source src="https://designerstephen.github.io/public-assets/videos/serene-art-hero.mp4" type="video/mp4">
-          </video>
-          <div class="hero-video-overlay"></div>
-        </div>
+        <!-- Fixed Header at top: 48px from screen edge, 48px padding on sides -->
+        <header class="frame-header">
+          <div class="header-meta-left">
+            <span class="meta-tag">AINESH HAMILTON // CREATIVE ENGINEER • ARCHIVE '26</span>
+          </div>
 
-        <!-- Centered Hero Hierarchy with Staggered Entrance Animations -->
-        <div class="hero-editorial-content interactive-zone">
+          <div class="header-stack-right">
+            <input 
+              type="text" 
+              id="promptInput" 
+              class="prompt-input-field interactive-text" 
+              value="AINESH" 
+              placeholder="TYPE PROMPT..." 
+              maxlength="16" 
+              autocomplete="off" 
+              spellcheck="false"
+              aria-label="Particle text generator prompt input"
+            >
+            <span class="prompt-sub-label">INPUT PROMPT TO REGENERATE</span>
+          </div>
+        </header>
+
+        <!-- Central Interaction Zone -->
+        <div class="central-interaction-zone">
           
-          <!-- Handwritten Signature Callout (Sakthi-inspired authentic touch) -->
-          <div class="handwritten-hero-tag fade-rise delay-0">
-            <span>crafted with obsessive care by</span>
-            <span class="font-caveat text-blue-400 text-2xl font-bold">ainesh joel</span>
-            <span>✦</span>
-          </div>
-
-          <!-- System Status Meta -->
-          <div class="hero-meta-badge fade-rise delay-0">
-            <span class="hero-meta-dot"></span>
-            <span>SYSTEM: ONLINE</span>
-            <span class="text-zinc-500">•</span>
-            <span id="liveClock">--:--:-- IST</span>
-            <span class="text-zinc-500">•</span>
-            <span>FULL-STACK & CREATIVE UI</span>
-          </div>
-
-          <!-- Heading: Instrument Serif H1, 80px, line-height 0.95, -2.46px tracking -->
-          <h1 class="hero-display-h1 fade-rise delay-0">
-            Architecting <em>Resilient Platforms</em> & Tactile <em>Digital Experiences</em>
+          <!-- Large Display Text (14vw, Space Grotesk, font-weight 500, letter-spacing -0.05em) -->
+          <h1 id="heroDisplayText" class="hero-display-silhouette" aria-label="Ainesh">
+            AINESH
           </h1>
 
-          <!-- Paragraph: Max-width 670px, centered, line-height 1.625, 18px -->
-          <p class="hero-editorial-p fade-rise delay-200">
-            Hi, I'm <strong>Ainesh Joel Hamilton</strong> (<strong>@Bloxi17</strong>). Full-stack web engineer blending high-throughput Node.js backends and disciplined relational schemas with hardware-accelerated 3D WebGL motion and Apple-grade fluid interfaces.
-          </p>
+          <!-- Invisible Trigger Overlay (z-index: 30) spanning text dimensions -->
+          <div id="heroTriggerOverlay" class="hero-trigger-overlay" aria-hidden="true"></div>
 
-          <!-- Main CTA: Large pill-shaped buttons -->
-          <div class="fade-rise delay-400 flex items-center justify-center gap-4 flex-wrap">
-            <button class="pill-btn pill-btn-hero trigger-lets-talk" id="heroLetsTalkBtn" data-cursor="click" data-cursor-text="CONNECT">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" class="mr-2 inline-block"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-              <span>Let's Talk</span>
-            </button>
-
-            <a href="#projects" class="pill-btn pill-btn-hero pill-btn-secondary" data-cursor="view" data-cursor-text="EXPLORE">
-              <span>Explore Featured Work</span>
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" class="ml-2 inline-block"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-
-            <button class="pill-btn pill-btn-hero pill-btn-secondary trigger-copy-email" title="Click to copy verified email address">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="mr-2 inline-block"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-              <span>Copy Direct Email</span>
-            </button>
-          </div>
-
+          <!-- Full Viewport Particle Canvas (z-index: 10) -->
+          <canvas id="particleCanvas" class="particle-canvas" aria-label="Interactive typographic particle simulation"></canvas>
         </div>
+
+        <!-- Fixed Footer at bottom: 48px from screen edge -->
+        <footer class="frame-footer">
+          <div class="footer-divider" aria-hidden="true"></div>
+          <span class="footer-instruction-label">HOVER TO DISPERSE // TYPE TO TRANSFORM // SCROLL FOR ARCHIVE</span>
+        </footer>
 
       </section>
 
@@ -166,7 +105,7 @@
             <div class="dossier-tab-row">
               <div class="dossier-tab">
                 <span class="dossier-tab-id">DOSSIER // ARCH-2026-01</span>
-                <span class="text-zinc-500">•</span>
+                <span class="">•</span>
                 <span class="dossier-tab-title">FIRST STEP SR. SEC. SCHOOL</span>
               </div>
               <div class="dossier-binder-clip" aria-hidden="true" title="Brushed Steel Binder Clip">
@@ -229,7 +168,7 @@
                       <div class="sheet-features-row">
                         <div class="sheet-feature-box">
                           <strong>Embedded SQLite Persistence</strong>
-                          <p>Direct atomic disk writes with <code class="text-blue-400">better-sqlite3</code> for ultra-low read latency without external database network hops.</p>
+                          <p>Direct atomic disk writes with <code class="">better-sqlite3</code> for ultra-low read latency without external database network hops.</p>
                         </div>
                         <div class="sheet-feature-box">
                           <strong>Admissions Workflow Pipeline</strong>
@@ -318,19 +257,19 @@
                     <div class="sheet-inner-content">
                       <div class="sheet-metrics-grid">
                         <div class="sheet-metric-card">
-                          <span class="metric-val text-blue-400">0.42s</span>
+                          <span class="metric-val">0.42s</span>
                           <span class="metric-lbl">Largest Contentful Paint (LCP)</span>
                         </div>
                         <div class="sheet-metric-card">
-                          <span class="metric-val text-emerald-400">0.00</span>
+                          <span class="metric-val">0.00</span>
                           <span class="metric-lbl">Cumulative Layout Shift (CLS)</span>
                         </div>
                         <div class="sheet-metric-card">
-                          <span class="metric-val text-blue-400">&lt; 180 KB</span>
+                          <span class="metric-val">&lt; 180 KB</span>
                           <span class="metric-lbl">Initial Total Asset Payload</span>
                         </div>
                         <div class="sheet-metric-card">
-                          <span class="metric-val text-emerald-400">60 / 120</span>
+                          <span class="metric-val">60 / 120</span>
                           <span class="metric-lbl">Render Refresh Rate (Hz)</span>
                         </div>
                       </div>
@@ -341,7 +280,7 @@
                   </div>
 
                   <div class="sheet-footer">
-                    <span class="font-mono text-xs text-zinc-400">Audited via Chrome DevTools & Google PageSpeed Insights</span>
+                    <span class="font-mono text-xs">Audited via Chrome DevTools & Google PageSpeed Insights</span>
                     <a href="https://github.com/Bloxi17/FIRSTSTEP" target="_blank" rel="noopener" class="sheet-btn sheet-btn-secondary">
                       <span>View GitHub Spec</span>
                     </a>
@@ -398,7 +337,7 @@
                 <span class="stamp-postmark">AUTH 01</span>
               </div>
               <div class="stamp-icon-box">
-                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" class="text-blue-400"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" class=""><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
               </div>
               <h3 class="stamp-title">Canvas 3D Ribbon Math Engine</h3>
               <p class="stamp-desc">
@@ -418,7 +357,7 @@
                 <span class="stamp-postmark">AUTH 02</span>
               </div>
               <div class="stamp-icon-box">
-                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" class="text-blue-400"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" class=""><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
               </div>
               <h3 class="stamp-title">Atomic SQLite & JWT Auth Gateway</h3>
               <p class="stamp-desc">
@@ -438,7 +377,7 @@
                 <span class="stamp-postmark">AUTH 03</span>
               </div>
               <div class="stamp-icon-box">
-                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" class="text-blue-400"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" class=""><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
               </div>
               <h3 class="stamp-title">Procedural Gyroscopic 3D Core</h3>
               <p class="stamp-desc">
@@ -581,63 +520,61 @@
       </section>
 
       <!-- ============================================================
-           INTERACTIVE 3D ENGINE PLAYGROUND
+           PHYSICS PARTICLE ENGINE CALIBRATION & PLAYGROUND
            ============================================================ -->
       <section class="section" id="playground">
         <div class="container">
           
           <div class="section-header interactive-zone">
-            <span class="section-kicker">Experiments // 03</span>
-            <h2 class="section-title">Live 3D Engine Playground</h2>
+            <span class="section-kicker">Simulation // 03</span>
+            <h2 class="section-title">Particle Physics Calibration</h2>
             <p class="section-lead">
-              Calibrate the real-time procedural WebGL background core directly. Tweak rotation velocity, wireframe density, and mesh colors in real time.
+              Tune the real-time typographic particle engine dynamics. Calibrate radial dispersion force, return friction, and interaction radius directly.
             </p>
           </div>
 
           <div class="playground-deck interactive-zone">
             
             <div class="control-group">
-              <span class="text-xs font-mono text-blue-400 uppercase tracking-wider">Parameters & Physics</span>
+              <span class="meta-tag">Kinetics & Forces</span>
 
               <div class="control-item">
                 <div class="control-label">
-                  <span>ORBIT VELOCITY</span>
-                  <span id="playSpeedVal">1.0x</span>
+                  <span>DISPERSION FORCE</span>
+                  <span id="playForceVal">15 N</span>
                 </div>
-                <input id="playSpeed" type="range" min="0" max="3" step="0.1" value="1.0" class="slider-input">
+                <input id="playForce" type="range" min="5" max="35" step="1" value="15" class="slider-input" aria-label="Particle dispersion force">
               </div>
 
               <div class="control-item">
                 <div class="control-label">
-                  <span>GEOMETRY TOGGLES</span>
+                  <span>RETURN FRICTION</span>
+                  <span id="playFrictionVal">0.95</span>
                 </div>
-                <div class="toggle-group">
-                  <button id="playToggleWireframe" class="toggle-btn active">WIREFRAME</button>
-                  <button id="playToggleCore" class="toggle-btn active">INNER CORE</button>
-                </div>
+                <input id="playFriction" type="range" min="0.85" max="0.98" step="0.01" value="0.95" class="slider-input" aria-label="Particle friction coefficient">
               </div>
             </div>
 
             <div class="control-group">
-              <span class="text-xs font-mono text-blue-400 uppercase tracking-wider">Aesthetic Calibration</span>
+              <span class="meta-tag">Primitives & Space</span>
 
               <div class="control-item">
                 <div class="control-label">
-                  <span>EDGE ILLUMINATION COLOR</span>
+                  <span>INTERACTION RADIUS</span>
+                  <span id="playRadiusVal">200px</span>
                 </div>
-                <div class="flex items-center gap-2 pt-1">
-                  <button class="play-color-btn active w-6 h-6 rounded-full bg-blue-500 border-2 border-white transition-transform active:scale-95" data-color="3b82f6" title="Electric Cobalt"></button>
-                  <button class="play-color-btn w-6 h-6 rounded-full bg-cyan-400 border border-transparent transition-transform active:scale-95" data-color="06b6d4" title="Cyan"></button>
-                  <button class="play-color-btn w-6 h-6 rounded-full bg-emerald-400 border border-transparent transition-transform active:scale-95" data-color="10b981" title="Emerald"></button>
-                  <button class="play-color-btn w-6 h-6 rounded-full bg-zinc-200 border border-transparent transition-transform active:scale-95" data-color="e4e4e7" title="Titanium White"></button>
-                  <button class="play-color-btn w-6 h-6 rounded-full bg-amber-400 border border-transparent transition-transform active:scale-95" data-color="f59e0b" title="Amber"></button>
-                </div>
+                <input id="playRadius" type="range" min="100" max="350" step="10" value="200" class="slider-input" aria-label="Interaction radius in pixels">
               </div>
 
-              <div class="control-item pt-2 border-t border-zinc-800">
-                <p class="text-xs text-zinc-400 font-mono leading-relaxed">
-                  TIP: You can also click, drag, and flick the 3D core in the background anywhere to experience Apple momentum handoff.
-                </p>
+              <div class="control-item">
+                <div class="control-label">
+                  <span>DYNAMIC PRESETS</span>
+                </div>
+                <div class="toggle-group">
+                  <button id="btnPresetDefault" type="button" class="toggle-btn active">DEFAULT</button>
+                  <button id="btnPresetExplosive" type="button" class="toggle-btn">EXPLOSIVE</button>
+                  <button id="btnPresetFloating" type="button" class="toggle-btn">ORBITAL</button>
+                </div>
               </div>
             </div>
 
@@ -762,25 +699,25 @@
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6 interactive-zone">
             
             <div class="bento-card">
-              <span class="text-xs font-mono text-blue-400 mb-2 block">01 // LATENCY</span>
+              <span class="text-xs font-mono mb-2 block">01 // LATENCY</span>
               <h3 class="text-lg font-semibold mb-2">Instant Response</h3>
-              <p class="text-sm text-zinc-400 leading-relaxed">
+              <p class="text-sm leading-relaxed">
                 The feeling of direct manipulation collapses the millisecond lag is introduced. Every button, drawer, and input responds on pointerdown with hardware-accelerated GPU transforms.
               </p>
             </div>
 
             <div class="bento-card">
-              <span class="text-xs font-mono text-blue-400 mb-2 block">02 // ARCHITECTURE</span>
+              <span class="text-xs font-mono mb-2 block">02 // ARCHITECTURE</span>
               <h3 class="text-lg font-semibold mb-2">Relational Rigor</h3>
-              <p class="text-sm text-zinc-400 leading-relaxed">
+              <p class="text-sm leading-relaxed">
                 A flashy frontend without dependable data architecture is a facade. I write disciplined SQL, secure authentication boundaries, and clean Node.js backend controllers.
               </p>
             </div>
 
             <div class="bento-card">
-              <span class="text-xs font-mono text-blue-400 mb-2 block">03 // RESTRAINT</span>
+              <span class="text-xs font-mono mb-2 block">03 // RESTRAINT</span>
               <h3 class="text-lg font-semibold mb-2">Restraint & Taste</h3>
-              <p class="text-sm text-zinc-400 leading-relaxed">
+              <p class="text-sm leading-relaxed">
                 Rejection of AI slop: no gratuitous glowing purple gradients, no emoji clutter, no decorative animation without tactile purpose. Every element earns its place.
               </p>
             </div>
@@ -797,7 +734,7 @@
         <div class="container">
           
           <div class="contact-terminal interactive-zone">
-            <div class="text-xs font-mono text-blue-400 tracking-wider mb-2">TRANSMISSION // DIRECT CONTACT</div>
+            <div class="text-xs font-mono tracking-wider mb-2">TRANSMISSION // DIRECT CONTACT</div>
             <h2 class="contact-headline">Initiate Collaboration</h2>
             <p class="contact-body">
               Interested in collaborating on high-throughput full-stack platforms, bespoke 3D web applications, or software engineering roles? I'd love to connect.
@@ -806,9 +743,9 @@
             <!-- Tactile Copy Email Pill -->
             <div>
               <button class="pill-btn pill-btn-hero trigger-copy-email mb-6" style="margin-top:0;" title="Click to copy verified email address">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" class="text-blue-400 mr-2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" class="mr-2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                 <span>hamiltonjoel848@gmail.com</span>
-                <span class="text-[10px] text-zinc-400 font-mono ml-2">[COPY]</span>
+                <span class="text-[10px] font-mono ml-2">[COPY]</span>
               </button>
             </div>
 
@@ -822,7 +759,7 @@
               </a>
             </div>
 
-            <div class="mt-8 pt-6 border-t border-zinc-800 text-xs font-mono text-zinc-500 flex items-center justify-center gap-4 flex-wrap">
+            <div class="mt-8 pt-6 border-t text-xs font-mono flex items-center justify-center gap-4 flex-wrap">
               <span>LOCATION: INDIA</span>
               <span>•</span>
               <span>TIMEZONE: UTC+5:30</span>
@@ -840,11 +777,11 @@
     <footer class="footer">
       <div class="container footer-content interactive-zone">
         <div class="flex items-center gap-2">
-          <span class="font-mono text-xs font-bold px-2 py-1 bg-zinc-900 border border-zinc-800 rounded">AH</span>
+          <span class="font-mono text-xs font-bold px-2 py-1 border rounded">AH</span>
           <span>Ainesh Joel Hamilton® • Portfolio</span>
         </div>
-        <div class="font-mono text-xs text-zinc-500">
-          EDITORIAL CINEMATIC • INSTRUMENT SERIF • 60 FPS WEBGL
+        <div class="font-mono text-xs">
+          SPACE GROTESK // MONOCHROMATIC PARTICLES // ARCHIVE '26
         </div>
       </div>
     </footer>
@@ -882,11 +819,11 @@
         </button>
 
         <!-- 3D Playground Item -->
-        <button type="button" class="dock-item" data-action="playground" aria-label="Navigate to 3D Engine Playground">
+        <button type="button" class="dock-item" data-action="playground" aria-label="Navigate to Particle Simulation">
           <span class="dock-icon">
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
           </span>
-          <span class="dock-label">3D Engine</span>
+          <span class="dock-label">Particles</span>
         </button>
 
         <!-- About / Philosophy Item -->
@@ -929,9 +866,9 @@
   <div id="cmdPaletteModal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Command Palette">
     <div class="cmd-palette-box interactive-zone">
       <div class="cmd-input-row">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="text-zinc-500"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class=""><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input type="text" id="cmdInput" placeholder="Type a command or jump to section..." autocomplete="off">
-        <kbd class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-zinc-900 border border-zinc-700 text-zinc-400" id="closeCmdModal">ESC</kbd>
+        <kbd class="text-[10px] font-mono px-1.5 py-0.5 rounded border" id="closeCmdModal">ESC</kbd>
       </div>
       <ul id="cmdResultsList" class="cmd-results-list">
         <!-- Injected via JavaScript -->
@@ -1014,7 +951,7 @@
 
   <!-- JavaScript Modules -->
   <script src="cursor.js"></script>
-  <script src="three-scene.js"></script>
+  <script src="particle-text.js"></script>
   <script src="dock.js"></script>
   <script src="app.js"></script>
 </body>

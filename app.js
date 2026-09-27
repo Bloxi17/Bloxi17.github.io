@@ -99,7 +99,7 @@ function initCommandPalette() {
     { title: 'Navigate: Featured Project (3D Dossier)', category: 'Case Study', shortcut: '#projects', action: () => scrollToSection('projects') },
     { title: 'Navigate: Laboratory & Stamp Modules', category: 'Modules', shortcut: '#laboratory', action: () => scrollToSection('laboratory') },
     { title: 'Navigate: Technical Stack & Capabilities', category: 'Skills', shortcut: '#capabilities', action: () => scrollToSection('capabilities') },
-    { title: 'Navigate: Interactive 3D Playground', category: 'Experiments', shortcut: '#playground', action: () => scrollToSection('playground') },
+    { title: 'Navigate: Particle Physics Calibration', category: 'Simulation', shortcut: '#playground', action: () => scrollToSection('playground') },
     { title: 'Navigate: Milestones & Journey Rail', category: 'Career', shortcut: '#journey', action: () => scrollToSection('journey') },
     { title: 'Navigate: Engineering Philosophy', category: 'About', shortcut: '#about', action: () => scrollToSection('about') },
     { title: 'Navigate: Get in Touch / Terminal', category: 'Contact', shortcut: '#contact', action: () => scrollToSection('contact') },
@@ -107,7 +107,7 @@ function initCommandPalette() {
     { title: 'Action: Copy Verified Email', category: 'Clipboard', shortcut: 'E', action: () => copyEmailToClipboard() },
     { title: 'Link: Open GitHub Profile (@Bloxi17)', category: 'External', shortcut: 'GH', action: () => window.open('https://github.com/Bloxi17', '_blank') },
     { title: 'Link: Open First Step School Live App', category: 'External', shortcut: 'LIVE', action: () => window.open('https://firststepschool-kbp6.onrender.com', '_blank') },
-    { title: 'Toggle: Pause 3D Background Engine', category: 'Performance', shortcut: 'P', action: () => toggle3DEngine() }
+    { title: 'Toggle: Pause Particle Simulation', category: 'Simulation', shortcut: 'P', action: () => toggleParticleEngine() }
   ];
 
   function renderCommands(filterText = '') {
@@ -119,7 +119,7 @@ function initCommandPalette() {
     );
 
     if (filtered.length === 0) {
-      list.innerHTML = `<li class="p-3 text-center text-xs text-[#71717a] font-mono">No commands matching "${filterText}"</li>`;
+      list.innerHTML = `<li class="cmd-item-empty">No commands matching "${filterText}"</li>`;
       return;
     }
 
@@ -127,8 +127,8 @@ function initCommandPalette() {
       const li = document.createElement('li');
       li.className = `cmd-item ${idx === 0 ? 'selected' : ''}`;
       li.innerHTML = `
-        <div class="flex items-center gap-2">
-          <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#18181c] border border-[#27272a] text-blue-400">${cmd.category}</span>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="cmd-category-tag">${cmd.category}</span>
           <span>${cmd.title}</span>
         </div>
         <kbd class="cmd-shortcut">${cmd.shortcut}</kbd>
@@ -206,14 +206,14 @@ function scrollToSection(id) {
   }
 }
 
-let is3DPaused = false;
-function toggle3DEngine() {
-  const canvas = document.getElementById('webgl-background');
+let isParticlePaused = false;
+function toggleParticleEngine() {
+  const canvas = document.getElementById('particleCanvas');
   if (!canvas) return;
 
-  is3DPaused = !is3DPaused;
-  canvas.style.opacity = is3DPaused ? '0.1' : '1';
-  showToast(is3DPaused ? '3D Engine Paused (Low-Power Mode)' : '3D Engine Resumed');
+  isParticlePaused = !isParticlePaused;
+  canvas.style.opacity = isParticlePaused ? '0.1' : '1';
+  showToast(isParticlePaused ? 'Particle Simulation Paused (Low-Power)' : 'Particle Simulation Active');
 }
 
 /* -------------------------------------------------------------
@@ -260,56 +260,66 @@ function showToast(message) {
    PLAYGROUND CONTROLS
    ------------------------------------------------------------- */
 function initPlaygroundControls() {
-  const speedSlider = document.getElementById('playSpeed');
-  const speedVal = document.getElementById('playSpeedVal');
-  const toggleWireframe = document.getElementById('playToggleWireframe');
-  const toggleCore = document.getElementById('playToggleCore');
-  const colorBtns = document.querySelectorAll('.play-color-btn');
+  const forceSlider = document.getElementById('playForce');
+  const forceVal = document.getElementById('playForceVal');
+  const frictionSlider = document.getElementById('playFriction');
+  const frictionVal = document.getElementById('playFrictionVal');
+  const radiusSlider = document.getElementById('playRadius');
+  const radiusVal = document.getElementById('playRadiusVal');
 
-  if (speedSlider && speedVal) {
-    speedSlider.addEventListener('input', (e) => {
-      const val = e.target.value;
-      speedVal.textContent = `${parseFloat(val).toFixed(1)}x`;
-      if (window.interactive3D) {
-        window.interactive3D.setSpinSpeed(val);
+  const btnDefault = document.getElementById('btnPresetDefault');
+  const btnExplosive = document.getElementById('btnPresetExplosive');
+  const btnFloating = document.getElementById('btnPresetFloating');
+
+  if (forceSlider && forceVal) {
+    forceSlider.addEventListener('input', (e) => {
+      const val = parseFloat(e.target.value);
+      forceVal.textContent = `${val} N`;
+      if (window.particleTextEngine) {
+        window.particleTextEngine.dispersionForce = val;
       }
     });
   }
 
-  if (toggleWireframe) {
-    let wireframeOn = true;
-    toggleWireframe.addEventListener('click', () => {
-      wireframeOn = !wireframeOn;
-      toggleWireframe.classList.toggle('active', wireframeOn);
-      toggleWireframe.textContent = wireframeOn ? 'ACTIVE' : 'MUTED';
-      if (window.interactive3D) {
-        window.interactive3D.setWireframeMode(wireframeOn);
+  if (frictionSlider && frictionVal) {
+    frictionSlider.addEventListener('input', (e) => {
+      const val = parseFloat(e.target.value);
+      frictionVal.textContent = val.toFixed(2);
+      if (window.particleTextEngine) {
+        window.particleTextEngine.friction = val;
       }
     });
   }
 
-  if (toggleCore) {
-    let coreOn = true;
-    toggleCore.addEventListener('click', () => {
-      coreOn = !coreOn;
-      toggleCore.classList.toggle('active', coreOn);
-      toggleCore.textContent = coreOn ? 'ACTIVE' : 'MUTED';
-      if (window.interactive3D) {
-        window.interactive3D.setCoreMode(coreOn);
+  if (radiusSlider && radiusVal) {
+    radiusSlider.addEventListener('input', (e) => {
+      const val = parseInt(e.target.value, 10);
+      radiusVal.textContent = `${val}px`;
+      if (window.particleTextEngine) {
+        window.particleTextEngine.interactionRadius = val;
       }
     });
   }
 
-  colorBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      colorBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const hex = btn.dataset.color;
-      if (window.interactive3D) {
-        window.interactive3D.setWireframeColor(parseInt(hex, 16));
-      }
-    });
-  });
+  function applyPreset(force, friction, radius, activeBtn) {
+    if (forceSlider) { forceSlider.value = force; forceVal.textContent = `${force} N`; }
+    if (frictionSlider) { frictionSlider.value = friction; frictionVal.textContent = friction.toFixed(2); }
+    if (radiusSlider) { radiusSlider.value = radius; radiusVal.textContent = `${radius}px`; }
+
+    if (window.particleTextEngine) {
+      window.particleTextEngine.dispersionForce = force;
+      window.particleTextEngine.friction = friction;
+      window.particleTextEngine.interactionRadius = radius;
+    }
+
+    [btnDefault, btnExplosive, btnFloating].forEach(b => b && b.classList.remove('active'));
+    if (activeBtn) activeBtn.classList.add('active');
+    showToast(`Physics: ${force}N force, ${friction} friction, ${radius}px radius`);
+  }
+
+  if (btnDefault) btnDefault.addEventListener('click', () => applyPreset(15, 0.95, 200, btnDefault));
+  if (btnExplosive) btnExplosive.addEventListener('click', () => applyPreset(32, 0.91, 280, btnExplosive));
+  if (btnFloating) btnFloating.addEventListener('click', () => applyPreset(8, 0.98, 160, btnFloating));
 }
 
 /* -------------------------------------------------------------
