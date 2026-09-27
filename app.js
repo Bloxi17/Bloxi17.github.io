@@ -23,7 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
    ------------------------------------------------------------- */
 function initClock() {
   const clockEl = document.getElementById('liveClock');
-  if (!clockEl) return;
+  const harshClockEl = document.getElementById('harshClock');
+  if (!clockEl && !harshClockEl) return;
 
   function update() {
     const now = new Date();
@@ -35,7 +36,9 @@ function initClock() {
       hour12: false 
     };
     const istTime = now.toLocaleTimeString('en-US', istOptions);
-    clockEl.textContent = `${istTime} IST`;
+    const text = `${istTime} IST`;
+    if (clockEl) clockEl.textContent = text;
+    if (harshClockEl) harshClockEl.textContent = text;
   }
 
   update();
