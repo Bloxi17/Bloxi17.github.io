@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initClipboardToast();
   initPlaygroundControls();
   initKeyboardShortcuts();
+  initFolderDossier();
+  initLetsTalkPopover();
+  initStampTilt();
 });
 
 /* -------------------------------------------------------------
@@ -93,11 +96,14 @@ function initCommandPalette() {
 
   const commands = [
     { title: 'Navigate: Hero / Intro', category: 'Navigation', shortcut: '#home', action: () => scrollToSection('home') },
-    { title: 'Navigate: Featured Project (First Step)', category: 'Case Study', shortcut: '#projects', action: () => scrollToSection('projects') },
+    { title: 'Navigate: Featured Project (3D Dossier)', category: 'Case Study', shortcut: '#projects', action: () => scrollToSection('projects') },
+    { title: 'Navigate: Laboratory & Stamp Modules', category: 'Modules', shortcut: '#laboratory', action: () => scrollToSection('laboratory') },
     { title: 'Navigate: Technical Stack & Capabilities', category: 'Skills', shortcut: '#capabilities', action: () => scrollToSection('capabilities') },
     { title: 'Navigate: Interactive 3D Playground', category: 'Experiments', shortcut: '#playground', action: () => scrollToSection('playground') },
+    { title: 'Navigate: Milestones & Journey Rail', category: 'Career', shortcut: '#journey', action: () => scrollToSection('journey') },
     { title: 'Navigate: Engineering Philosophy', category: 'About', shortcut: '#about', action: () => scrollToSection('about') },
     { title: 'Navigate: Get in Touch / Terminal', category: 'Contact', shortcut: '#contact', action: () => scrollToSection('contact') },
+    { title: 'Action: Open Let\'s Talk Floating Popover', category: 'Connect', shortcut: 'T', action: () => window.toggleLetsTalkPopover(true) },
     { title: 'Action: Copy Verified Email', category: 'Clipboard', shortcut: 'E', action: () => copyEmailToClipboard() },
     { title: 'Link: Open GitHub Profile (@Bloxi17)', category: 'External', shortcut: 'GH', action: () => window.open('https://github.com/Bloxi17', '_blank') },
     { title: 'Link: Open First Step School Live App', category: 'External', shortcut: 'LIVE', action: () => window.open('https://firststepschool-kbp6.onrender.com', '_blank') },
@@ -316,5 +322,129 @@ function initKeyboardShortcuts() {
       e.preventDefault();
       if (window.openCommandPalette) window.openCommandPalette();
     }
+  });
+}
+
+/* -------------------------------------------------------------
+   3D CONFIDENTIAL PROJECT DOSSIER CONTROLLER
+   ------------------------------------------------------------- */
+function initFolderDossier() {
+  const tabs = document.querySelectorAll('.dossier-tab-btn');
+  const sheets = document.querySelectorAll('.dossier-sheet');
+  if (!tabs.length || !sheets.length) return;
+
+  function switchSheet(targetIdx) {
+    tabs.forEach(t => {
+      const isTarget = t.dataset.target === targetIdx;
+      t.classList.toggle('active', isTarget);
+      t.setAttribute('aria-selected', isTarget ? 'true' : 'false');
+    });
+
+    sheets.forEach(s => {
+      const isTarget = s.dataset.sheet === targetIdx;
+      s.classList.toggle('active', isTarget);
+    });
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const target = tab.dataset.target;
+      if (target) switchSheet(target);
+    });
+  });
+
+  // Clicking an inactive sheet brings it to front
+  sheets.forEach(sheet => {
+    sheet.addEventListener('click', () => {
+      const idx = sheet.dataset.sheet;
+      if (idx) switchSheet(idx);
+    });
+  });
+}
+
+/* -------------------------------------------------------------
+   "LET'S TALK" FLOATING POPOVER CONTROLLER
+   ------------------------------------------------------------- */
+function initLetsTalkPopover() {
+  const popover = document.getElementById('letsTalkPopover');
+  const closeBtn = document.getElementById('closeLetsTalkBtn');
+  const triggers = document.querySelectorAll('.trigger-lets-talk');
+
+  if (!popover) return;
+
+  window.toggleLetsTalkPopover = function(forceState) {
+    const shouldOpen = typeof forceState === 'boolean' 
+      ? forceState 
+      : !popover.classList.contains('open');
+
+    if (shouldOpen) {
+      popover.classList.add('open');
+      popover.setAttribute('aria-modal', 'true');
+    } else {
+      popover.classList.remove('open');
+      popover.setAttribute('aria-modal', 'false');
+    }
+  };
+
+  triggers.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      window.toggleLetsTalkPopover();
+    });
+  });
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      window.toggleLetsTalkPopover(false);
+    });
+  }
+
+  // Dismiss on outside click
+  document.addEventListener('click', (e) => {
+    if (popover.classList.contains('open')) {
+      if (!popover.contains(e.target) && !e.target.closest('.trigger-lets-talk') && !e.target.closest('[data-action="contact"]')) {
+        window.toggleLetsTalkPopover(false);
+      }
+    }
+  });
+
+  // Dismiss on Escape
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && popover.classList.contains('open')) {
+      window.toggleLetsTalkPopover(false);
+    }
+  });
+}
+
+/* -------------------------------------------------------------
+   PERFORATED STAMP CARDS 3D TILT
+   ------------------------------------------------------------- */
+function initStampTilt() {
+  const cards = document.querySelectorAll('.stamp-card');
+  if (!cards.length) return;
+
+  // Only tilt on fine pointers (desktop)
+  if (window.matchMedia('(pointer: coarse)').matches) return;
+
+  cards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      
+      const rotateX = ((y - centerY) / centerY) * -6;
+      const rotateY = ((x - centerX) / centerX) * 6;
+
+      card.style.transform = `perspective(800px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-4px)`;
+    });
+
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+    });
   });
 }

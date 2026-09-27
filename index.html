@@ -12,10 +12,10 @@
   <meta property="og:url" content="https://bloxi17.github.io">
   <meta property="og:type" content="website">
 
-  <!-- Google Fonts: Instrument Serif & Inter -->
+  <!-- Google Fonts: Instrument Serif, Inter, JetBrains Mono, and Caveat -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="style.css">
 
@@ -65,9 +65,10 @@
           <span class="font-mono text-xs">⌘K</span>
         </button>
 
-        <a href="#contact" class="pill-btn pill-btn-sm">
-          <span>Get in Touch</span>
-        </a>
+        <button class="pill-btn pill-btn-sm trigger-lets-talk" aria-label="Quick contact popover">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" class="mr-1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span>Let's Talk</span>
+        </button>
       </div>
 
     </div>
@@ -95,6 +96,13 @@
         <!-- Centered Hero Hierarchy with Staggered Entrance Animations -->
         <div class="hero-editorial-content interactive-zone">
           
+          <!-- Handwritten Signature Callout (Sakthi-inspired authentic touch) -->
+          <div class="handwritten-hero-tag fade-rise delay-0">
+            <span>crafted with obsessive care by</span>
+            <span class="font-caveat text-blue-400 text-2xl font-bold">ainesh joel</span>
+            <span>✦</span>
+          </div>
+
           <!-- System Status Meta -->
           <div class="hero-meta-badge fade-rise delay-0">
             <span class="hero-meta-dot"></span>
@@ -115,9 +123,14 @@
             Hi, I'm <strong>Ainesh Joel Hamilton</strong> (<strong>@Bloxi17</strong>). Full-stack web engineer blending high-throughput Node.js backends and disciplined relational schemas with hardware-accelerated 3D WebGL motion and Apple-grade fluid interfaces.
           </p>
 
-          <!-- Main CTA: Large pill-shaped button (padding: 20px 56px), placed 48px below text -->
+          <!-- Main CTA: Large pill-shaped buttons -->
           <div class="fade-rise delay-400 flex items-center justify-center gap-4 flex-wrap">
-            <a href="#projects" class="pill-btn pill-btn-hero" data-cursor="view" data-cursor-text="EXPLORE">
+            <button class="pill-btn pill-btn-hero trigger-lets-talk" id="heroLetsTalkBtn" data-cursor="click" data-cursor-text="CONNECT">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" class="mr-2 inline-block"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <span>Let's Talk</span>
+            </button>
+
+            <a href="#projects" class="pill-btn pill-btn-hero pill-btn-secondary" data-cursor="view" data-cursor-text="EXPLORE">
               <span>Explore Featured Work</span>
               <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" class="ml-2 inline-block"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
@@ -146,94 +159,299 @@
             </p>
           </div>
 
-          <!-- Flagship Project Card -->
-          <div class="flagship-panel interactive-zone" data-cursor="view" data-cursor-text="CASE">
+          <!-- 3D "Confidential Project Dossier" Manila Folder Component -->
+          <div class="dossier-wrapper interactive-zone" data-cursor="view" data-cursor-text="DOSSIER">
             
-            <div class="flagship-badge-row">
-              <div class="flex items-center gap-2">
-                <span class="case-study-tag">FULL-STACK PRODUCTION PLATFORM</span>
-                <span class="text-xs font-mono text-zinc-400">DEPLOYED ON RENDER</span>
+            <!-- Folder Tab, Steel Binder Clip & Handwritten Stamp -->
+            <div class="dossier-tab-row">
+              <div class="dossier-tab">
+                <span class="dossier-tab-id">DOSSIER // ARCH-2026-01</span>
+                <span class="text-zinc-500">•</span>
+                <span class="dossier-tab-title">FIRST STEP SR. SEC. SCHOOL</span>
               </div>
-              <span class="text-xs font-mono text-zinc-500">EST. 1990 • RE-ENGINEERED 2026</span>
+              <div class="dossier-binder-clip" aria-hidden="true" title="Brushed Steel Binder Clip">
+                <div class="clip-wire-loop"></div>
+                <div class="clip-solid-body"></div>
+              </div>
+              <div class="handwritten-stamp" style="margin-left: auto;">
+                <span>verified in production ✓</span>
+              </div>
             </div>
 
-            <h3 class="flagship-title">First Step School Digital Platform & Content System</h3>
-            
-            <p class="flagship-desc">
-              Replaced legacy infrastructure with a secure, high-framerate web platform featuring dynamic CMS content administration, real-time admissions pipeline handling, and an in-house hardware-accelerated 3D motion design system.
-            </p>
-
-            <!-- 4 Architectural Modules -->
-            <div class="flagship-breakdown-grid">
+            <!-- 3D Folder Shell -->
+            <div class="dossier-folder" id="dossierFolder">
               
-              <div class="breakdown-card">
-                <div class="breakdown-card-header">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" class="text-blue-400"><polygon points="12 2 2 7 12 12 22 7 12 2"/></svg>
-                  <span>3D Fluid Mesh Wave</span>
-                </div>
-                <p class="breakdown-card-text">
-                  Custom HTML5 Canvas rendering engine with layered, living ribbons in Gold, Navy & Crimson running at steady 60 FPS on mobile devices with zero DOM overhead.
-                </p>
+              <!-- Red Confidential Rubber Stamp -->
+              <div class="confidential-seal" aria-hidden="true">
+                <span>CONFIDENTIAL</span>
+                <span class="text-[9px] tracking-widest block font-mono">PRODUCTION VERIFIED // 2026</span>
               </div>
 
-              <div class="breakdown-card">
-                <div class="breakdown-card-header">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" class="text-blue-400"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                  <span>Full-Stack Node.js CMS</span>
-                </div>
-                <p class="breakdown-card-text">
-                  Express backend powered by an embedded SQLite (<code class="text-blue-400">better-sqlite3</code>) database with JWT authentication and real-time admissions inquiry handling.
-                </p>
+              <!-- Interactive Layered Sheets inside Folder -->
+              <div class="dossier-sheets-container">
+                
+                <!-- Sheet 1: Systems Architecture (Active by default) -->
+                <article class="dossier-sheet sheet-1 active" id="sheet-1" data-sheet="1">
+                  <div>
+                    <div class="sheet-tab-header">
+                      <div class="flex items-center gap-2">
+                        <span class="sheet-index-pill">DOC 01/03</span>
+                        <span class="sheet-tab-name">ARCHITECTURE & SQL ENGINE</span>
+                      </div>
+                      <span class="sheet-status-badge">DEPLOYED • RENDER CLOUD</span>
+                    </div>
+                    
+                    <div class="sheet-inner-content">
+                      <div class="sheet-meta-grid">
+                        <div>
+                          <span class="sheet-meta-label">CLIENT / INSTITUTION</span>
+                          <span class="sheet-meta-val">First Step Sr. Sec. School (Est. 1990)</span>
+                        </div>
+                        <div>
+                          <span class="sheet-meta-label">DEPLOYMENT RUNTIME</span>
+                          <span class="sheet-meta-val">Linux Node.js Cluster + SSL</span>
+                        </div>
+                        <div>
+                          <span class="sheet-meta-label">DATABASE PERSISTENCE</span>
+                          <span class="sheet-meta-val">better-sqlite3 Prepared Stmts</span>
+                        </div>
+                        <div>
+                          <span class="sheet-meta-label">SECURITY AUDIT</span>
+                          <span class="sheet-meta-val">Zero SQL Injection • JWT Auth</span>
+                        </div>
+                      </div>
+
+                      <h3 class="sheet-headline">Mission-Critical Educational Content Management System</h3>
+                      <p class="sheet-body-text">
+                        Architected to eliminate legacy bottlenecks, replacing static brochureware with a high-throughput dynamic platform capable of handling peak admissions cycles with sub-second response times.
+                      </p>
+
+                      <div class="sheet-features-row">
+                        <div class="sheet-feature-box">
+                          <strong>Embedded SQLite Persistence</strong>
+                          <p>Direct atomic disk writes with <code class="text-blue-400">better-sqlite3</code> for ultra-low read latency without external database network hops.</p>
+                        </div>
+                        <div class="sheet-feature-box">
+                          <strong>Admissions Workflow Pipeline</strong>
+                          <p>Automated input sanitization, dynamic applicant logging, and instant notification triggers for administrative staff.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="sheet-footer">
+                    <div class="tech-pills">
+                      <span class="tech-pill">Node.js</span>
+                      <span class="tech-pill">Express</span>
+                      <span class="tech-pill">better-sqlite3</span>
+                      <span class="tech-pill">JWT</span>
+                    </div>
+                    <div class="sheet-actions">
+                      <a href="https://firststepschool-kbp6.onrender.com" target="_blank" rel="noopener" class="sheet-btn sheet-btn-primary">
+                        <span>Open Live Platform</span>
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+                      </a>
+                      <a href="https://github.com/Bloxi17/FIRSTSTEP" target="_blank" rel="noopener" class="sheet-btn sheet-btn-secondary">
+                        <span>Inspect Source</span>
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+                      </a>
+                    </div>
+                  </div>
+                </article>
+
+                <!-- Sheet 2: 3D Motion & Touch Engine -->
+                <article class="dossier-sheet sheet-2" id="sheet-2" data-sheet="2">
+                  <div>
+                    <div class="sheet-tab-header">
+                      <div class="flex items-center gap-2">
+                        <span class="sheet-index-pill">DOC 02/03</span>
+                        <span class="sheet-tab-name">CANVAS 3D WAVE ENGINE & TOUCH UX</span>
+                      </div>
+                      <span class="sheet-status-badge">60 FPS LOCKED</span>
+                    </div>
+
+                    <div class="sheet-inner-content">
+                      <h3 class="sheet-headline">Hardware-Accelerated Fluid Canvas Ribbons</h3>
+                      <p class="sheet-body-text">
+                        Rather than relying on resource-intensive video loops or heavy external 3D libraries, authored a bespoke HTML5 Canvas sine-wave rendering simulation.
+                      </p>
+
+                      <div class="sheet-features-row">
+                        <div class="sheet-feature-box">
+                          <strong>Mathematical Wave Simulation</strong>
+                          <p>Layered trigonometric waves with dynamic phase modulation rendering school crest tones (Gold, Navy, Crimson) with zero layout thrash.</p>
+                        </div>
+                        <div class="sheet-feature-box">
+                          <strong>Touch Gesture Velocity Handoff</strong>
+                          <p>Zero-jank drawer navigation responding directly to touchstart with momentum scrolling and Apple spring resistance curves.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="sheet-footer">
+                    <div class="tech-pills">
+                      <span class="tech-pill">HTML5 Canvas</span>
+                      <span class="tech-pill">Math Simulations</span>
+                      <span class="tech-pill">GSAP</span>
+                      <span class="tech-pill">Touch UX</span>
+                    </div>
+                    <div class="sheet-actions">
+                      <a href="https://firststepschool-kbp6.onrender.com" target="_blank" rel="noopener" class="sheet-btn sheet-btn-primary">
+                        <span>Test Live Motion</span>
+                      </a>
+                    </div>
+                  </div>
+                </article>
+
+                <!-- Sheet 3: Production Metrics & Telemetry -->
+                <article class="dossier-sheet sheet-3" id="sheet-3" data-sheet="3">
+                  <div>
+                    <div class="sheet-tab-header">
+                      <div class="flex items-center gap-2">
+                        <span class="sheet-index-pill">DOC 03/03</span>
+                        <span class="sheet-tab-name">PRODUCTION TELEMETRY & VITALS</span>
+                      </div>
+                      <span class="sheet-status-badge">LIGHTHOUSE: 98/100</span>
+                    </div>
+
+                    <div class="sheet-inner-content">
+                      <div class="sheet-metrics-grid">
+                        <div class="sheet-metric-card">
+                          <span class="metric-val text-blue-400">0.42s</span>
+                          <span class="metric-lbl">Largest Contentful Paint (LCP)</span>
+                        </div>
+                        <div class="sheet-metric-card">
+                          <span class="metric-val text-emerald-400">0.00</span>
+                          <span class="metric-lbl">Cumulative Layout Shift (CLS)</span>
+                        </div>
+                        <div class="sheet-metric-card">
+                          <span class="metric-val text-blue-400">&lt; 180 KB</span>
+                          <span class="metric-lbl">Initial Total Asset Payload</span>
+                        </div>
+                        <div class="sheet-metric-card">
+                          <span class="metric-val text-emerald-400">60 / 120</span>
+                          <span class="metric-lbl">Render Refresh Rate (Hz)</span>
+                        </div>
+                      </div>
+                      <p class="sheet-body-text mt-4">
+                        Audited across mobile 4G throttled connections to ensure seamless accessibility for families and students in tier-2 regions.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="sheet-footer">
+                    <span class="font-mono text-xs text-zinc-400">Audited via Chrome DevTools & Google PageSpeed Insights</span>
+                    <a href="https://github.com/Bloxi17/FIRSTSTEP" target="_blank" rel="noopener" class="sheet-btn sheet-btn-secondary">
+                      <span>View GitHub Spec</span>
+                    </a>
+                  </div>
+                </article>
+
               </div>
 
-              <div class="breakdown-card">
-                <div class="breakdown-card-header">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" class="text-blue-400"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
-                  <span>Touch-Optimized UX</span>
-                </div>
-                <p class="breakdown-card-text">
-                  Zero-glitch mobile drawer with dedicated touch event handling, spring momentum deceleration, and instantaneous pointerdown feedback.
-                </p>
+              <!-- Sheet Switcher Tabs Bar -->
+              <div class="dossier-tabs-bar" role="tablist" aria-label="Dossier Document Selector">
+                <button type="button" class="dossier-tab-btn active" data-target="1" role="tab" aria-selected="true">
+                  <span>01 // SYSTEM SPEC</span>
+                </button>
+                <button type="button" class="dossier-tab-btn" data-target="2" role="tab" aria-selected="false">
+                  <span>02 // CANVAS ENGINE</span>
+                </button>
+                <button type="button" class="dossier-tab-btn" data-target="3" role="tab" aria-selected="false">
+                  <span>03 // TELEMETRY</span>
+                </button>
               </div>
 
-              <div class="breakdown-card">
-                <div class="breakdown-card-header">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" class="text-blue-400"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                  <span>Sub-Second Performance</span>
-                </div>
-                <p class="breakdown-card-text">
-                  Sub-second LCP (Largest Contentful Paint), zero cumulative layout shifts (CLS), and modular asset bundling keeping cold loads under 200KB.
-                </p>
-              </div>
-
-            </div>
-
-            <!-- Footer Meta & Links -->
-            <div class="flagship-footer-bar">
-              <div class="tech-pills">
-                <span class="tech-pill">Node.js</span>
-                <span class="tech-pill">Express</span>
-                <span class="tech-pill">better-sqlite3</span>
-                <span class="tech-pill">HTML5 Canvas 3D</span>
-                <span class="tech-pill">GSAP</span>
-                <span class="tech-pill">JWT Auth</span>
-                <span class="tech-pill">REST APIs</span>
-              </div>
-
-              <div class="flex items-center gap-3">
-                <a href="https://firststepschool-kbp6.onrender.com" target="_blank" rel="noopener" class="pill-btn pill-btn-sm" style="background:#ffffff; color:#000000;">
-                  <span>Visit Live Platform</span>
-                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" class="ml-1 inline"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
-                </a>
-                <a href="https://github.com/Bloxi17/FIRSTSTEP" target="_blank" rel="noopener" class="pill-btn pill-btn-sm pill-btn-secondary">
-                  <span>View Repository</span>
-                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" class="ml-1 inline"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
-                </a>
-              </div>
             </div>
 
           </div>
 
+        </div>
+      </section>
+
+      <!-- ============================================================
+           LABORATORY: BLUEPRINT GRID & PERFORATED STAMP CARDS
+           (Sakthi-inspired physical stamp aesthetic)
+           ============================================================ -->
+      <section class="section blueprint-grid-section" id="laboratory">
+        <div class="container">
+          
+          <div class="section-header interactive-zone">
+            <div class="flex items-center gap-3">
+              <span class="section-kicker">Laboratory // 02</span>
+              <span class="handwritten-accent">perforated experiments ✦</span>
+            </div>
+            <h2 class="section-title">Specialized Modules & Standalone Systems</h2>
+            <p class="section-lead">
+              Focused algorithmic components, math physics simulations, and backend micro-frameworks crafted for latency-critical applications.
+            </p>
+          </div>
+
+          <!-- Stamp Cards Grid -->
+          <div class="stamp-grid interactive-zone">
+            
+            <!-- Stamp 1 -->
+            <div class="stamp-card" data-cursor="view" data-cursor-text="INSPECT">
+              <div class="stamp-header">
+                <span class="stamp-pill">PROD // '26</span>
+                <span class="stamp-postmark">AUTH 01</span>
+              </div>
+              <div class="stamp-icon-box">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" class="text-blue-400"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+              </div>
+              <h3 class="stamp-title">Canvas 3D Ribbon Math Engine</h3>
+              <p class="stamp-desc">
+                High-performance procedural trigonometric ribbon simulation running at 60 FPS across desktop & mobile. Zero external 3D engine overhead.
+              </p>
+              <div class="stamp-footer">
+                <span class="stamp-tag">HTML5 Canvas</span>
+                <span class="stamp-tag">Trigonometry</span>
+                <span class="stamp-tag">60 FPS</span>
+              </div>
+            </div>
+
+            <!-- Stamp 2 -->
+            <div class="stamp-card" data-cursor="view" data-cursor-text="INSPECT">
+              <div class="stamp-header">
+                <span class="stamp-pill">CORE // '25</span>
+                <span class="stamp-postmark">AUTH 02</span>
+              </div>
+              <div class="stamp-icon-box">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" class="text-blue-400"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+              </div>
+              <h3 class="stamp-title">Atomic SQLite & JWT Auth Gateway</h3>
+              <p class="stamp-desc">
+                Prepared statement persistence layer with zero SQL injection vulnerability, token-based authorization, and atomic transaction pipelines.
+              </p>
+              <div class="stamp-footer">
+                <span class="stamp-tag">better-sqlite3</span>
+                <span class="stamp-tag">Express</span>
+                <span class="stamp-tag">Security</span>
+              </div>
+            </div>
+
+            <!-- Stamp 3 -->
+            <div class="stamp-card" data-cursor="view" data-cursor-text="INSPECT">
+              <div class="stamp-header">
+                <span class="stamp-pill">WEBGL // '26</span>
+                <span class="stamp-postmark">AUTH 03</span>
+              </div>
+              <div class="stamp-icon-box">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" class="text-blue-400"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+              </div>
+              <h3 class="stamp-title">Procedural Gyroscopic 3D Core</h3>
+              <p class="stamp-desc">
+                Real-time WebGL wireframe polyhedron with momentum flick deceleration, cursor orbit coupling, and scroll timeline synchronization.
+              </p>
+              <div class="stamp-footer">
+                <span class="stamp-tag">Three.js</span>
+                <span class="stamp-tag">Shaders</span>
+                <span class="stamp-tag">Momentum</span>
+              </div>
+            </div>
+
+          </div>
         </div>
       </section>
 
@@ -420,6 +638,105 @@
                 <p class="text-xs text-zinc-400 font-mono leading-relaxed">
                   TIP: You can also click, drag, and flick the 3D core in the background anywhere to experience Apple momentum handoff.
                 </p>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ============================================================
+           TIMELINE JOURNEY RAIL: MILESTONES & SKILL STOPS
+           (Sakthi-inspired vertical railway timeline)
+           ============================================================ -->
+      <section class="section" id="journey">
+        <div class="container">
+          
+          <div class="section-header interactive-zone">
+            <div class="flex items-center gap-3">
+              <span class="section-kicker">Trajectory // 04</span>
+              <span class="handwritten-accent">the timeline ✦</span>
+            </div>
+            <h2 class="section-title">Engineering Milestones & Journey Rail</h2>
+            <p class="section-lead">
+              A chronological trajectory across backend persistence architecture, real-time math graphics, and responsive systems engineering.
+            </p>
+          </div>
+
+          <div class="journey-rail-container interactive-zone">
+            
+            <!-- Track line -->
+            <div class="journey-track" aria-hidden="true"></div>
+
+            <!-- Station 01 -->
+            <div class="journey-station">
+              <div class="station-node">
+                <div class="node-pulse"></div>
+                <div class="node-dot"></div>
+              </div>
+              <div class="station-card">
+                <div class="station-meta">
+                  <span class="station-badge">CURRENT FOCUS</span>
+                  <span class="station-time">2026 — PRESENT</span>
+                </div>
+                <h3 class="station-title">Full-Stack Web Architect & Creative UI Engineer</h3>
+                <p class="station-desc">
+                  Designing resilient web applications, hardware-accelerated 3D WebGL experiences, and high-performance client systems. Specializing in sub-second LCP optimization, relational SQL integrity, and Apple fluid physics.
+                </p>
+                <div class="station-skills">
+                  <span class="tech-pill">TypeScript</span>
+                  <span class="tech-pill">Node.js</span>
+                  <span class="tech-pill">Three.js</span>
+                  <span class="tech-pill">better-sqlite3</span>
+                  <span class="tech-pill">Performance CRP</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Station 02 -->
+            <div class="journey-station">
+              <div class="station-node">
+                <div class="node-dot"></div>
+              </div>
+              <div class="station-card">
+                <div class="station-meta">
+                  <span class="station-badge">FLAGSHIP PRODUCTION</span>
+                  <span class="station-time">2025 — 2026</span>
+                </div>
+                <h3 class="station-title">Lead Engineer // First Step Sr. Sec. School Platform</h3>
+                <p class="station-desc">
+                  Spearheaded full redesign and backend architecture for premier 34-year educational institution. Implemented custom SQLite data persistence, JWT administrator management, and in-house 60 FPS Canvas wave simulation with zero DOM lag.
+                </p>
+                <div class="station-skills">
+                  <span class="tech-pill">Node / Express</span>
+                  <span class="tech-pill">better-sqlite3</span>
+                  <span class="tech-pill">HTML5 Canvas</span>
+                  <span class="tech-pill">Render Cloud</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Station 03 -->
+            <div class="journey-station">
+              <div class="station-node">
+                <div class="node-dot"></div>
+              </div>
+              <div class="station-card">
+                <div class="station-meta">
+                  <span class="station-badge">FOUNDATIONAL LABS</span>
+                  <span class="station-time">2024 — 2025</span>
+                </div>
+                <h3 class="station-title">Real-Time Canvas & Motion Design Research</h3>
+                <p class="station-desc">
+                  Authored procedural graphics experiments, algorithmic geometry solvers, and explored spring dynamics with zero runtime overhead and hardware-accelerated transforms.
+                </p>
+                <div class="station-skills">
+                  <span class="tech-pill">JavaScript ES6+</span>
+                  <span class="tech-pill">Trigonometry</span>
+                  <span class="tech-pill">GSAP</span>
+                  <span class="tech-pill">Git / Linux</span>
+                </div>
               </div>
             </div>
 
@@ -619,6 +936,76 @@
       <ul id="cmdResultsList" class="cmd-results-list">
         <!-- Injected via JavaScript -->
       </ul>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       FLOATING "LET'S TALK" POPOVER
+       (Sakthi-inspired floating quick-connect card)
+       ============================================================ -->
+  <div id="letsTalkPopover" class="lets-talk-popover interactive-zone" role="dialog" aria-modal="false" aria-label="Quick Contact Channels">
+    <div class="popover-header">
+      <div class="flex items-center gap-2">
+        <span class="live-pulse-dot"></span>
+        <span class="popover-status-text">AVAILABLE FOR WORK</span>
+      </div>
+      <button type="button" id="closeLetsTalkBtn" class="popover-close-btn" aria-label="Close dialog">✕</button>
+    </div>
+
+    <div class="popover-body">
+      <p class="popover-tagline">
+        Let's build something fast, beautiful, and resilient. Reach me directly across:
+      </p>
+
+      <div class="popover-channels">
+        <!-- WhatsApp Direct -->
+        <a href="https://wa.me/?text=Hi%20Ainesh,%20I%20saw%20your%20portfolio%20and%20would%20like%20to%20connect!" target="_blank" rel="noopener" class="channel-chip channel-whatsapp">
+          <div class="channel-icon">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2zm.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 012.41 5.83c0 4.54-3.7 8.24-8.24 8.24-1.42 0-2.82-.37-4.06-1.07l-.29-.17-3.12.82.83-3.04-.19-.3a8.21 8.21 0 01-1.26-4.47c0-4.54 3.7-8.24 8.24-8.24zm4.52 11.59c-.25-.12-1.47-.72-1.7-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.44.12-.14.17-.25.25-.41.08-.17.04-.31-.02-.44-.06-.12-.56-1.34-.76-1.84-.2-.49-.4-.42-.56-.43h-.47c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1 0 1.24.9 2.44 1.03 2.61.12.17 1.78 2.72 4.31 3.81.6.26 1.07.42 1.44.53.61.19 1.16.17 1.6.1.49-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.15-1.18-.06-.11-.23-.17-.48-.3z"/></svg>
+          </div>
+          <div class="channel-info">
+            <span class="channel-name">WhatsApp</span>
+            <span class="channel-action">Instant Message</span>
+          </div>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" class="channel-arrow"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+
+        <!-- GitHub -->
+        <a href="https://github.com/Bloxi17" target="_blank" rel="noopener" class="channel-chip channel-github">
+          <div class="channel-icon">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          </div>
+          <div class="channel-info">
+            <span class="channel-name">GitHub</span>
+            <span class="channel-action">@Bloxi17</span>
+          </div>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" class="channel-arrow"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+
+        <!-- LinkedIn -->
+        <a href="https://linkedin.com" target="_blank" rel="noopener" class="channel-chip channel-linkedin">
+          <div class="channel-icon">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.68 1.68 0 1 0 0-3.36 1.68 1.68 0 0 0 0 3.36m1.39 9.74v-8.37H5.07v8.37h2.78z"/></svg>
+          </div>
+          <div class="channel-info">
+            <span class="channel-name">LinkedIn</span>
+            <span class="channel-action">Connect Professionally</span>
+          </div>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" class="channel-arrow"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+
+        <!-- Copy Email -->
+        <button type="button" class="channel-chip channel-email trigger-copy-email">
+          <div class="channel-icon">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div class="channel-info">
+            <span class="channel-name">Direct Email</span>
+            <span class="channel-action font-mono text-[11px]">hamiltonjoel848@gmail.com</span>
+          </div>
+          <span class="channel-badge font-mono text-[10px]">COPY</span>
+        </button>
+      </div>
     </div>
   </div>
 

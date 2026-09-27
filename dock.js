@@ -149,7 +149,11 @@ class MagnificationDock {
         this.scrollTo('about');
         break;
       case 'contact':
-        this.scrollTo('contact');
+        if (window.toggleLetsTalkPopover) {
+          window.toggleLetsTalkPopover(true);
+        } else {
+          this.scrollTo('contact');
+        }
         break;
       case 'github':
         window.open('https://github.com/Bloxi17', '_blank');
