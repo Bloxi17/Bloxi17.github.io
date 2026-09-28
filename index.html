@@ -588,6 +588,66 @@
 
         #svg-filters { position: absolute; width: 0; height: 0; overflow: hidden; }
 
+        /* ======================== BOOT SEQUENCE ======================== */
+        #boot-sequence {
+            position: fixed; inset: 0; z-index: 9999999;
+            background: var(--black); color: var(--cyan);
+            font-family: 'Space Mono', monospace; font-size: 0.85rem;
+            padding: 3rem; display: flex; flex-direction: column; justify-content: flex-end;
+            pointer-events: none; transition: opacity 0.8s ease;
+        }
+        #boot-text p { margin: 0.3rem 0; text-shadow: 0 0 8px var(--cyan); }
+        .cursor-blink { display: inline-block; width: 8px; height: 1.2em; background: var(--cyan); vertical-align: bottom; animation: blink 0.8s infinite; }
+        @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+
+        /* ======================== LIVE HUD ======================== */
+        .hud {
+            position: fixed; z-index: 99990; pointer-events: none;
+            font-family: 'Space Mono', monospace; font-size: 0.65rem; color: rgba(255,255,255,0.4);
+            text-transform: uppercase; letter-spacing: 0.2em; opacity: 0; transition: opacity 1s ease;
+        }
+        body.portfolio-active .hud { opacity: 1; }
+        .hud-tl { top: 2rem; left: 2rem; }
+        .hud-tr { top: 2rem; right: 2rem; text-align: right; }
+        .hud-bl { bottom: 2rem; left: 2rem; }
+        .hud-br { bottom: 2rem; right: 2rem; text-align: right; }
+        .hud span { color: var(--cyan); text-shadow: 0 0 5px rgba(0,240,255,0.5); }
+
+        /* ======================== SPOTIFY WIDGET ======================== */
+        #spotify-widget {
+            position: fixed; bottom: 2rem; left: 2rem; z-index: 99990;
+            display: flex; align-items: center; gap: 1rem;
+            background: rgba(10,10,12,0.8); border: 1px solid rgba(255,255,255,0.1);
+            padding: 0.8rem 1.2rem; border-radius: 4px; backdrop-filter: blur(10px);
+            opacity: 0; transition: opacity 1s ease, transform 0.5s ease;
+            transform: translateY(20px); pointer-events: auto; cursor: none;
+        }
+        body.portfolio-active #spotify-widget { opacity: 1; transform: translateY(0); }
+        .spot-art { width: 40px; height: 40px; border-radius: 2px; background: url('https://i.scdn.co/image/ab67616d0000b2734139de65cd28362ea31252ce') center/cover; }
+        .spot-info { display: flex; flex-direction: column; gap: 0.3rem; max-width: 150px; }
+        .spot-label { font-family: 'Space Mono', monospace; font-size: 0.5rem; color: var(--orange); letter-spacing: 0.2em; }
+        .spot-track { font-size: 0.75rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .spot-artist { font-size: 0.65rem; color: rgba(255,255,255,0.5); }
+        .eq-bars { display: flex; gap: 2px; height: 12px; align-items: flex-end; margin-left: auto; }
+        .eq-bar { width: 3px; background: var(--cyan); animation: eq 1s infinite alternate ease-in-out; }
+        .eq-bar:nth-child(2) { animation-duration: 0.8s; animation-delay: 0.2s; }
+        .eq-bar:nth-child(3) { animation-duration: 1.2s; animation-delay: 0.4s; }
+        @keyframes eq { 0% { height: 2px; } 100% { height: 12px; } }
+
+        /* ======================== RED ALERT (EASTER EGG) ======================== */
+        body.red-alert {
+            --cyan: #ff003c; --orange: #ff0000; --white: #ffaaaa; --silver: #cc5555;
+            animation: screen-shake 0.4s infinite;
+        }
+        body.red-alert #bg-video { filter: sepia(1) hue-rotate(-50deg) saturate(3) brightness(0.5); }
+        body.red-alert #accretion-canvas { filter: hue-rotate(-50deg) contrast(1.5); }
+        @keyframes screen-shake {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(2px, -2px); }
+            50% { transform: translate(-2px, 2px); }
+            75% { transform: translate(2px, 2px); }
+        }
+
         /* ======================== RESPONSIVE ======================== */
         @media (max-width: 768px) {
             .stamp-grid { grid-template-columns: 1fr; }
@@ -598,6 +658,30 @@
     </style>
 </head>
 <body>
+
+    <!-- ==================== BOOT SEQUENCE ==================== -->
+    <div id="boot-sequence">
+        <div id="boot-text"></div>
+    </div>
+
+    <!-- ==================== LIVE HUD ==================== -->
+    <div class="hud hud-tl">SYS_TIME<br><span id="hud-time">00:00:00:00</span></div>
+    <div class="hud hud-tr">UPLINK<br><span>STABLE</span></div>
+    <div class="hud hud-bl" style="bottom: 6rem;">POS_X: <span id="hud-x">0</span><br>POS_Y: <span id="hud-y">0</span></div>
+    <div class="hud hud-br">VELOCITY<br><span id="hud-vel">0.00</span> v/s</div>
+
+    <!-- ==================== SPOTIFY WIDGET ==================== -->
+    <div id="spotify-widget">
+        <div class="spot-art"></div>
+        <div class="spot-info">
+            <span class="spot-label">LIVE TRANSMISSION</span>
+            <span class="spot-track">Cornfield Chase</span>
+            <span class="spot-artist">Hans Zimmer</span>
+        </div>
+        <div class="eq-bars">
+            <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+        </div>
+    </div>
 
     <!-- SVG Filters for Crosshair Distortion -->
     <svg id="svg-filters">
@@ -842,6 +926,149 @@
     let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 
     /* ================================================================
+       CINEMATIC ENGINE: Audio, HUD, Boot, Easter Egg
+       ================================================================ */
+    // --- Audio Engine ---
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let actx, droneOsc, droneGain;
+    function initAudio() {
+        if (actx) return;
+        actx = new AudioContext();
+        // Ambient Drone
+        droneOsc = actx.createOscillator();
+        droneOsc.type = 'sine';
+        droneOsc.frequency.setValueAtTime(55, actx.currentTime); // Low A
+        const lfo = actx.createOscillator(); lfo.frequency.value = 0.1;
+        const lfoGain = actx.createGain(); lfoGain.gain.value = 5;
+        lfo.connect(lfoGain); lfoGain.connect(droneOsc.frequency);
+        lfo.start();
+        droneGain = actx.createGain();
+        droneGain.gain.setValueAtTime(0, actx.currentTime);
+        droneOsc.connect(droneGain);
+        droneGain.connect(actx.destination);
+        droneOsc.start();
+        droneGain.gain.linearRampToValueAtTime(0.08, actx.currentTime + 3);
+    }
+    function playWarp() {
+        if(!actx) return;
+        const dur = 2.0;
+        const osc = actx.createOscillator();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(100, actx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(800, actx.currentTime + dur);
+        const bpf = actx.createBiquadFilter();
+        bpf.type = 'bandpass';
+        bpf.Q.value = 5;
+        bpf.frequency.setValueAtTime(200, actx.currentTime);
+        bpf.frequency.exponentialRampToValueAtTime(2000, actx.currentTime + dur);
+        const gain = actx.createGain();
+        gain.gain.setValueAtTime(0, actx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.15, actx.currentTime + 0.1);
+        gain.gain.exponentialRampToValueAtTime(0.01, actx.currentTime + dur);
+        osc.connect(bpf); bpf.connect(gain); gain.connect(actx.destination);
+        osc.start(); osc.stop(actx.currentTime + dur);
+    }
+    function playBeep() {
+        if(!actx) return;
+        const osc = actx.createOscillator();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(1200, actx.currentTime);
+        const gain = actx.createGain();
+        gain.gain.setValueAtTime(0.05, actx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + 0.1);
+        osc.connect(gain); gain.connect(actx.destination);
+        osc.start(); osc.stop(actx.currentTime + 0.1);
+    }
+
+    // --- Easter Egg (Keylogger) ---
+    let keys = '';
+    window.addEventListener('keydown', e => {
+        keys += e.key.toLowerCase();
+        if(keys.length > 6) keys = keys.slice(1);
+        if(keys === 'ainesh') {
+            document.body.classList.toggle('red-alert');
+            if(document.body.classList.contains('red-alert') && actx) {
+                // Alarm
+                const osc = actx.createOscillator();
+                osc.type = 'square';
+                const gain = actx.createGain();
+                gain.gain.value = 0.05;
+                osc.connect(gain); gain.connect(actx.destination);
+                osc.start();
+                setInterval(() => {
+                    osc.frequency.setValueAtTime(osc.frequency.value === 400 ? 600 : 400, actx.currentTime);
+                }, 250);
+            }
+        }
+    });
+
+    // --- Live Telemetry HUD ---
+    const hudTime = document.getElementById('hud-time');
+    const hudX = document.getElementById('hud-x');
+    const hudY = document.getElementById('hud-y');
+    const hudVel = document.getElementById('hud-vel');
+    let lastScrollY = window.scrollY, smoothVel = 0;
+    function updateHUD() {
+        const d = new Date();
+        if(hudTime) hudTime.innerText = d.toISOString().substr(11, 12);
+        if(hudX) hudX.innerText = Math.round(mouse.x);
+        if(hudY) hudY.innerText = Math.round(mouse.y);
+        const currScroll = window.scrollY;
+        const vel = Math.abs(currScroll - lastScrollY);
+        smoothVel = lerp(smoothVel, vel, 0.1);
+        if(hudVel) hudVel.innerText = smoothVel.toFixed(2);
+        lastScrollY = currScroll;
+        requestAnimationFrame(updateHUD);
+    }
+    updateHUD();
+
+    // --- Cipher Decrypt Effect ---
+    function decryptEffect(el) {
+        if(el.dataset.decrypted === 'true') return;
+        el.dataset.decrypted = 'true';
+        const original = el.innerText;
+        if(!original.trim()) return;
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*';
+        let iteration = 0;
+        const interval = setInterval(() => {
+            el.innerText = original.split('').map((char, index) => {
+                if(char === ' ' || char === '\\n') return char;
+                if(index < iteration) return char;
+                return chars[Math.floor(Math.random() * chars.length)];
+            }).join('');
+            if(iteration >= original.length) clearInterval(interval);
+            iteration += 0.5;
+        }, 30);
+    }
+
+    // --- Boot Sequence ---
+    const bootLines = [
+        "INITIALIZING CORE SYSTEMS...",
+        "ESTABLISHING SECURE UPLINK...",
+        "MOUNTING ACCRETION DISC SHADER [0x9F3B]...",
+        "DECRYPTING ARCHIVES...",
+        "ACCESS GRANTED."
+    ];
+    const bootContainer = document.getElementById('boot-text');
+    let bootIdx = 0;
+    function runBoot() {
+        if(bootIdx < bootLines.length) {
+            const p = document.createElement('p');
+            bootContainer.appendChild(p);
+            let charIdx = 0;
+            const line = bootLines[bootIdx] + (bootIdx === bootLines.length-1 ? '<span class="cursor-blink"></span>' : '');
+            p.innerHTML = line;
+            bootIdx++;
+            setTimeout(runBoot, Math.random() * 200 + 100);
+        } else {
+            setTimeout(() => {
+                document.getElementById('boot-sequence').style.opacity = '0';
+            }, 800);
+        }
+    }
+    window.addEventListener('load', runBoot);
+
+    /* ================================================================
        SECTION 1: CROSSHAIR (persists across both pages)
        ================================================================ */
     const lineH = document.getElementById('line-horizontal');
@@ -867,7 +1094,7 @@
         onComplete: () => { lineH.style.filter = 'none'; lineV.style.filter = 'none'; }
     }).to(turbVal, { duration: 0.5, ease: 'power1', startAt: { v: 1 }, v: 0 });
 
-    const chEnter = () => turbTL.restart();
+    const chEnter = () => { turbTL.restart(); playBeep(); };
     const chLeave = () => turbTL.progress(1).kill();
     document.querySelectorAll('.sf-btn, .stamp-card, .play-item, .preview-link, .rate-badge').forEach(el => {
         el.addEventListener('mouseenter', chEnter);
@@ -1191,14 +1418,20 @@ void main(){
             gl.clearColor(0, 0, 0, 0);
             gl.clear(gl.COLOR_BUFFER_BIT);
 
+            // Scroll Parallax mapping
+            const maxScroll = Math.max(1, document.body.scrollHeight - window.innerHeight);
+            const scrollP = Math.min(1, Math.max(0, window.scrollY / maxScroll));
+            const pDist = DISTANCE - (scrollP * 60);
+            const pTilt = TILT + (scrollP * 0.4);
+
             // Draw core
             gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
             gl.useProgram(cProg);
-            gl.uniform1f(cu.uDist, DISTANCE);
+            gl.uniform1f(cu.uDist, pDist);
             gl.uniform1f(cu.uCore, CORE);
             gl.uniform1f(cu.uAspect, aspect);
             gl.uniform1f(cu.uHalfH, halfH);
-            gl.uniform1f(cu.uTilt, TILT);
+            gl.uniform1f(cu.uTilt, pTilt);
             gl.uniform3fv(cu.uBase, BASE);
             gl.uniform3fv(cu.uAccent, ACCENT);
             gl.bindBuffer(gl.ARRAY_BUFFER, quadBuf);
@@ -1211,8 +1444,8 @@ void main(){
             gl.blendFunc(gl.ONE, gl.ONE);
             gl.useProgram(pProg);
             gl.uniform1f(pu.uTime, t);
-            gl.uniform1f(pu.uTilt, TILT);
-            gl.uniform1f(pu.uDist, DISTANCE);
+            gl.uniform1f(pu.uTilt, pTilt);
+            gl.uniform1f(pu.uDist, pDist);
             gl.uniform1f(pu.uAspect, aspect);
             gl.uniform1f(pu.uHalfH, halfH);
             gl.uniform1f(pu.uDotSize, DOT_SIZE);
@@ -1315,6 +1548,9 @@ void main(){
         if (transitioned) return;
         transitioned = true;
 
+        initAudio();
+        playWarp();
+
         // Start warp
         warpRunning = true;
         warpCtx.fillStyle = '#000';
@@ -1367,6 +1603,8 @@ void main(){
         document.body.classList.remove('portfolio-active');
         window.scrollTo(0, 0);
 
+        playWarp(); // Play sound going back too
+
         welcomeEl.style.display = '';
         gsap.set(welcomeEl, { scale: 1, rotateX: 0, opacity: 1 });
 
@@ -1408,20 +1646,31 @@ void main(){
     gsap.from('.welcome-tag', { y: 20, opacity: 0, duration: 1, ease: 'power3.out', delay: 0.3 });
     gsap.from('.glitch-text', { y: 30, opacity: 0, duration: 1.2, ease: 'power3.out', delay: 0.5 });
     gsap.from('.welcome-subtitle', { y: 15, opacity: 0, duration: 1, ease: 'power3.out', delay: 0.7 });
-    gsap.from('#explore-btn', { y: 20, opacity: 0, duration: 1, ease: 'power3.out', delay: 1 });
+    gsap.from('.click-anywhere', { y: 20, opacity: 0, duration: 1, ease: 'power3.out', delay: 1 });
 
     // Portfolio scroll reveals
     gsap.utils.toArray('.pf-reveal').forEach(el => {
         gsap.from(el, {
             y: 60, opacity: 0, duration: 1, ease: 'power3.out',
-            scrollTrigger: { trigger: el, start: 'top 85%' }
+            scrollTrigger: { 
+                trigger: el, 
+                start: 'top 85%',
+                onEnter: () => decryptEffect(el)
+            }
         });
     });
     gsap.utils.toArray('.pf-card').forEach((el, i) => {
         gsap.from(el, {
             y: 80, opacity: 0, rotation: (i%2===0 ? -3 : 3), duration: 0.9,
             ease: 'power3.out', delay: i * 0.1,
-            scrollTrigger: { trigger: el, start: 'top 90%' }
+            scrollTrigger: { 
+                trigger: el, 
+                start: 'top 90%',
+                onEnter: () => {
+                    const txts = el.querySelectorAll('h3, p, .stamp-mission');
+                    txts.forEach(t => decryptEffect(t));
+                }
+            }
         });
     });
 
