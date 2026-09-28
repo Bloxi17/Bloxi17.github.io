@@ -136,24 +136,23 @@
         /* LET'S EXPLORE Button */
         #explore-btn {
             position: absolute;
-            bottom: 5vh;
-            left: 50%;
-            transform: translateX(-50%);
+            top: 2.5rem;
+            right: 3rem;
             z-index: 10;
             background: transparent;
             border: 1px solid rgba(255, 255, 255, 0.15);
             color: var(--white);
-            padding: 1rem 3rem;
-            font-size: 0.85rem;
+            padding: 0.75rem 2rem;
+            font-size: 0.75rem;
             letter-spacing: 0.35em;
             text-transform: uppercase;
             cursor: none;
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             align-items: center;
             gap: 0.6rem;
             backdrop-filter: blur(8px);
-            border-radius: 6px;
+            border-radius: 50px;
             transition: all 0.4s ease;
             font-family: 'Inter', sans-serif;
             animation: explore-pulse 2s infinite ease-in-out;
@@ -164,8 +163,8 @@
             box-shadow: 0 0 30px rgba(255, 95, 0, 0.3), inset 0 0 20px rgba(255, 95, 0, 0.08);
         }
         #explore-btn svg {
-            width: 20px; height: 20px;
-            animation: bounce-arrow 1.5s infinite ease-in-out;
+            width: 16px; height: 16px;
+            transform: rotate(-90deg);
         }
         @keyframes explore-pulse {
             0%, 100% { box-shadow: 0 0 10px rgba(255, 95, 0, 0.1); }
