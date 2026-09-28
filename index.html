@@ -133,47 +133,25 @@
             letter-spacing: 0.1em;
         }
 
-        /* LET'S EXPLORE Button */
-        #explore-btn {
+        /* CLICK ANYWHERE PROMPT */
+        .click-anywhere {
             position: absolute;
-            top: 2.5rem;
-            right: 3rem;
-            z-index: 99999;
-            pointer-events: auto;
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            bottom: 5vh;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
             color: var(--white);
-            padding: 0.75rem 2rem;
-            font-size: 0.75rem;
-            letter-spacing: 0.35em;
+            font-size: 0.7rem;
+            letter-spacing: 0.5em;
             text-transform: uppercase;
-            cursor: none;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 0.6rem;
-            backdrop-filter: blur(8px);
-            border-radius: 50px;
-            transition: all 0.4s ease;
-            font-family: 'Inter', sans-serif;
-            animation: explore-pulse 2s infinite ease-in-out;
+            pointer-events: none;
+            opacity: 0.5;
+            animation: pulse-fade 2s infinite ease-in-out;
+            font-family: 'Space Mono', monospace;
         }
-        #explore-btn:hover {
-            background: rgba(255, 95, 0, 0.1);
-            border-color: var(--orange);
-            box-shadow: 0 0 30px rgba(255, 95, 0, 0.3), inset 0 0 20px rgba(255, 95, 0, 0.08);
-        }
-        #explore-btn svg {
-            width: 16px; height: 16px;
-            transform: rotate(-90deg);
-        }
-        @keyframes explore-pulse {
-            0%, 100% { box-shadow: 0 0 10px rgba(255, 95, 0, 0.1); }
-            50% { box-shadow: 0 0 25px rgba(255, 95, 0, 0.25); }
-        }
-        @keyframes bounce-arrow {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(6px); }
+        @keyframes pulse-fade {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.8; }
         }
 
         /* ======================== WARP TRANSITION ======================== */
@@ -238,6 +216,35 @@
             color: var(--accent);
             font-weight: 400;
         }
+
+        .rate-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 1.5rem;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            background: rgba(0, 240, 255, 0.05);
+            border-radius: 50px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            color: var(--cyan);
+            margin-top: 1rem;
+            backdrop-filter: blur(5px);
+        }
+
+        .status-dot {
+            width: 8px; height: 8px;
+            background: var(--cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--cyan);
+            animation: pulse-dot 1.5s infinite alternate;
+        }
+        @keyframes pulse-dot {
+            0% { opacity: 0.4; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1.2); }
+        }
+        .rate-badge .divider { color: rgba(255,255,255,0.2); }
 
         /* ======================== STAMP CARDS ======================== */
         .stamp-section {
@@ -352,6 +359,53 @@
             border-radius: 2px;
             color: var(--silver);
             text-transform: uppercase;
+        }
+
+        /* ======================== PLAYGROUND SECTION ======================== */
+        .playground-section {
+            padding: 4rem 8% 8rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .playground-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+        .play-item {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(10, 10, 12, 0.6);
+            padding: 1.8rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: none;
+        }
+        .play-item:hover {
+            border-color: rgba(0, 240, 255, 0.3);
+            background: rgba(0, 240, 255, 0.02);
+            transform: translateY(-4px);
+        }
+        .play-item span {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--cyan);
+            opacity: 0.7;
+            display: block;
+            margin-bottom: 1rem;
+        }
+        .play-item h4 {
+            font-size: 1.1rem;
+            font-weight: 400;
+            margin-bottom: 0.6rem;
+            color: var(--white);
+        }
+        .play-item p {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 1.2rem;
+            line-height: 1.5;
         }
 
         /* ======================== CONNECT SECTION ======================== */
@@ -560,7 +614,7 @@
     </svg>
 
     <!-- ==================== WELCOME PAGE ==================== -->
-    <section id="welcome">
+    <section id="welcome" style="cursor: none; pointer-events: auto;">
         <video id="bg-video" autoplay loop muted playsinline>
             <source src="background.mp4" type="video/mp4">
         </video>
@@ -572,12 +626,7 @@
             <p class="welcome-subtitle">Creative Technologist &middot; Digital Architect</p>
         </div>
 
-        <button id="explore-btn">
-            <span>Let's Explore</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                <path d="M12 5v14M5 12l7 7 7-7"/>
-            </svg>
-        </button>
+        <div class="click-anywhere">[ CLICK ANYWHERE TO INITIALIZE ]</div>
     </section>
 
     <!-- ==================== WARP TRANSITION ==================== -->
@@ -589,9 +638,9 @@
 
         <div class="portfolio-scroll">
 
-            <!-- Hero -->
+            <!-- Hero / About -->
             <div class="portfolio-hero">
-                <h2 class="pf-reveal">STELLAR ARCHIVES</h2>
+                <h2 class="pf-reveal">ABOUT THE ARCHITECT</h2>
                 <p class="about-text pf-reveal">
                     I'm <span class="highlight">Ainesh</span> — a creative technologist who builds at the intersection of
                     <span class="highlight">design</span>, <span class="highlight">code</span>, and
@@ -599,12 +648,32 @@
                     that push the boundaries of what the web can feel like. Every pixel, every frame, every interaction
                     is engineered to pull you deeper into the void.
                 </p>
+                <div class="rate-badge pf-reveal">
+                    <div class="status-dot"></div>
+                    <span>STATUS: ACCEPTING MISSIONS</span>
+                    <span class="divider">|</span>
+                    <span>BASE RATE: $50/HR</span>
+                </div>
             </div>
 
             <!-- Projects -->
             <div class="stamp-section">
                 <div class="stamp-section-title pf-reveal">// Mission Briefings — Selected Work</div>
                 <div class="stamp-grid">
+
+                    <div class="stamp-card pf-card" data-stamp="INIT">
+                        <div class="stamp-mission">Mission #000</div>
+                        <h3>First Step Website</h3>
+                        <p>The genesis point. The very first website I built, marking the beginning of my journey into digital architecture. A testament to growth, starting from raw structural HTML/CSS before advancing into complex WebGL physics.</p>
+                        <div class="stamp-tags">
+                            <span class="stamp-tag">HTML</span>
+                            <span class="stamp-tag">CSS</span>
+                            <span class="stamp-tag">Genesis</span>
+                        </div>
+                        <div style="margin-top: 1.5rem;">
+                            <a href="#" class="preview-link" target="_blank" data-url="https://github.com/Bloxi17">View Origin ↗</a>
+                        </div>
+                    </div>
 
                     <div class="stamp-card pf-card" data-stamp="CLASSIFIED">
                         <div class="stamp-mission">Mission #001</div>
@@ -693,11 +762,48 @@
                 </div>
             </div>
 
+            <!-- Playground -->
+            <div class="playground-section">
+                <div class="stamp-section-title pf-reveal">// The Sandbox — Experimental Prototypes</div>
+                <div class="playground-grid pf-reveal">
+                    <div class="play-item">
+                        <span>01</span>
+                        <h4>WebGL Shaders</h4>
+                        <p>Fragment shader experiments in GLSL.</p>
+                        <a href="#" class="preview-link" data-url="https://github.com/Bloxi17">Run Test ↗</a>
+                    </div>
+                    <div class="play-item">
+                        <span>02</span>
+                        <h4>GSAP Physics</h4>
+                        <p>Spring-based cursor tracking & hover states.</p>
+                        <a href="#" class="preview-link" data-url="https://github.com/Bloxi17">Run Test ↗</a>
+                    </div>
+                    <div class="play-item">
+                        <span>03</span>
+                        <h4>Three.js Geometries</h4>
+                        <p>Procedurally generated 3D meshes.</p>
+                        <a href="#" class="preview-link" data-url="https://github.com/Bloxi17">Run Test ↗</a>
+                    </div>
+                    <div class="play-item">
+                        <span>04</span>
+                        <h4>Canvas Particles</h4>
+                        <p>High-performance rendering of 100k+ nodes.</p>
+                        <a href="#" class="preview-link" data-url="https://github.com/Bloxi17">Run Test ↗</a>
+                    </div>
+                </div>
+            </div>
+
             <!-- Connect -->
             <div class="connect-section">
                 <h2 class="pf-reveal">TRANSMIT SIGNAL</h2>
                 <p class="connect-desc pf-reveal">Ready to build the next frontier? Establish a secure uplink and let's architect something extraordinary together.</p>
                 <div class="button-row pf-reveal">
+                    <a href="mailto:hello@example.com" class="sf-btn">
+                        <div class="glow-track"><div class="glow-dot"></div></div>
+                        <canvas class="sf-pixel-canvas"></canvas>
+                        <svg class="sf-btn-icon" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                        <span>Comms Link</span>
+                    </a>
                     <a href="https://github.com/Bloxi17" target="_blank" rel="noopener noreferrer" class="sf-btn">
                         <div class="glow-track"><div class="glow-dot"></div></div>
                         <canvas class="sf-pixel-canvas"></canvas>
@@ -763,7 +869,7 @@
 
     const chEnter = () => turbTL.restart();
     const chLeave = () => turbTL.progress(1).kill();
-    document.querySelectorAll('.sf-btn, .stamp-card, #explore-btn').forEach(el => {
+    document.querySelectorAll('.sf-btn, .stamp-card, .play-item, .preview-link, .rate-badge').forEach(el => {
         el.addEventListener('mouseenter', chEnter);
         el.addEventListener('mouseleave', chLeave);
     });
@@ -1252,7 +1358,7 @@ void main(){
         }, null, 2.8);
     }
 
-    document.getElementById('explore-btn').addEventListener('click', launchTransition);
+    document.getElementById('welcome').addEventListener('click', launchTransition);
 
     // Back Home
     function returnHome() {
