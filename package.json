@@ -16,5 +16,8 @@
     "minimalist"
   ],
   "author": "Ainesh Joel Hamilton",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "gsap": "^3.15.0"
+  }
 }
