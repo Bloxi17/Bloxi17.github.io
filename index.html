@@ -620,7 +620,7 @@
             background: rgba(10,10,12,0.8); border: 1px solid rgba(255,255,255,0.1);
             padding: 0.8rem 1.2rem; border-radius: 4px; backdrop-filter: blur(10px);
             opacity: 0; transition: opacity 1s ease, transform 0.5s ease;
-            transform: translateY(20px); pointer-events: auto; cursor: none;
+            transform: translateY(20px); pointer-events: none; cursor: none;
         }
         body.portfolio-active #spotify-widget { opacity: 1; transform: translateY(0); }
         .spot-art { width: 40px; height: 40px; border-radius: 2px; background: url('https://i.scdn.co/image/ab67616d0000b2734139de65cd28362ea31252ce') center/cover; }
@@ -982,22 +982,28 @@
 
     // --- Easter Egg (Keylogger) ---
     let keys = '';
+    let alarmOsc, alarmInterval;
     window.addEventListener('keydown', e => {
         keys += e.key.toLowerCase();
         if(keys.length > 6) keys = keys.slice(1);
         if(keys === 'ainesh') {
-            document.body.classList.toggle('red-alert');
-            if(document.body.classList.contains('red-alert') && actx) {
-                // Alarm
-                const osc = actx.createOscillator();
-                osc.type = 'square';
+            const isRed = document.body.classList.toggle('red-alert');
+            if(isRed && actx) {
+                // Alarm Start
+                alarmOsc = actx.createOscillator();
+                alarmOsc.type = 'square';
                 const gain = actx.createGain();
                 gain.gain.value = 0.05;
-                osc.connect(gain); gain.connect(actx.destination);
-                osc.start();
-                setInterval(() => {
-                    osc.frequency.setValueAtTime(osc.frequency.value === 400 ? 600 : 400, actx.currentTime);
+                alarmOsc.connect(gain); gain.connect(actx.destination);
+                alarmOsc.start();
+                alarmInterval = setInterval(() => {
+                    alarmOsc.frequency.setValueAtTime(alarmOsc.frequency.value === 400 ? 600 : 400, actx.currentTime);
                 }, 250);
+            } else if (!isRed && alarmOsc) {
+                // Alarm Stop
+                alarmOsc.stop();
+                clearInterval(alarmInterval);
+                alarmOsc = null;
             }
         }
     });
@@ -1021,25 +1027,6 @@
         requestAnimationFrame(updateHUD);
     }
     updateHUD();
-
-    // --- Cipher Decrypt Effect ---
-    function decryptEffect(el) {
-        if(el.dataset.decrypted === 'true') return;
-        el.dataset.decrypted = 'true';
-        const original = el.innerText;
-        if(!original.trim()) return;
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*';
-        let iteration = 0;
-        const interval = setInterval(() => {
-            el.innerText = original.split('').map((char, index) => {
-                if(char === ' ' || char === '\\n') return char;
-                if(index < iteration) return char;
-                return chars[Math.floor(Math.random() * chars.length)];
-            }).join('');
-            if(iteration >= original.length) clearInterval(interval);
-            iteration += 0.5;
-        }, 30);
-    }
 
     // --- Boot Sequence ---
     const bootLines = [
@@ -1654,8 +1641,7 @@ void main(){
             y: 60, opacity: 0, duration: 1, ease: 'power3.out',
             scrollTrigger: { 
                 trigger: el, 
-                start: 'top 85%',
-                onEnter: () => decryptEffect(el)
+                start: 'top 85%'
             }
         });
     });
@@ -1665,11 +1651,7 @@ void main(){
             ease: 'power3.out', delay: i * 0.1,
             scrollTrigger: { 
                 trigger: el, 
-                start: 'top 90%',
-                onEnter: () => {
-                    const txts = el.querySelectorAll('h3, p, .stamp-mission');
-                    txts.forEach(t => decryptEffect(t));
-                }
+                start: 'top 90%'
             }
         });
     });
