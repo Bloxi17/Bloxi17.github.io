@@ -1,27 +1,33 @@
 /**
- * app.js — Main Controller for Huyml.co Reverse-Engineered Architecture
+ * app.js — GSAP-Powered Controller for Huyml.co Reverse-Engineered Architecture
  * Ainesh Joel Hamilton®
  * Features:
- * - Live IST Clock
- * - Custom difference cursor with hover states
- * - Cursor-trailing floating media preview card with spring lerp
+ * - GSAP Hero Entrance Sequence & ScrollTrigger Reveals
+ * - Magnetic Button Physics & Elastic Springs
+ * - GSAP quickTo Cursor & Floating Preview Follower
  * - 3D Gyroscopic Coin Badge (Face 1 & Face 2 flipping)
- * - Lateral sliding drawer system (About, Contact, Playground, Case Studies)
- * - '26 Showreel fullscreen procedural canvas simulation
- * - Tactile clipboard copy with micro-pill toast
+ * - Lateral Sliding Drawers with Staggered Elements
+ * - '26 Showreel Fullscreen Procedural Canvas Simulation
  * - 11x11 Harmonic Wave Dot Matrix & Mini CRT Console
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Register ScrollTrigger if loaded
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+  }
+
   initClock();
   initCursor();
   initProjectHoverPreview();
+  initMagneticButtons();
   init3DCoinBadge();
   initDrawers();
   initProjectModal();
   initShowreel();
   initClipboardToast();
   initPlaygroundFeatures();
+  initGSAPAnimations();
 });
 
 /* --------------------------------------------------------------------------
@@ -47,30 +53,20 @@ function initClock() {
 }
 
 /* --------------------------------------------------------------------------
-   2. Custom Difference Cursor
+   2. GSAP-Powered Custom Difference Cursor
    -------------------------------------------------------------------------- */
 function initCursor() {
   const cursor = document.getElementById('cursorDot');
   if (!cursor || window.matchMedia('(pointer: coarse)').matches) return;
 
-  let mouseX = window.innerWidth / 2;
-  let mouseY = window.innerHeight / 2;
-  let cursorX = mouseX;
-  let cursorY = mouseY;
+  // Use GSAP quickTo for high-performance zero-jank cursor physics
+  const setX = gsap.quickTo(cursor, "x", { duration: 0.18, ease: "power3.out" });
+  const setY = gsap.quickTo(cursor, "y", { duration: 0.18, ease: "power3.out" });
 
   window.addEventListener('pointermove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
+    setX(e.clientX);
+    setY(e.clientY);
   }, { passive: true });
-
-  function render() {
-    // Smooth lerp for liquid feel
-    cursorX += (mouseX - cursorX) * 0.22;
-    cursorY += (mouseY - cursorY) * 0.22;
-    cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
-    requestAnimationFrame(render);
-  }
-  requestAnimationFrame(render);
 
   // Hover states
   document.addEventListener('pointerover', (e) => {
@@ -89,7 +85,7 @@ function initCursor() {
 }
 
 /* --------------------------------------------------------------------------
-   3. Cursor-Trailing Floating Media Preview Card
+   3. Cursor-Trailing Floating Media Preview Card (GSAP quickTo)
    -------------------------------------------------------------------------- */
 function initProjectHoverPreview() {
   const preview = document.getElementById('hoverPreviewCard');
@@ -100,16 +96,12 @@ function initProjectHoverPreview() {
 
   if (!preview || !rows.length || window.matchMedia('(pointer: coarse)').matches) return;
 
-  let targetX = 0;
-  let targetY = 0;
-  let currentX = 0;
-  let currentY = 0;
-  let isVisible = false;
+  const setX = gsap.quickTo(preview, "x", { duration: 0.32, ease: "power3.out" });
+  const setY = gsap.quickTo(preview, "y", { duration: 0.32, ease: "power3.out" });
 
   window.addEventListener('pointermove', (e) => {
-    // Position preview slightly offset from pointer
-    targetX = e.clientX + 30;
-    targetY = e.clientY - 105;
+    let targetX = e.clientX + 30;
+    let targetY = e.clientY - 105;
 
     // Prevent clipping right/bottom edge
     if (targetX + 340 > window.innerWidth) {
@@ -119,17 +111,10 @@ function initProjectHoverPreview() {
       targetY = window.innerHeight - 240;
     }
     if (targetY < 80) targetY = 80;
-  }, { passive: true });
 
-  function renderPreview() {
-    if (isVisible) {
-      currentX += (targetX - currentX) * 0.15;
-      currentY += (targetY - currentY) * 0.15;
-      preview.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
-    }
-    requestAnimationFrame(renderPreview);
-  }
-  requestAnimationFrame(renderPreview);
+    setX(targetX);
+    setY(targetY);
+  }, { passive: true });
 
   rows.forEach(row => {
     row.addEventListener('pointerenter', () => {
@@ -141,19 +126,68 @@ function initProjectHoverPreview() {
       if (previewTitle && title) previewTitle.textContent = title;
       if (previewCategory && category) previewCategory.textContent = category;
 
-      isVisible = true;
-      preview.classList.add('visible');
+      gsap.to(preview, {
+        opacity: 1,
+        scale: 1,
+        duration: 0.28,
+        ease: "power2.out",
+        overwrite: "auto"
+      });
     });
 
     row.addEventListener('pointerleave', () => {
-      isVisible = false;
-      preview.classList.remove('visible');
+      gsap.to(preview, {
+        opacity: 0,
+        scale: 0.85,
+        duration: 0.25,
+        ease: "power2.in",
+        overwrite: "auto"
+      });
     });
   });
 }
 
 /* --------------------------------------------------------------------------
-   4. 3D Interactive Coin / Flipping Face Badge
+   4. Magnetic Button Physics (Elastic Springs)
+   -------------------------------------------------------------------------- */
+function initMagneticButtons() {
+  if (window.matchMedia('(pointer: coarse)').matches) return;
+
+  const magneticElements = document.querySelectorAll(
+    '.huyml-showreel-btn, .huyml-explore-btn, .huyml-inquiry-btn, .huyml-audio-toggle'
+  );
+
+  magneticElements.forEach(el => {
+    el.addEventListener('pointermove', (e) => {
+      const rect = el.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+
+      // Magnetic pull: 30% of offset
+      gsap.to(el, {
+        x: x * 0.32,
+        y: y * 0.32,
+        duration: 0.25,
+        ease: "power2.out",
+        overwrite: "auto"
+      });
+    });
+
+    el.addEventListener('pointerleave', () => {
+      // Elastic snapback
+      gsap.to(el, {
+        x: 0,
+        y: 0,
+        duration: 0.7,
+        ease: "elastic.out(1, 0.38)",
+        overwrite: "auto"
+      });
+    });
+  });
+}
+
+/* --------------------------------------------------------------------------
+   5. 3D Interactive Coin / Flipping Face Badge
    -------------------------------------------------------------------------- */
 function init3DCoinBadge() {
   const wrapper = document.getElementById('huymlCoin');
@@ -171,18 +205,37 @@ function init3DCoinBadge() {
     const rotY = (x / (rect.width / 2)) * 18;
     const flipDeg = isFlipped ? 180 : 0;
 
-    card.style.transform = `rotateX(${rotX}deg) rotateY(${rotY + flipDeg}deg)`;
+    gsap.to(card, {
+      rotateX: rotX,
+      rotateY: rotY + flipDeg,
+      duration: 0.25,
+      ease: "power2.out",
+      overwrite: "auto"
+    });
   });
 
   wrapper.addEventListener('pointerleave', () => {
     const flipDeg = isFlipped ? 180 : 0;
-    card.style.transform = `rotateX(0deg) rotateY(${flipDeg}deg)`;
+    gsap.to(card, {
+      rotateX: 0,
+      rotateY: flipDeg,
+      duration: 0.6,
+      ease: "power3.out",
+      overwrite: "auto"
+    });
   });
 
   wrapper.addEventListener('click', () => {
     isFlipped = !isFlipped;
     const flipDeg = isFlipped ? 180 : 0;
-    card.style.transform = `rotateY(${flipDeg}deg)`;
+
+    gsap.to(card, {
+      rotateY: flipDeg,
+      duration: 0.7,
+      ease: "back.out(1.6)",
+      overwrite: "auto"
+    });
+
     if (window.soundEngine) {
       window.soundEngine.playOpen();
     }
@@ -191,7 +244,7 @@ function init3DCoinBadge() {
 }
 
 /* --------------------------------------------------------------------------
-   5. Lateral Sliding Drawers (About, Contact, Playground)
+   6. Lateral Sliding Drawers (About, Contact, Playground)
    -------------------------------------------------------------------------- */
 function initDrawers() {
   const backdrop = document.getElementById('drawerBackdrop');
@@ -200,7 +253,11 @@ function initDrawers() {
   const allDrawers = document.querySelectorAll('.huyml-drawer');
 
   function openDrawer(drawerId) {
-    allDrawers.forEach(d => d.classList.remove('active'));
+    allDrawers.forEach(d => {
+      d.classList.remove('active');
+      gsap.set(d, { xPercent: 100 });
+    });
+
     const target = document.getElementById(`${drawerId}Drawer`);
     if (!target) return;
 
@@ -208,11 +265,36 @@ function initDrawers() {
     backdrop?.classList.add('active');
     document.body.style.overflow = 'hidden';
 
+    // GSAP drawer slide-in
+    gsap.fromTo(target, 
+      { xPercent: 100 }, 
+      { xPercent: 0, duration: 0.45, ease: "power4.out" }
+    );
+
+    // Stagger inner sections
+    const innerBlocks = target.querySelectorAll('.huyml-drawer-body > div');
+    if (innerBlocks.length) {
+      gsap.fromTo(innerBlocks, 
+        { y: 22, opacity: 0 }, 
+        { y: 0, opacity: 1, duration: 0.45, stagger: 0.08, delay: 0.15, ease: "power3.out" }
+      );
+    }
+
     if (window.soundEngine) window.soundEngine.playOpen();
   }
 
   function closeAllDrawers() {
-    allDrawers.forEach(d => d.classList.remove('active'));
+    allDrawers.forEach(d => {
+      if (d.classList.contains('active')) {
+        gsap.to(d, {
+          xPercent: 100,
+          duration: 0.35,
+          ease: "power3.in",
+          onComplete: () => d.classList.remove('active')
+        });
+      }
+    });
+
     backdrop?.classList.remove('active');
     document.body.style.overflow = '';
   }
@@ -234,7 +316,7 @@ function initDrawers() {
 }
 
 /* --------------------------------------------------------------------------
-   6. Project Case Study Detail Modal
+   7. Project Case Study Detail Modal
    -------------------------------------------------------------------------- */
 const PROJECT_DETAILS = {
   'first-step': {
@@ -388,13 +470,18 @@ function initProjectModal() {
       backdrop?.classList.add('active');
       document.body.style.overflow = 'hidden';
 
+      gsap.fromTo(modal, 
+        { xPercent: 100 }, 
+        { xPercent: 0, duration: 0.45, ease: "power4.out" }
+      );
+
       if (window.soundEngine) window.soundEngine.playOpen();
     });
   });
 }
 
 /* --------------------------------------------------------------------------
-   7. '26 Showreel Fullscreen Procedural Canvas Player
+   8. '26 Showreel Fullscreen Procedural Canvas Player
    -------------------------------------------------------------------------- */
 function initShowreel() {
   const modal = document.getElementById('showreelModal');
@@ -456,13 +543,22 @@ function initShowreel() {
     resizeCanvas();
     t = 0;
     animationId = requestAnimationFrame(drawSimulation);
+
+    gsap.fromTo(modal, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out" });
     if (window.soundEngine) window.soundEngine.playOpen();
   }
 
   function close() {
-    modal.classList.remove('active');
-    document.body.style.overflow = '';
-    if (animationId) cancelAnimationFrame(animationId);
+    gsap.to(modal, {
+      opacity: 0,
+      duration: 0.25,
+      ease: "power2.in",
+      onComplete: () => {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+        if (animationId) cancelAnimationFrame(animationId);
+      }
+    });
   }
 
   if (openBtn) openBtn.addEventListener('click', open);
@@ -478,7 +574,7 @@ function initShowreel() {
 }
 
 /* --------------------------------------------------------------------------
-   8. Clipboard Copy & Toast Feedback
+   9. Clipboard Copy & Toast Feedback
    -------------------------------------------------------------------------- */
 function showToast(message) {
   const toast = document.getElementById('huymlToast');
@@ -513,7 +609,7 @@ function initClipboardToast() {
 }
 
 /* --------------------------------------------------------------------------
-   9. Playground Micro-Lab: 11x11 Harmonic Wave Dot Matrix & Mini CRT
+   10. Playground Micro-Lab: 11x11 Harmonic Wave Dot Matrix & Mini CRT
    -------------------------------------------------------------------------- */
 function initPlaygroundFeatures() {
   const matrixGrid = document.getElementById('playgroundMatrixGrid');
@@ -533,16 +629,13 @@ function initPlaygroundFeatures() {
           border-radius: 50%;
           background: rgba(56, 189, 248, 0.35);
           cursor: pointer;
-          transition: transform 0.15s ease, background 0.15s ease;
         `;
 
         dot.addEventListener('mouseenter', () => {
-          dot.style.transform = 'scale(1.8)';
-          dot.style.background = '#38bdf8';
+          gsap.to(dot, { scale: 1.8, backgroundColor: '#38bdf8', duration: 0.15, ease: 'power2.out' });
           if (window.soundEngine) window.soundEngine.playTick();
           setTimeout(() => {
-            dot.style.transform = 'scale(1)';
-            dot.style.background = 'rgba(56, 189, 248, 0.35)';
+            gsap.to(dot, { scale: 1, backgroundColor: 'rgba(56, 189, 248, 0.35)', duration: 0.2 });
           }, 200);
         });
 
@@ -562,11 +655,9 @@ function initPlaygroundFeatures() {
       dots.forEach(({ el, r, c }) => {
         const dist = Math.sqrt((r - originR) ** 2 + (c - originC) ** 2);
         setTimeout(() => {
-          el.style.transform = 'scale(1.8)';
-          el.style.background = '#38bdf8';
+          gsap.to(el, { scale: 1.8, backgroundColor: '#38bdf8', duration: 0.15 });
           setTimeout(() => {
-            el.style.transform = 'scale(1)';
-            el.style.background = 'rgba(56, 189, 248, 0.35)';
+            gsap.to(el, { scale: 1, backgroundColor: 'rgba(56, 189, 248, 0.35)', duration: 0.25 });
           }, 200);
         }, dist * 35);
       });
@@ -609,4 +700,99 @@ function initPlaygroundFeatures() {
       if (window.soundEngine) window.soundEngine.playTick();
     });
   });
+}
+
+/* --------------------------------------------------------------------------
+   11. GSAP Hero Entrance & ScrollTrigger Reveals
+   -------------------------------------------------------------------------- */
+function initGSAPAnimations() {
+  if (typeof gsap === 'undefined') return;
+
+  const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+  // 1. Header elements staggered entrance
+  tl.from('.huyml-header', {
+    yPercent: -100,
+    opacity: 0,
+    duration: 0.8
+  });
+
+  // 2. Hero lead tag
+  tl.from('.huyml-hero-tag', {
+    y: 20,
+    opacity: 0,
+    duration: 0.6
+  }, "-=0.4");
+
+  // 3. Hero massive display headline
+  tl.from('.huyml-hero-title', {
+    y: 35,
+    opacity: 0,
+    duration: 0.9,
+    ease: "power4.out"
+  }, "-=0.4");
+
+  // 4. Hero description
+  tl.from('.huyml-hero-desc', {
+    y: 20,
+    opacity: 0,
+    duration: 0.7
+  }, "-=0.5");
+
+  // 5. Hero action buttons
+  tl.from('.huyml-hero-actions > *', {
+    y: 20,
+    opacity: 0,
+    duration: 0.6,
+    stagger: 0.1,
+    ease: "back.out(1.5)"
+  }, "-=0.5");
+
+  // 6. 3D Coin Badge Entrance
+  tl.from('#huymlCoin', {
+    scale: 0.6,
+    rotateY: -120,
+    opacity: 0,
+    duration: 1.1,
+    ease: "elastic.out(1, 0.5)"
+  }, "-=0.6");
+
+  // 7. ScrollTrigger for Project Feed rows
+  if (typeof ScrollTrigger !== 'undefined') {
+    gsap.from('.huyml-section-header', {
+      scrollTrigger: {
+        trigger: '#work',
+        start: 'top 85%'
+      },
+      y: 25,
+      opacity: 0,
+      duration: 0.7,
+      ease: "power3.out"
+    });
+
+    gsap.from('.huyml-project-row', {
+      scrollTrigger: {
+        trigger: '#projectList',
+        start: 'top 85%'
+      },
+      y: 35,
+      opacity: 0,
+      stagger: 0.08,
+      duration: 0.75,
+      ease: "power3.out"
+    });
+
+    // Footer entrance
+    gsap.from('.huyml-footer-grid > div', {
+      scrollTrigger: {
+        trigger: '.huyml-footer',
+        start: 'top 90%'
+      },
+      y: 30,
+      opacity: 0,
+      stagger: 0.1,
+      duration: 0.8,
+      ease: "power3.out"
+    });
+  }
 }
