@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voyager: The Golden Record</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;600;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #020205;
+            --text: #ffffff;
+            --accent: #00f0ff;
+            --gold: #ffd700;
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        /* The Three.js Canvas stays fixed in the background */
+        #webgl-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        /* The scrollable content layer */
+        #scroll-container {
+            position: relative;
+            z-index: 1;
+        }
+
+        section {
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            position: relative;
+            box-sizing: border-box;
+            padding: 0 10vw;
+        }
+
+        .content-block {
+            max-width: 500px;
+            background: rgba(2, 2, 5, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            padding: 3rem;
+            border-radius: 4px;
+            opacity: 0; /* Animated by GSAP */
+            transform: translateY(50px);
+        }
+
+        h1, h2 {
+            font-family: 'Space Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 0;
+        }
+        h1 { font-size: 3rem; color: var(--gold); text-shadow: 0 0 20px rgba(255, 215, 0, 0.4); }
+        h2 { font-size: 2rem; color: var(--accent); }
+        
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .data-readout {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--accent);
+            margin-top: 2rem;
+            border-top: 1px dashed rgba(0,240,255,0.3);
+            padding-top: 1rem;
+        }
+
+        /* Alignment classes for sections */
+        .align-left { justify-content: flex-start; }
+        .align-right { justify-content: flex-end; }
+        .align-center { justify-content: center; text-align: center; }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.5);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: translate(-50%, 0); }
+            50% { opacity: 1; transform: translate(-50%, 10px); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <canvas id="webgl-canvas"></canvas>
+
+    <div id="scroll-container">
+        
+        <!-- SECTION 1: Launch -->
+        <section class="align-left" id="sec-1">
+            <div class="content-block">
+                <h1>Voyager 1</h1>
+                <p>Launched in 1977, it was designed for a five-year mission to study Jupiter and Saturn. It became the farthest human-made object in existence.</p>
+                <div class="data-readout">
+                    STATUS: ONLINE<br>
+                    DISTANCE_FROM_EARTH: 15,000,000,000 MILES
+                </div>
+            </div>
+            <div class="scroll-indicator">SCROLL TO INITIATE TELEMETRY ↓</div>
+        </section>
+
+        <!-- SECTION 2: Jupiter -->
+        <section class="align-right" id="sec-2">
+            <div class="content-block">
+                <h2>The Grand Tour</h2>
+                <p>Voyager utilized a rare planetary alignment occurring once every 176 years. By using Jupiter's immense gravity, it slingshotted itself outward, gaining the velocity needed to escape the solar system.</p>
+                <div class="data-readout">
+                    GRAVITY_ASSIST: ENGAGED<br>
+                    CURRENT_VELOCITY: 38,000 MPH
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: The Golden Record -->
+        <section class="align-left" id="sec-3">
+            <div class="content-block" style="border-color: rgba(255,215,0,0.4);">
+                <h2 style="color: var(--gold);">The Golden Record</h2>
+                <p>Attached to the side of the probe is a phonograph record containing sounds and images selected to portray the diversity of life and culture on Earth, intended for any intelligent extraterrestrial life.</p>
+                <div class="data-readout" style="color: var(--gold);">
+                    PAYLOAD: PHONOGRAPH_RECORD<br>
+                    MATERIAL: GOLD-PLATED COPPER
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: Interstellar Space -->
+        <section class="align-center" id="sec-4">
+            <div class="content-block" style="margin: 0 auto; background: transparent; border: none;">
+                <h1 style="color: #fff; text-shadow: 0 0 30px #fff;">Interstellar Space</h1>
+                <p style="font-size: 1.5rem;">In August 2012, Voyager 1 crossed the heliopause. It is now drifting in the void between the stars, destined to wander the Milky Way eternally.</p>
+                <div class="data-readout" style="border: none;">
+                    [ TRANSMISSION ENDS ]
+                </div>
+            </div>
+        </section>
+
+        <!-- Extra spacing for smooth scrolling out -->
+        <div style="height: 50vh;"></div>
+    </div>
+
+    <!-- Scripts: Three.js and GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // ==========================================
+        // 1. THREE.JS SCENE SETUP
+        // ==========================================
+        const canvas = document.getElementById('webgl-canvas');
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x020205, 0.02);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+        scene.add(ambientLight);
+        
+        const directionalLight = new THREE.DirectionalLight(0x00f0ff, 1.5);
+        directionalLight.position.set(5, 5, 5);
+        scene.add(directionalLight);
+
+        const sunLight = new THREE.PointLight(0xffd700, 2, 100);
+        sunLight.position.set(-20, 10, -20);
+        scene.add(sunLight);
+
+        // ==========================================
+        // 2. PROCEDURAL VOYAGER MODEL
+        // ==========================================
+        const voyager = new THREE.Group();
+
+        // Material for the probe
+        const probeMat = new THREE.MeshStandardMaterial({ 
+            color: 0xcccccc, 
+            metalness: 0.8, 
+            roughness: 0.4,
+            wireframe: false 
+        });
+        const goldMat = new THREE.MeshStandardMaterial({
+            color: 0xffd700,
+            metalness: 1.0,
+            roughness: 0.2
+        });
+
+        // High-Gain Antenna (The Dish)
+        const dishGeo = new THREE.CylinderGeometry(2.5, 0.1, 0.5, 32);
+        const dish = new THREE.Mesh(dishGeo, probeMat);
+        dish.rotation.x = Math.PI / 2;
+        voyager.add(dish);
+
+        // Main Bus (Body)
+        const busGeo = new THREE.BoxGeometry(1.5, 1.5, 1);
+        const bus = new THREE.Mesh(busGeo, probeMat);
+        bus.position.z = -0.8;
+        voyager.add(bus);
+
+        // RTG (Power Source Boom)
+        const rtgBoomGeo = new THREE.CylinderGeometry(0.05, 0.05, 4);
+        const rtgBoom = new THREE.Mesh(rtgBoomGeo, probeMat);
+        rtgBoom.position.set(2, -0.5, -0.8);
+        rtgBoom.rotation.z = Math.PI / 2;
+        voyager.add(rtgBoom);
+
+        const rtgGeo = new THREE.CylinderGeometry(0.3, 0.3, 1.5, 16);
+        const rtg = new THREE.Mesh(rtgGeo, probeMat);
+        rtg.position.set(4, -0.5, -0.8);
+        rtg.rotation.z = Math.PI / 2;
+        voyager.add(rtg);
+
+        // Magnetometer Boom (Long thin rod)
+        const magBoomGeo = new THREE.CylinderGeometry(0.02, 0.02, 8);
+        const magBoom = new THREE.Mesh(magBoomGeo, probeMat);
+        magBoom.position.set(-4, 1, -0.8);
+        magBoom.rotation.z = -Math.PI / 2.5;
+        voyager.add(magBoom);
+
+        // The Golden Record (Attached to bus)
+        const recordGeo = new THREE.CylinderGeometry(0.4, 0.4, 0.05, 32);
+        const record = new THREE.Mesh(recordGeo, goldMat);
+        record.position.set(0.8, 0, -0.8);
+        record.rotation.z = Math.PI / 2;
+        voyager.add(record);
+
+        scene.add(voyager);
+
+        // ==========================================
+        // 3. ENVIRONMENT (Stars & Planet)
+        // ==========================================
+        // Stars
+        const starsGeo = new THREE.BufferGeometry();
+        const starsCount = 3000;
+        const posArray = new Float32Array(starsCount * 3);
+        for(let i=0; i<starsCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 200;
+        }
+        starsGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const starsMat = new THREE.PointsMaterial({ size: 0.1, color: 0xffffff });
+        const starMesh = new THREE.Points(starsGeo, starsMat);
+        scene.add(starMesh);
+
+        // Jupiter-like planet in the distance
+        const planetGeo = new THREE.SphereGeometry(15, 64, 64);
+        const planetMat = new THREE.MeshStandardMaterial({ 
+            color: 0x111115, 
+            emissive: 0x00f0ff, 
+            emissiveIntensity: 0.1,
+            wireframe: true
+        });
+        const planet = new THREE.Mesh(planetGeo, planetMat);
+        planet.position.set(-30, -10, -50);
+        scene.add(planet);
+
+        // ==========================================
+        // 4. CAMERA SETUP
+        // ==========================================
+        // Start camera near the probe
+        camera.position.set(5, 2, 8);
+        camera.lookAt(voyager.position);
+
+        // ==========================================
+        // 5. ANIMATION LOOP
+        // ==========================================
+        let time = 0;
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Subtle floating animation for the probe
+            time += 0.01;
+            voyager.position.y = Math.sin(time) * 0.2;
+            voyager.rotation.z = Math.sin(time * 0.5) * 0.05;
+            
+            // Rotate planet slowly
+            planet.rotation.y += 0.001;
+            starMesh.rotation.y += 0.0002;
+
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Handle Resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // ==========================================
+        // 6. GSAP SCROLL-TELLING LOGIC
+        // ==========================================
+        // Fade in text blocks as they enter the screen
+        gsap.utils.toArray('.content-block').forEach(block => {
+            gsap.to(block, {
+                scrollTrigger: {
+                    trigger: block,
+                    start: "top 80%",
+                    end: "top 50%",
+                    scrub: 1
+                },
+                opacity: 1,
+                y: 0
+            });
+        });
+
+        // Camera & Object Animation Timeline tied to entire scroll container
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: "#scroll-container",
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 2 // smooth scrubbing
+            }
+        });
+
+        // State 1 -> State 2 (Moving towards Jupiter)
+        tl.to(camera.position, { x: -8, y: 0, z: 12, duration: 1 }, 0)
+          .to(voyager.rotation, { x: Math.PI / 6, y: -Math.PI / 4, duration: 1 }, 0)
+          .to(planet.position, { x: -15, z: -30, duration: 1 }, 0);
+
+        // State 2 -> State 3 (Focusing on the Golden Record)
+        tl.to(camera.position, { x: 3, y: 0, z: 3, duration: 1 }, 1)
+          .to(voyager.rotation, { x: 0, y: Math.PI / 2, duration: 1 }, 1)
+          .to(planet.position, { x: -50, z: -100, duration: 1 }, 1); // planet fades into distance
+
+        // State 3 -> State 4 (Interstellar Space / Flying away)
+        tl.to(camera.position, { x: 0, y: 0, z: 20, duration: 1 }, 2)
+          .to(voyager.rotation, { x: Math.PI / 8, y: Math.PI, duration: 1 }, 2)
+          .to(voyager.position, { z: -50, duration: 1 }, 2) // probe shoots off into the distance
+          .to(directionalLight, { intensity: 0, duration: 1 }, 2); // gets darker
+
+    </script>
+</body>
+</html>
