@@ -4,339 +4,548 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ainesh | Event Horizon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@100;300;400;600;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --absolute-black: #000000;
-            --silver: #a0a0a0;
+            --black: #000000;
+            --deep-space: #020208;
             --white: #ffffff;
+            --silver: #a0a0a0;
             --cyan: #00f0ff;
-            --magenta: #8a005a;
-            --glass-bg: rgba(20, 20, 30, 0.4);
-            --glass-border: rgba(0, 240, 255, 0.2);
+            --orange: #FF5F00;
+            --accent: #ffd9a0;
+            --magenta: #c0007a;
+            --glass-bg: rgba(10, 10, 18, 0.55);
+            --glass-border: rgba(0, 240, 255, 0.15);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body, html {
-            width: 100%;
-            height: 100%;
-            overflow-x: hidden;
-            overflow-y: auto; /* Enable scrolling */
-            background: var(--absolute-black);
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            cursor: none; /* Hide default cursor */
+            width: 100%; height: 100%;
+            overflow: hidden;
+            background: var(--black);
+            font-family: 'Inter', system-ui, sans-serif;
+            cursor: none;
             color: var(--white);
-            scroll-behavior: smooth;
         }
 
-        /* Hide scrollbar for cleaner look */
-        body::-webkit-scrollbar {
-            width: 8px;
-        }
-        body::-webkit-scrollbar-track {
-            background: #000;
-        }
-        body::-webkit-scrollbar-thumb {
-            background: rgba(0, 240, 255, 0.3);
-            border-radius: 4px;
+        body.portfolio-active {
+            overflow-y: auto;
+            overflow-x: hidden;
         }
 
-        /* Fixed Backgrounds */
-        #bg-video {
-            position: fixed; /* Keep fixed during scroll */
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover;
-            z-index: 0;
-            opacity: 0.7;
-        }
+        body::-webkit-scrollbar { width: 6px; }
+        body::-webkit-scrollbar-track { background: #000; }
+        body::-webkit-scrollbar-thumb { background: rgba(255, 95, 0, 0.4); border-radius: 3px; }
 
-        #canvas-container {
+        /* ======================== WELCOME PAGE ======================== */
+        #welcome {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        /* Main Scroll Container */
-        .main-content {
-            position: relative;
-            z-index: 10;
-            width: 100%;
-        }
-
-        /* Typography & Layout */
-        section {
-            min-height: 100vh;
-            width: 100%;
-            padding: 6rem 10%;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 100;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: center;
+            transform-origin: center center;
+        }
+
+        #bg-video {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.65;
+        }
+
+        #constellation-canvas {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .welcome-content {
             position: relative;
+            z-index: 10;
+            text-align: center;
+            pointer-events: none;
         }
 
-        /* Hero Section */
-        .hero-section {
-            align-items: flex-start;
-        }
-
-        .subtitle {
-            font-size: 1rem;
-            letter-spacing: 0.5em;
+        .welcome-tag {
+            display: block;
+            font-size: 0.8rem;
+            letter-spacing: 0.6em;
             color: var(--cyan);
-            margin-bottom: 1rem;
             text-transform: uppercase;
+            margin-bottom: 1.2rem;
+            font-weight: 300;
         }
 
         h1.glitch-text {
-            font-size: clamp(4rem, 10vw, 8rem);
+            font-size: clamp(4.5rem, 12vw, 10rem);
             font-weight: 100;
-            letter-spacing: 0.1em;
-            margin-left: -0.05em;
-            margin-bottom: 1rem;
+            letter-spacing: 0.15em;
             color: var(--white);
-            text-shadow: 0 0 40px rgba(0, 240, 255, 0.4);
+            text-shadow: 0 0 60px rgba(0, 240, 255, 0.3);
             user-select: none;
             position: relative;
+            line-height: 1;
+            margin-bottom: 1rem;
         }
-
-        /* Simple CSS Glitch Effect */
         h1.glitch-text::before, h1.glitch-text::after {
             content: attr(data-text);
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0.8;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            opacity: 0.7;
         }
         h1.glitch-text::before {
-            left: 2px;
-            text-shadow: -2px 0 var(--magenta);
-            animation: glitch-anim 2s infinite linear alternate-reverse;
+            left: 3px;
+            text-shadow: -3px 0 var(--magenta);
+            animation: glitch1 2.5s infinite linear alternate-reverse;
         }
         h1.glitch-text::after {
-            left: -2px;
-            text-shadow: -2px 0 var(--cyan);
-            animation: glitch-anim 3s infinite linear alternate-reverse;
+            left: -3px;
+            text-shadow: 3px 0 var(--cyan);
+            animation: glitch2 3.5s infinite linear alternate-reverse;
+        }
+        @keyframes glitch1 {
+            0% { clip-path: inset(15% 0 80% 0); } 20% { clip-path: inset(60% 0 5% 0); }
+            40% { clip-path: inset(35% 0 55% 0); } 60% { clip-path: inset(75% 0 10% 0); }
+            80% { clip-path: inset(5% 0 65% 0); } 100% { clip-path: inset(45% 0 25% 0); }
+        }
+        @keyframes glitch2 {
+            0% { clip-path: inset(70% 0 5% 0); } 25% { clip-path: inset(10% 0 75% 0); }
+            50% { clip-path: inset(50% 0 30% 0); } 75% { clip-path: inset(25% 0 60% 0); }
+            100% { clip-path: inset(85% 0 2% 0); }
         }
 
-        @keyframes glitch-anim {
-            0% { clip-path: inset(20% 0 80% 0); }
-            20% { clip-path: inset(60% 0 10% 0); }
-            40% { clip-path: inset(40% 0 50% 0); }
-            60% { clip-path: inset(80% 0 5% 0); }
-            80% { clip-path: inset(10% 0 70% 0); }
-            100% { clip-path: inset(30% 0 20% 0); }
-        }
-
-        .hero-desc {
-            font-size: clamp(1rem, 2vw, 1.25rem);
+        .welcome-subtitle {
+            font-size: clamp(0.9rem, 1.8vw, 1.15rem);
             font-weight: 300;
             color: var(--silver);
-            max-width: 500px;
-            line-height: 1.6;
-            margin-bottom: 3rem;
-            text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+            letter-spacing: 0.1em;
         }
 
-        .cta-button {
-            pointer-events: auto;
-            padding: 1rem 2.5rem;
-            background: rgba(0, 240, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            backdrop-filter: blur(12px);
+        /* LET'S EXPLORE Button */
+        #explore-btn {
+            position: absolute;
+            bottom: 5vh;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
             color: var(--white);
-            font-size: 0.9rem;
-            letter-spacing: 0.2em;
+            padding: 1rem 3rem;
+            font-size: 0.85rem;
+            letter-spacing: 0.35em;
             text-transform: uppercase;
             cursor: none;
-            border-radius: 4px;
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .cta-button:hover {
-            background: rgba(0, 240, 255, 0.15);
-            border-color: rgba(0, 240, 255, 0.6);
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.3), inset 0 0 15px rgba(0, 240, 255, 0.1);
-            transform: translateY(-2px);
-        }
-
-        /* Portfolio Section */
-        .section-title {
-            font-size: 3rem;
-            font-weight: 200;
-            letter-spacing: 0.2em;
-            margin-bottom: 4rem;
-            color: var(--white);
-            text-align: center;
-        }
-
-        .project-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 3rem;
-            width: 100%;
-        }
-
-        .project-card {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            padding: 2rem;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            min-height: 300px;
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.4s ease, border-color 0.4s ease;
-            cursor: none;
+            align-items: center;
+            gap: 0.6rem;
+            backdrop-filter: blur(8px);
+            border-radius: 6px;
+            transition: all 0.4s ease;
+            font-family: 'Inter', sans-serif;
+            animation: explore-pulse 2s infinite ease-in-out;
+        }
+        #explore-btn:hover {
+            background: rgba(255, 95, 0, 0.1);
+            border-color: var(--orange);
+            box-shadow: 0 0 30px rgba(255, 95, 0, 0.3), inset 0 0 20px rgba(255, 95, 0, 0.08);
+        }
+        #explore-btn svg {
+            width: 20px; height: 20px;
+            animation: bounce-arrow 1.5s infinite ease-in-out;
+        }
+        @keyframes explore-pulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(255, 95, 0, 0.1); }
+            50% { box-shadow: 0 0 25px rgba(255, 95, 0, 0.25); }
+        }
+        @keyframes bounce-arrow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(6px); }
         }
 
-        .project-card::before {
+        /* ======================== WARP TRANSITION ======================== */
+        #warp-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 200;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        /* ======================== PORTFOLIO PAGE ======================== */
+        #portfolio {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: none;
+        }
+
+        #accretion-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 0;
+        }
+
+        .portfolio-scroll {
+            position: relative;
+            z-index: 5;
+            padding: 0;
+        }
+
+        .portfolio-hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .portfolio-hero h2 {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 100;
+            letter-spacing: 0.25em;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 40px rgba(255, 95, 0, 0.4), 0 0 80px rgba(255, 95, 0, 0.15);
+        }
+
+        .portfolio-hero .about-text {
+            max-width: 700px;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--silver);
+            font-weight: 300;
+            margin-bottom: 3rem;
+        }
+
+        .about-text .highlight {
+            color: var(--accent);
+            font-weight: 400;
+        }
+
+        /* ======================== STAMP CARDS ======================== */
+        .stamp-section {
+            padding: 6rem 8%;
+            min-height: 100vh;
+        }
+
+        .stamp-section-title {
+            text-align: center;
+            font-size: 0.75rem;
+            letter-spacing: 0.5em;
+            color: var(--orange);
+            text-transform: uppercase;
+            margin-bottom: 4rem;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .stamp-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stamp-card {
+            background: rgba(15, 12, 10, 0.7);
+            border: 1.5px dashed rgba(255, 200, 150, 0.2);
+            border-radius: 4px;
+            padding: 2.2rem;
+            position: relative;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.4s ease, box-shadow 0.4s ease;
+            overflow: hidden;
+            cursor: none;
+        }
+        .stamp-card:nth-child(odd) { transform: rotate(-0.8deg); }
+        .stamp-card:nth-child(even) { transform: rotate(0.6deg); }
+        .stamp-card:hover {
+            transform: rotate(0deg) translateY(-8px) !important;
+            border-color: rgba(255, 95, 0, 0.5);
+            box-shadow: 0 10px 40px rgba(255, 95, 0, 0.15), inset 0 0 30px rgba(255, 95, 0, 0.05);
+        }
+
+        /* Classified stamp */
+        .stamp-card::after {
+            content: attr(data-stamp);
+            position: absolute;
+            top: 1.2rem; right: 1.2rem;
+            border: 2px solid rgba(255, 95, 0, 0.4);
+            border-radius: 50%;
+            width: 60px; height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.45rem;
+            letter-spacing: 0.15em;
+            color: rgba(255, 95, 0, 0.6);
+            font-family: 'Space Mono', monospace;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        /* Paper texture gradient */
+        .stamp-card::before {
             content: '';
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.1), transparent 70%);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-
-        .project-card:hover {
-            transform: translateY(-10px);
-            border-color: rgba(0, 240, 255, 0.5);
-        }
-        .project-card:hover::before {
-            opacity: 1;
-        }
-
-        .project-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            font-weight: 400;
-            z-index: 1;
-        }
-
-        .project-card p {
-            color: var(--silver);
-            font-size: 0.9rem;
-            line-height: 1.5;
-            z-index: 1;
-        }
-
-        /* 3D ARTIFACTS */
-        .artifact-container {
-            position: absolute;
+            background: radial-gradient(ellipse at 30% 20%, rgba(255, 200, 150, 0.03), transparent 70%);
             pointer-events: none;
-            perspective: 1000px;
-            z-index: 5;
         }
 
-        /* Artifact 1: Glowing Cube */
-        .cube-wrapper {
-            right: 15%;
-            top: 30%;
-            width: 150px;
-            height: 150px;
+        .stamp-mission {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.3em;
+            color: var(--orange);
+            text-transform: uppercase;
+            margin-bottom: 0.8rem;
+            opacity: 0.8;
         }
-        .cube {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            animation: rotate3D 20s infinite linear;
-        }
-        .cube__face {
-            position: absolute;
-            width: 150px;
-            height: 150px;
-            border: 1px solid rgba(0, 240, 255, 0.5);
-            background: rgba(0, 0, 0, 0.4);
-            box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.1);
-        }
-        .cube__face--front  { transform: rotateY(  0deg) translateZ(75px); }
-        .cube__face--right  { transform: rotateY( 90deg) translateZ(75px); }
-        .cube__face--back   { transform: rotateY(180deg) translateZ(75px); }
-        .cube__face--left   { transform: rotateY(-90deg) translateZ(75px); }
-        .cube__face--top    { transform: rotateX( 90deg) translateZ(75px); }
-        .cube__face--bottom { transform: rotateX(-90deg) translateZ(75px); }
 
-        /* Artifact 2: Gyroscopic Rings */
-        .rings-wrapper {
-            left: 10%;
-            top: 20%;
-            width: 250px;
-            height: 250px;
+        .stamp-card h3 {
+            font-size: 1.4rem;
+            font-weight: 400;
+            margin-bottom: 0.8rem;
+            letter-spacing: 0.05em;
+            color: var(--white);
         }
-        .rings {
-            width: 100%;
-            height: 100%;
+
+        .stamp-card p {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.55);
+            font-weight: 300;
+        }
+
+        .stamp-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1.2rem;
+        }
+
+        .stamp-tag {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 0.1em;
+            padding: 0.3rem 0.7rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            color: var(--silver);
+            text-transform: uppercase;
+        }
+
+        /* ======================== CONNECT SECTION ======================== */
+        .connect-section {
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 6rem 2rem;
+        }
+
+        .connect-section h2 {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 100;
+            letter-spacing: 0.3em;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 30px rgba(255, 95, 0, 0.3);
+        }
+
+        .connect-section .connect-desc {
+            color: var(--silver);
+            font-size: 1rem;
+            max-width: 500px;
+            line-height: 1.7;
+            margin-bottom: 3rem;
+            font-weight: 300;
+        }
+
+        .button-row {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* ======================== STARFIELD BUTTONS ======================== */
+        .sf-btn {
             position: relative;
-            transform-style: preserve-3d;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1rem 2.5rem;
+            background: rgba(10, 10, 10, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 50px;
+            color: var(--white);
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            text-decoration: none;
+            cursor: none;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            font-family: 'Inter', sans-serif;
         }
-        .ring {
+        .sf-btn:active { transform: scale(0.97); }
+
+        /* Orbiting glow dot */
+        .sf-btn .glow-track {
             position: absolute;
-            width: 100%;
-            height: 100%;
-            border: 1px solid rgba(138, 0, 90, 0.6); /* Magenta */
+            inset: -1px;
+            border-radius: inherit;
+            overflow: hidden;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .sf-btn:hover .glow-track { opacity: 1; }
+
+        .sf-btn .glow-dot {
+            position: absolute;
+            width: 80px; height: 80px;
             border-radius: 50%;
-            box-shadow: 0 0 15px rgba(138, 0, 90, 0.2), inset 0 0 15px rgba(138, 0, 90, 0.2);
+            background: radial-gradient(circle, var(--orange) 0%, var(--orange) 25%, transparent 70%);
+            top: -40px; left: -40px;
+            animation: orbit-glow 3s linear infinite;
         }
-        .ring:nth-child(1) { transform: rotateX(60deg) rotateY(0deg); animation: spin1 10s infinite linear; }
-        .ring:nth-child(2) { transform: rotateX(60deg) rotateY(60deg); animation: spin2 12s infinite linear; }
-        .ring:nth-child(3) { transform: rotateX(60deg) rotateY(120deg); animation: spin3 14s infinite linear; }
-
-        @keyframes rotate3D {
-            0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
-            100% { transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg); }
+        @keyframes orbit-glow {
+            0%   { transform: translate(0, 0); }
+            25%  { transform: translate(calc(100% + 80px), 0); }
+            50%  { transform: translate(calc(100% + 80px), calc(100% + 0px)); }
+            75%  { transform: translate(0, calc(100% + 0px)); }
+            100% { transform: translate(0, 0); }
         }
-        @keyframes spin1 { to { transform: rotateX(60deg) rotateY(0deg) rotateZ(360deg); } }
-        @keyframes spin2 { to { transform: rotateX(60deg) rotateY(60deg) rotateZ(360deg); } }
-        @keyframes spin3 { to { transform: rotateX(60deg) rotateY(120deg) rotateZ(360deg); } }
 
+        /* Inner glow */
+        .sf-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            border: 1px solid transparent;
+            transition: border-color 0.4s ease, box-shadow 0.4s ease;
+            pointer-events: none;
+        }
+        .sf-btn:hover::before {
+            border-color: rgba(255, 95, 0, 0.4);
+            box-shadow: inset 0 0 20px rgba(255, 95, 0, 0.1);
+        }
 
-        /* Crosshair */
+        /* Pixel canvas */
+        .sf-btn canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%; height: 100%;
+            border-radius: inherit;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+        .sf-btn:hover canvas { opacity: 1; }
+
+        .sf-btn span { position: relative; z-index: 2; }
+
+        .sf-btn-icon {
+            position: relative; z-index: 2;
+            width: 18px; height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* ======================== LINK PREVIEW ======================== */
+        .preview-link {
+            color: var(--accent);
+            text-decoration: underline;
+            text-decoration-color: rgba(255, 217, 160, 0.3);
+            text-underline-offset: 0.2em;
+            cursor: none;
+            position: relative;
+            transition: text-decoration-color 0.3s ease;
+        }
+        .preview-link:hover {
+            text-decoration-color: var(--accent);
+        }
+
+        #link-preview-card {
+            position: fixed;
+            z-index: 9999;
+            width: 280px;
+            height: 170px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #111;
+            border: 1px solid rgba(255,255,255,0.06);
+            box-shadow: 0 18px 40px rgba(0,0,0,0.5);
+            pointer-events: none;
+            opacity: 0;
+            transform: scale(0.92) translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        #link-preview-card.visible {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+        #link-preview-card img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* ======================== CROSSHAIR ======================== */
         #crosshair-container {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 10000;
+            pointer-events: none; z-index: 99999;
         }
         .crosshair-line {
             position: absolute;
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.6);
             pointer-events: none; opacity: 0;
         }
-        #line-horizontal { width: 100%; height: 1px; transform: translateY(-50%); top: 0; }
-        #line-vertical { height: 100%; width: 1px; transform: translateX(-50%); left: 0; }
-        #svg-filters { position: absolute; left: 0; top: 0; width: 0; height: 0; pointer-events: none; }
+        #line-horizontal { width: 100%; height: 1px; top: 0; }
+        #line-vertical { height: 100%; width: 1px; left: 0; }
 
+        #svg-filters { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+        /* ======================== RESPONSIVE ======================== */
+        @media (max-width: 768px) {
+            .stamp-grid { grid-template-columns: 1fr; }
+            h1.glitch-text { letter-spacing: 0.05em; }
+            .stamp-section { padding: 4rem 5%; }
+            .sf-btn { padding: 0.8rem 1.8rem; font-size: 0.75rem; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- Background Video -->
-    <video id="bg-video" autoplay loop muted playsinline>
-        <source src="background.mp4" type="video/mp4">
-    </video>
-
-    <!-- SVG Filters for Crosshair -->
+    <!-- SVG Filters for Crosshair Distortion -->
     <svg id="svg-filters">
         <defs>
             <filter id="filter-noise-x">
@@ -350,8 +559,147 @@
         </defs>
     </svg>
 
-    <!-- Canvas Simulation (Constellations) -->
-    <canvas id="canvas-container"></canvas>
+    <!-- ==================== WELCOME PAGE ==================== -->
+    <section id="welcome">
+        <video id="bg-video" autoplay loop muted playsinline>
+            <source src="background.mp4" type="video/mp4">
+        </video>
+        <canvas id="constellation-canvas"></canvas>
+
+        <div class="welcome-content">
+            <span class="welcome-tag">Welcome to the void</span>
+            <h1 class="glitch-text" data-text="AINESH">AINESH</h1>
+            <p class="welcome-subtitle">Creative Technologist &middot; Digital Architect</p>
+        </div>
+
+        <button id="explore-btn">
+            <span>Let's Explore</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M12 5v14M5 12l7 7 7-7"/>
+            </svg>
+        </button>
+    </section>
+
+    <!-- ==================== WARP TRANSITION ==================== -->
+    <canvas id="warp-canvas"></canvas>
+
+    <!-- ==================== PORTFOLIO PAGE ==================== -->
+    <section id="portfolio">
+        <canvas id="accretion-canvas"></canvas>
+
+        <div class="portfolio-scroll">
+
+            <!-- Hero -->
+            <div class="portfolio-hero">
+                <h2 class="pf-reveal">STELLAR ARCHIVES</h2>
+                <p class="about-text pf-reveal">
+                    I'm <span class="highlight">Ainesh</span> — a creative technologist who builds at the intersection of
+                    <span class="highlight">design</span>, <span class="highlight">code</span>, and
+                    <span class="highlight">interactive storytelling</span>. I craft high-fidelity digital experiences
+                    that push the boundaries of what the web can feel like. Every pixel, every frame, every interaction
+                    is engineered to pull you deeper into the void.
+                </p>
+            </div>
+
+            <!-- Projects -->
+            <div class="stamp-section">
+                <div class="stamp-section-title pf-reveal">// Mission Briefings — Selected Work</div>
+                <div class="stamp-grid">
+
+                    <div class="stamp-card pf-card" data-stamp="CLASSIFIED">
+                        <div class="stamp-mission">Mission #001</div>
+                        <h3>Neural Interface UI</h3>
+                        <p>Designed a conceptual dashboard for interacting with high-density data arrays in zero-gravity environments. Real-time WebGL data visualization with haptic feedback integration.</p>
+                        <div class="stamp-tags">
+                            <span class="stamp-tag">WebGL</span>
+                            <span class="stamp-tag">Three.js</span>
+                            <span class="stamp-tag">UI/UX</span>
+                        </div>
+                    </div>
+
+                    <div class="stamp-card pf-card" data-stamp="APPROVED">
+                        <div class="stamp-mission">Mission #002</div>
+                        <h3>Orbital Mechanics Engine</h3>
+                        <p>A physics simulation mapping trajectory patterns for orbital satellites. Built with custom quaternion math, predictive path rendering, and multi-body gravitational calculations.</p>
+                        <div class="stamp-tags">
+                            <span class="stamp-tag">Canvas</span>
+                            <span class="stamp-tag">Physics</span>
+                            <span class="stamp-tag">JavaScript</span>
+                        </div>
+                    </div>
+
+                    <div class="stamp-card pf-card" data-stamp="TOP SECRET">
+                        <div class="stamp-mission">Mission #003</div>
+                        <h3>Void Commerce</h3>
+                        <p>An experimental e-commerce platform using dark-mode aesthetics, glassmorphic spatial design, and immersive product showcases with 3D model previews.</p>
+                        <div class="stamp-tags">
+                            <span class="stamp-tag">React</span>
+                            <span class="stamp-tag">GSAP</span>
+                            <span class="stamp-tag">E-Commerce</span>
+                        </div>
+                    </div>
+
+                    <div class="stamp-card pf-card" data-stamp="ACTIVE">
+                        <div class="stamp-mission">Mission #004</div>
+                        <h3>Project Singularity</h3>
+                        <p>A multiplayer creative space where users collaboratively build constellations using interactive particle nodes. Real-time WebSocket synchronization across sessions.</p>
+                        <div class="stamp-tags">
+                            <span class="stamp-tag">WebSocket</span>
+                            <span class="stamp-tag">Node.js</span>
+                            <span class="stamp-tag">Canvas</span>
+                        </div>
+                    </div>
+
+                    <div class="stamp-card pf-card" data-stamp="DEPLOYED">
+                        <div class="stamp-mission">Mission #005</div>
+                        <h3>Event Horizon Portfolio</h3>
+                        <p>This very website — a cinematic, WebGL-powered portfolio featuring an accretion disc particle simulation, warp-speed transitions, and interactive crosshair cursor.</p>
+                        <div class="stamp-tags">
+                            <span class="stamp-tag">WebGL</span>
+                            <span class="stamp-tag">GSAP</span>
+                            <span class="stamp-tag">Shaders</span>
+                        </div>
+                    </div>
+
+                    <div class="stamp-card pf-card" data-stamp="ARCHIVED">
+                        <div class="stamp-mission">Mission #006</div>
+                        <h3>Deep Field Scanner</h3>
+                        <p>AI-powered image analysis tool that processes astronomical survey data. Built with TensorFlow.js for browser-native inference and interactive heatmap overlays.</p>
+                        <div class="stamp-tags">
+                            <span class="stamp-tag">AI/ML</span>
+                            <span class="stamp-tag">TensorFlow</span>
+                            <span class="stamp-tag">Python</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Connect -->
+            <div class="connect-section">
+                <h2 class="pf-reveal">TRANSMIT SIGNAL</h2>
+                <p class="connect-desc pf-reveal">Ready to build the next frontier? Establish a secure uplink and let's architect something extraordinary together.</p>
+                <div class="button-row pf-reveal">
+                    <a href="https://github.com/Bloxi17" target="_blank" rel="noopener noreferrer" class="sf-btn">
+                        <div class="glow-track"><div class="glow-dot"></div></div>
+                        <canvas class="sf-pixel-canvas"></canvas>
+                        <svg class="sf-btn-icon" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                        <span>GitHub</span>
+                    </a>
+                    <a href="#" id="back-home-btn" class="sf-btn">
+                        <div class="glow-track"><div class="glow-dot"></div></div>
+                        <canvas class="sf-pixel-canvas"></canvas>
+                        <svg class="sf-btn-icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                        <span>Back Home</span>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Link Preview Tooltip -->
+    <div id="link-preview-card"><img id="link-preview-img" src="" alt="Preview"></div>
 
     <!-- Interactive Crosshair -->
     <div id="crosshair-container">
@@ -359,260 +707,599 @@
         <div id="line-vertical" class="crosshair-line"></div>
     </div>
 
-    <!-- MAIN SCROLLABLE CONTENT -->
-    <main class="main-content">
-        
-        <!-- HERO SECTION -->
-        <section class="hero-section">
-            <!-- 3D Artifact: Cube -->
-            <div class="artifact-container cube-wrapper gsap-float">
-                <div class="cube">
-                    <div class="cube__face cube__face--front"></div>
-                    <div class="cube__face cube__face--back"></div>
-                    <div class="cube__face cube__face--right"></div>
-                    <div class="cube__face cube__face--left"></div>
-                    <div class="cube__face cube__face--top"></div>
-                    <div class="cube__face cube__face--bottom"></div>
-                </div>
-            </div>
-
-            <div class="subtitle">Welcome to the</div>
-            <h1 class="glitch-text" data-text="AINESH">AINESH</h1>
-            <p class="hero-desc">Creative Technologist & UI Architect. Engineering immersive, high-fidelity digital experiences that bridge the gap between design and deep space.</p>
-            <a href="#projects" class="cta-button">Initiate Sequence</a>
-        </section>
-
-        <!-- PORTFOLIO SECTION -->
-        <section id="projects" class="projects-section">
-            <!-- 3D Artifact: Gyroscopic Rings -->
-            <div class="artifact-container rings-wrapper gsap-float-reverse">
-                <div class="rings">
-                    <div class="ring"></div>
-                    <div class="ring"></div>
-                    <div class="ring"></div>
-                </div>
-            </div>
-
-            <h2 class="section-title">STELLAR ARCHIVES</h2>
-            <div class="project-grid">
-                <div class="project-card gsap-card">
-                    <h3>Neural Interface UI</h3>
-                    <p>Designed a conceptual dashboard for interacting with high-density data arrays in zero gravity environments.</p>
-                </div>
-                <div class="project-card gsap-card">
-                    <h3>Orbital Mechanics Engine</h3>
-                    <p>A WebGL-powered physics simulation mapping trajectory patterns for orbital satellites.</p>
-                </div>
-                <div class="project-card gsap-card">
-                    <h3>Void Commerce</h3>
-                    <p>An experimental e-commerce platform using dark mode aesthetics and glassmorphic spatial design.</p>
-                </div>
-                <div class="project-card gsap-card">
-                    <h3>Project Singularity</h3>
-                    <p>A massive, multiplayer creative space where users build constellations using interactive nodes.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- FOOTER / CONTACT SECTION -->
-        <section class="contact-section" style="min-height: 50vh; text-align: center; align-items: center;">
-            <h2 class="section-title" style="margin-bottom: 2rem;">TRANSMIT SIGNAL</h2>
-            <p class="hero-desc" style="text-align: center;">Ready to build the next frontier? Establish a secure connection.</p>
-            <a href="#" class="cta-button">Open Comms</a>
-        </section>
-
-    </main>
-
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
     <script>
-        gsap.registerPlugin(ScrollTrigger);
+    gsap.registerPlugin(ScrollTrigger);
 
-        /** ==========================================
-         *  GSAP CROSSHAIR COMPONENT 
-         *  ========================================== */
-        const lineHorizontal = document.getElementById('line-horizontal');
-        const lineVertical = document.getElementById('line-vertical');
-        const filterXTurb = document.getElementById('filter-x-turb');
-        const filterYTurb = document.getElementById('filter-y-turb');
-        
-        let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-        let renderedStyles = {
-            tx: { previous: window.innerWidth / 2, current: window.innerWidth / 2, amt: 0.15 },
-            ty: { previous: window.innerHeight / 2, current: window.innerHeight / 2, amt: 0.15 }
+    const lerp = (a, b, n) => (1 - n) * a + n * b;
+    let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+
+    /* ================================================================
+       SECTION 1: CROSSHAIR (persists across both pages)
+       ================================================================ */
+    const lineH = document.getElementById('line-horizontal');
+    const lineV = document.getElementById('line-vertical');
+    const fxTurb = document.getElementById('filter-x-turb');
+    const fyTurb = document.getElementById('filter-y-turb');
+    let chStyles = {
+        tx: { prev: mouse.x, cur: mouse.x, amt: 0.15 },
+        ty: { prev: mouse.y, cur: mouse.y, amt: 0.15 }
+    };
+    let hasMoved = false;
+    window.addEventListener('mousemove', e => {
+        mouse.x = e.clientX; mouse.y = e.clientY;
+        if (!hasMoved) {
+            gsap.to([lineH, lineV], { duration: 0.9, opacity: 1, ease: 'power3.out' });
+            hasMoved = true;
+        }
+    });
+    const turbVal = { v: 0 };
+    const turbTL = gsap.timeline({ paused: true,
+        onStart: () => { lineH.style.filter = 'url(#filter-noise-x)'; lineV.style.filter = 'url(#filter-noise-y)'; },
+        onUpdate: () => { fxTurb.setAttribute('baseFrequency', turbVal.v); fyTurb.setAttribute('baseFrequency', turbVal.v); },
+        onComplete: () => { lineH.style.filter = 'none'; lineV.style.filter = 'none'; }
+    }).to(turbVal, { duration: 0.5, ease: 'power1', startAt: { v: 1 }, v: 0 });
+
+    const chEnter = () => turbTL.restart();
+    const chLeave = () => turbTL.progress(1).kill();
+    document.querySelectorAll('.sf-btn, .stamp-card, #explore-btn').forEach(el => {
+        el.addEventListener('mouseenter', chEnter);
+        el.addEventListener('mouseleave', chLeave);
+    });
+    (function crosshairLoop() {
+        chStyles.tx.cur = mouse.x; chStyles.ty.cur = mouse.y;
+        chStyles.tx.prev = lerp(chStyles.tx.prev, chStyles.tx.cur, chStyles.tx.amt);
+        chStyles.ty.prev = lerp(chStyles.ty.prev, chStyles.ty.cur, chStyles.ty.amt);
+        gsap.set(lineV, { x: chStyles.tx.prev });
+        gsap.set(lineH, { y: chStyles.ty.prev });
+        requestAnimationFrame(crosshairLoop);
+    })();
+
+    /* ================================================================
+       SECTION 2: CONSTELLATION (welcome page overlay)
+       ================================================================ */
+    const cCanvas = document.getElementById('constellation-canvas');
+    const cCtx = cCanvas.getContext('2d', { alpha: true });
+    let cW, cH;
+    function resizeConstellation() { cW = cCanvas.width = window.innerWidth; cH = cCanvas.height = window.innerHeight; }
+    window.addEventListener('resize', resizeConstellation); resizeConstellation();
+    class CNode {
+        constructor() { this.x = Math.random()*cW; this.y = Math.random()*cH; this.vx = (Math.random()-0.5)*0.3; this.vy = (Math.random()-0.5)*0.3; this.r = Math.random()*1.5+0.5; }
+        update() {
+            this.x += this.vx; this.y += this.vy;
+            if (this.x<0||this.x>cW) this.vx*=-1;
+            if (this.y<0||this.y>cH) this.vy*=-1;
+            const dx=mouse.x-this.x, dy=mouse.y-this.y, d=Math.sqrt(dx*dx+dy*dy);
+            if (d<200){ const f=(200-d)/200; this.x+=dx*f*0.02; this.y+=dy*f*0.02; }
+        }
+    }
+    const cNodes = Array.from({length:70}, ()=>new CNode());
+    let constellationActive = true;
+    (function drawConstellation() {
+        if (!constellationActive) return;
+        cCtx.clearRect(0,0,cW,cH);
+        for (let i=0;i<cNodes.length;i++){
+            const p=cNodes[i]; p.update();
+            cCtx.fillStyle='rgba(0,240,255,0.35)'; cCtx.beginPath(); cCtx.arc(p.x,p.y,p.r,0,Math.PI*2); cCtx.fill();
+            for (let j=i+1;j<cNodes.length;j++){
+                const q=cNodes[j], dx=p.x-q.x, dy=p.y-q.y, ds=dx*dx+dy*dy;
+                if (ds<16000){ const o=1-ds/16000; cCtx.strokeStyle=`rgba(0,240,255,${o*0.35})`; cCtx.lineWidth=0.5; cCtx.beginPath(); cCtx.moveTo(p.x,p.y); cCtx.lineTo(q.x,q.y); cCtx.stroke(); }
+            }
+        }
+        requestAnimationFrame(drawConstellation);
+    })();
+
+    /* ================================================================
+       SECTION 3: WARP TRANSITION (star tunnel)
+       ================================================================ */
+    const warpCanvas = document.getElementById('warp-canvas');
+    const warpCtx = warpCanvas.getContext('2d');
+    let wW, wH;
+    function resizeWarp() { wW = warpCanvas.width = window.innerWidth; wH = warpCanvas.height = window.innerHeight; }
+    window.addEventListener('resize', resizeWarp); resizeWarp();
+
+    class WarpStar {
+        constructor() { this.reset(); }
+        reset() { this.x = (Math.random()-0.5)*wW*2; this.y = (Math.random()-0.5)*wH*2; this.z = Math.random()*1500+500; this.pz = this.z; }
+    }
+    const warpStars = Array.from({length:400}, ()=>new WarpStar());
+    let warpSpeed = 0;
+    let warpRunning = false;
+
+    function drawWarp() {
+        if (!warpRunning) return;
+        warpCtx.fillStyle = 'rgba(0,0,0,0.15)';
+        warpCtx.fillRect(0,0,wW,wH);
+        const cx = wW/2, cy = wH/2;
+        for (const s of warpStars) {
+            s.pz = s.z;
+            s.z -= warpSpeed;
+            if (s.z <= 0) { s.reset(); s.z = 1500; s.pz = s.z; }
+            const sx = (s.x/s.z)*cx + cx;
+            const sy = (s.y/s.z)*cy + cy;
+            const px = (s.x/s.pz)*cx + cx;
+            const py = (s.y/s.pz)*cy + cy;
+            const size = Math.max(0.5, (1-s.z/2000)*3);
+            const alpha = Math.min(1, (1-s.z/2000)*1.5);
+            warpCtx.strokeStyle = `rgba(255,200,150,${alpha})`;
+            warpCtx.lineWidth = size;
+            warpCtx.beginPath();
+            warpCtx.moveTo(px, py);
+            warpCtx.lineTo(sx, sy);
+            warpCtx.stroke();
+        }
+        requestAnimationFrame(drawWarp);
+    }
+
+    /* ================================================================
+       SECTION 4: ACCRETION DISC (WebGL shader — ported from Originkit)
+       ================================================================ */
+    const TAU = Math.PI * 2;
+    const ROUT = 100;
+    const FOCAL = 3.270853;
+    const JET_SHARE = 0.32;
+
+    const AD_PARTICLE_VERT = `
+precision highp float;
+attribute vec4 aSeed;
+attribute float aKind;
+uniform float uTime, uTilt, uDist, uAspect, uHalfH;
+uniform float uDotSize, uBlur, uScatter, uCore, uArms;
+uniform float uJetAmount, uJetLen, uJetSpread;
+varying float vAlpha, vRamp;
+const float FOCAL=3.270853, ROUT=100.0, WIND=3.400, THICKNESS=2.40, ORBIT=0.4490;
+
+void kill(){ gl_Position=vec4(2.0,2.0,2.0,1.0); gl_PointSize=0.0; vAlpha=0.0; vRamp=0.0; }
+
+void main(){
+    float rIn=max(uCore*1.32, 6.0);
+    vec3 p; float bright, ramp;
+    if(aKind==0.0){
+        float r=sqrt(mix(rIn*rIn,ROUT*ROUT,aSeed.x));
+        float f=clamp((r-rIn)/max(ROUT-rIn,1e-3),0.0,1.0);
+        float th=aSeed.y+ORBIT*pow(rIn/r,1.5)*uTime;
+        float armAngle=uArms*(th-WIND*log(r/rIn))-0.060*uTime*min(uArms,1.0);
+        th-=0.45*sin(armAngle)/max(uArms,1.0);
+        float arm=pow(0.5+0.5*cos(armAngle),2.6);
+        float flare=0.30+0.70*pow(f,1.2);
+        float y=aSeed.z*THICKNESS*uScatter*flare;
+        p=vec3(r*cos(th),y,r*sin(th));
+        float radial=smoothstep(0.0,0.06,f)*(1.0-smoothstep(0.45,1.0,f));
+        radial*=1.0+1.4*exp(-pow((f-0.32)/0.20,2.0));
+        float farSide=0.5-0.5*(p.z/max(r,1e-3));
+        bright=radial*(0.34+0.75*arm)*mix(0.62,1.0,farSide)*1.45;
+        ramp=clamp((1.0-f)*0.55+arm*0.55,0.0,1.0);
+    } else {
+        if(aSeed.w>uJetAmount){kill();return;}
+        float u=fract(aSeed.x+0.090*uTime);
+        float climb=pow(u,1.35)*uJetLen;
+        float cone=tan(uJetSpread)*climb*(0.30+0.70*u)+uCore*0.35;
+        float rr=aSeed.z*cone;
+        float az=aSeed.y+climb*0.0055;
+        p=vec3(rr*cos(az),aKind*climb,rr*sin(az));
+        bright=mix(1.0,0.20,smoothstep(0.0,1.0,u))*(0.28+0.72*(1.0-aSeed.z))*1.75;
+        ramp=0.30+0.40*(1.0-u);
+    }
+    float c=cos(uTilt),s=sin(uTilt);
+    vec3 camPos=vec3(0.0,uDist*s,uDist*c);
+    vec3 rel=p-camPos;
+    vec3 q=vec3(rel.x,c*rel.y-s*rel.z,s*rel.y+c*rel.z);
+    float depth=-q.z;
+    if(depth<1.0){kill();return;}
+    float len=length(q); vec3 dir=q/max(len,1e-4);
+    float tca=-uDist*dir.z; float perp2=uDist*uDist-tca*tca; float core2=uCore*uCore;
+    if(perp2<core2){float tEnter=tca-sqrt(core2-perp2);if(tEnter>0.0&&len>tEnter){kill();return;}}
+    gl_Position=vec4(q.x*FOCAL/(depth*uAspect),q.y*FOCAL/depth,0.0,1.0);
+    float ppw=FOCAL*uHalfH/depth;
+    float focusD=uDist*1.75;
+    float coc=uBlur*max(0.0,focusD-depth)/focusD;
+    float px=(uDotSize+coc)*ppw*1.70;
+    vAlpha=bright*pow(uDotSize/max(uDotSize+coc,1e-5),1.6);
+    float optical=px/1.70;
+    if(optical<1.0) vAlpha*=optical*optical;
+    vRamp=ramp;
+    gl_PointSize=clamp(px,1.0,96.0);
+}`;
+
+    const AD_PARTICLE_FRAG = `
+precision highp float;
+uniform vec3 uBase, uAccent;
+varying float vAlpha, vRamp;
+void main(){
+    vec2 d=gl_PointCoord-0.5; float r2=dot(d,d)*4.0;
+    if(r2>1.0) discard;
+    float core=max(0.0,exp(-r2*9.25)-0.0000961);
+    float skirt=max(0.0,exp(-r2*1.80)-0.165299);
+    float g=core+0.30*skirt;
+    float e=g*vAlpha;
+    vec3 col=mix(uBase,uAccent,vRamp);
+    gl_FragColor=vec4(col*e,e);
+}`;
+
+    const AD_CORE_VERT = `
+precision highp float;
+attribute vec2 aQuad;
+uniform float uDist,uCore,uAspect,uHalfH;
+varying vec2 vUV; varying float vPxR;
+const float FOCAL=3.270853;
+void main(){
+    float tanR=uCore/sqrt(max(uDist*uDist-uCore*uCore,1.0));
+    float ndcR=tanR*FOCAL;
+    vUV=aQuad; vPxR=ndcR*uHalfH;
+    gl_Position=vec4(aQuad.x*ndcR/uAspect,aQuad.y*ndcR,0.0,1.0);
+}`;
+
+    const AD_CORE_FRAG = `
+precision highp float;
+uniform vec3 uBase,uAccent; uniform float uTilt;
+varying vec2 vUV; varying float vPxR;
+void main(){
+    float rr=length(vUV);
+    float aa=1.0/max(vPxR,1.0);
+    float m=1.0-smoothstep(1.0-aa,1.0,rr);
+    if(m<=0.0) discard;
+    float st=sin(uTilt)*0.55;
+    float dTop=vUV.y-st, dBot=vUV.y+st;
+    float ring=0.40*exp(-dTop*dTop*9.0)+1.0*exp(-dBot*dBot*9.0);
+    float rim=pow(smoothstep(0.78,1.0,rr),1.6);
+    float lit=rim*(0.05+0.95*ring*(0.30+0.70*abs(vUV.x)));
+    vec3 col=uBase*0.012+uAccent*lit*0.42;
+    gl_FragColor=vec4(col*m,m);
+}`;
+
+    function adCompile(gl, type, src) {
+        const sh = gl.createShader(type);
+        gl.shaderSource(sh, src); gl.compileShader(sh);
+        if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) console.warn('Shader:', gl.getShaderInfoLog(sh));
+        return sh;
+    }
+    function adLink(gl, vs, fs) {
+        const p = gl.createProgram();
+        gl.attachShader(p, adCompile(gl, gl.VERTEX_SHADER, vs));
+        gl.attachShader(p, adCompile(gl, gl.FRAGMENT_SHADER, fs));
+        gl.linkProgram(p);
+        if (!gl.getProgramParameter(p, gl.LINK_STATUS)) console.warn('Link:', gl.getProgramInfoLog(p));
+        return p;
+    }
+
+    function mulberry32(a) {
+        return () => {
+            a |= 0; a = (a + 0x6d2b79f5) | 0;
+            let t = Math.imul(a ^ (a >>> 15), 1 | a);
+            t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+            return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
         };
-        const lerp = (a, b, n) => (1 - n) * a + n * b;
-
-        let hasMoved = false;
-        window.addEventListener('mousemove', (e) => {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY;
-            if (!hasMoved) {
-                gsap.to([lineHorizontal, lineVertical], { duration: 0.9, opacity: 1, ease: 'power3.out' });
-                hasMoved = true;
+    }
+    function gauss(rnd) {
+        const u1 = Math.max(1e-9, rnd()), u2 = rnd();
+        return Math.max(-3, Math.min(3, Math.sqrt(-2*Math.log(u1))*Math.cos(TAU*u2)));
+    }
+    function buildCloud(count) {
+        const seed = new Float32Array(count*4), kind = new Float32Array(count);
+        const rnd = mulberry32(0x9e3779b9);
+        for (let i=0;i<count;i++) {
+            const o=i*4;
+            if (rnd()>=JET_SHARE) {
+                seed[o]=rnd(); seed[o+1]=rnd()*TAU; seed[o+2]=gauss(rnd); seed[o+3]=rnd(); kind[i]=0;
+            } else {
+                seed[o]=rnd(); seed[o+1]=rnd()*TAU; seed[o+2]=Math.sqrt(rnd()); seed[o+3]=rnd();
+                kind[i]=rnd()<0.5?1:-1;
             }
-        });
-
-        const primitiveValues = { turbulence: 0 };
-        const tl = gsap.timeline({
-            paused: true,
-            onStart: () => {
-                lineHorizontal.style.filter = `url(#filter-noise-x)`;
-                lineVertical.style.filter = `url(#filter-noise-y)`;
-            },
-            onUpdate: () => {
-                filterXTurb.setAttribute('baseFrequency', primitiveValues.turbulence);
-                filterYTurb.setAttribute('baseFrequency', primitiveValues.turbulence);
-            },
-            onComplete: () => {
-                lineHorizontal.style.filter = 'none';
-                lineVertical.style.filter = 'none';
-            }
-        }).to(primitiveValues, { duration: 0.5, ease: 'power1', startAt: { turbulence: 1 }, turbulence: 0 });
-
-        const onMouseEnter = () => tl.restart();
-        const onMouseLeave = () => tl.progress(1).kill();
-
-        document.querySelectorAll('.cta-button, .project-card').forEach(el => {
-            el.addEventListener('mouseenter', onMouseEnter);
-            el.addEventListener('mouseleave', onMouseLeave);
-        });
-
-        function renderCrosshair() {
-            renderedStyles.tx.current = mouse.x;
-            renderedStyles.ty.current = mouse.y;
-            renderedStyles.tx.previous = lerp(renderedStyles.tx.previous, renderedStyles.tx.current, renderedStyles.tx.amt);
-            renderedStyles.ty.previous = lerp(renderedStyles.ty.previous, renderedStyles.ty.current, renderedStyles.ty.amt);
-            gsap.set(lineVertical, { x: renderedStyles.tx.previous });
-            gsap.set(lineHorizontal, { y: renderedStyles.ty.previous });
-            requestAnimationFrame(renderCrosshair);
         }
-        requestAnimationFrame(renderCrosshair);
+        return {seed, kind};
+    }
 
-        /** ==========================================
-         *  CANVAS CONSTELLATION OVERLAY
-         *  ========================================== */
-        const canvas = document.getElementById('canvas-container');
-        const ctx = canvas.getContext('2d', { alpha: true }); 
-        let width, height;
+    let adActive = false;
+    function initAccretionDisc() {
+        const canvas = document.getElementById('accretion-canvas');
+        const gl = canvas.getContext('webgl', { alpha: true, antialias: false, premultipliedAlpha: true, preserveDrawingBuffer: false });
+        if (!gl) { console.warn('No WebGL'); return; }
 
-        function resizeCanvas() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
+        const pProg = adLink(gl, AD_PARTICLE_VERT, AD_PARTICLE_FRAG);
+        const cProg = adLink(gl, AD_CORE_VERT, AD_CORE_FRAG);
+
+        const pu = {};
+        ['uTime','uTilt','uDist','uAspect','uHalfH','uDotSize','uBlur','uScatter','uCore','uArms','uJetAmount','uJetLen','uJetSpread','uBase','uAccent'].forEach(n => pu[n] = gl.getUniformLocation(pProg, n));
+        const cu = {};
+        ['uDist','uCore','uAspect','uHalfH','uBase','uAccent','uTilt'].forEach(n => cu[n] = gl.getUniformLocation(cProg, n));
+
+        const aSeed = gl.getAttribLocation(pProg, 'aSeed');
+        const aKind = gl.getAttribLocation(pProg, 'aKind');
+        const aQuad = gl.getAttribLocation(cProg, 'aQuad');
+
+        const seedBuf = gl.createBuffer(), kindBuf = gl.createBuffer(), quadBuf = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, quadBuf);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+
+        // Preset values
+        const COUNT = 200000;
+        const DOT_SIZE = 0.16 * 214 / 100; // 0.3424
+        const TILT = 44 * Math.PI / 180;
+        const CORE = (6/100) * ROUT;
+        const ARMS = 8;
+        const SCATTER = 44/100;
+        const BLUR = 0;
+        const DISTANCE = 220;
+        const JET_AMOUNT = 23/100;
+        const JET_LEN = (300/100) * ROUT;
+        const JET_SPREAD = 34 * Math.PI / 180;
+        const BASE = [1.0, 0.373, 0.0]; // #FF5F00
+        const ACCENT = [1.0, 0.851, 0.627]; // #ffd9a0
+
+        const {seed, kind} = buildCloud(COUNT);
+        gl.bindBuffer(gl.ARRAY_BUFFER, seedBuf);
+        gl.bufferData(gl.ARRAY_BUFFER, seed, gl.STATIC_DRAW);
+        gl.bindBuffer(gl.ARRAY_BUFFER, kindBuf);
+        gl.bufferData(gl.ARRAY_BUFFER, kind, gl.STATIC_DRAW);
+
+        gl.disable(gl.DEPTH_TEST);
+        gl.enable(gl.BLEND);
+
+        let bw = 1, bh = 1;
+        function resize() {
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            const w = Math.max(1, Math.round(canvas.clientWidth * dpr));
+            const h = Math.max(1, Math.round(canvas.clientHeight * dpr));
+            if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+            bw = w; bh = h;
+            gl.viewport(0, 0, w, h);
         }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
+        resize();
+        const ro = new ResizeObserver(resize);
+        ro.observe(canvas);
 
-        class ConstellationNode {
-            constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.vx = (Math.random() - 0.5) * 0.3;
-                this.vy = (Math.random() - 0.5) * 0.3;
-                this.radius = Math.random() * 1.5 + 0.5;
-            }
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-                if (this.x < 0 || this.x > width) this.vx *= -1;
-                if (this.y < 0 || this.y > height) this.vy *= -1;
+        let last = 0, t = 0;
+        const speedScale = 100 / 50; // speed=100 default
 
-                const dx = mouse.x - this.x;
-                const dy = mouse.y - this.y;
-                const dist = Math.sqrt(dx*dx + dy*dy);
-                if (dist < 200) {
-                    const force = (200 - dist) / 200;
-                    this.x += (dx * force * 0.02);
-                    this.y += (dy * force * 0.02);
+        function frame(now) {
+            if (!adActive) { requestAnimationFrame(frame); return; }
+
+            const dt = last === 0 ? 0 : Math.min(0.05, Math.max(0, (now - last) / 1000));
+            last = now;
+            t = (t + dt * speedScale) % 1e5;
+
+            const aspect = bw / Math.max(bh, 1);
+            const halfH = bh * 0.5;
+
+            gl.clearColor(0, 0, 0, 0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+
+            // Draw core
+            gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+            gl.useProgram(cProg);
+            gl.uniform1f(cu.uDist, DISTANCE);
+            gl.uniform1f(cu.uCore, CORE);
+            gl.uniform1f(cu.uAspect, aspect);
+            gl.uniform1f(cu.uHalfH, halfH);
+            gl.uniform1f(cu.uTilt, TILT);
+            gl.uniform3fv(cu.uBase, BASE);
+            gl.uniform3fv(cu.uAccent, ACCENT);
+            gl.bindBuffer(gl.ARRAY_BUFFER, quadBuf);
+            gl.enableVertexAttribArray(aQuad);
+            gl.vertexAttribPointer(aQuad, 2, gl.FLOAT, false, 0, 0);
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+            gl.disableVertexAttribArray(aQuad);
+
+            // Draw particles
+            gl.blendFunc(gl.ONE, gl.ONE);
+            gl.useProgram(pProg);
+            gl.uniform1f(pu.uTime, t);
+            gl.uniform1f(pu.uTilt, TILT);
+            gl.uniform1f(pu.uDist, DISTANCE);
+            gl.uniform1f(pu.uAspect, aspect);
+            gl.uniform1f(pu.uHalfH, halfH);
+            gl.uniform1f(pu.uDotSize, DOT_SIZE);
+            gl.uniform1f(pu.uBlur, BLUR);
+            gl.uniform1f(pu.uScatter, SCATTER);
+            gl.uniform1f(pu.uCore, CORE);
+            gl.uniform1f(pu.uArms, ARMS);
+            gl.uniform1f(pu.uJetAmount, JET_AMOUNT);
+            gl.uniform1f(pu.uJetLen, JET_LEN);
+            gl.uniform1f(pu.uJetSpread, JET_SPREAD);
+            gl.uniform3fv(pu.uBase, BASE);
+            gl.uniform3fv(pu.uAccent, ACCENT);
+            gl.bindBuffer(gl.ARRAY_BUFFER, seedBuf);
+            gl.enableVertexAttribArray(aSeed);
+            gl.vertexAttribPointer(aSeed, 4, gl.FLOAT, false, 0, 0);
+            gl.bindBuffer(gl.ARRAY_BUFFER, kindBuf);
+            gl.enableVertexAttribArray(aKind);
+            gl.vertexAttribPointer(aKind, 1, gl.FLOAT, false, 0, 0);
+            gl.drawArrays(gl.POINTS, 0, COUNT);
+
+            requestAnimationFrame(frame);
+        }
+        requestAnimationFrame(frame);
+    }
+
+    /* ================================================================
+       SECTION 5: STARFIELD BUTTON PIXEL CANVAS
+       ================================================================ */
+    function initPixelCanvas(canvas) {
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+        const el = canvas.parentElement;
+        let cells = [], w = 0, h = 0;
+
+        function build() {
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            w = el.clientWidth; h = el.clientHeight;
+            canvas.width = Math.max(1, Math.round(w * dpr));
+            canvas.height = Math.max(1, Math.round(h * dpr));
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            cells = [];
+            const cellSize = 4, cols = Math.floor(w/cellSize), rows = Math.floor(h/cellSize);
+            const ox = (w - cols*cellSize)/2, oy = (h - rows*cellSize)/2;
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    const i = r*cols+c;
+                    const rnd = (seed) => { let x = Math.sin((i+1)*12.9898+seed*78.233)*43758.5453; return x - Math.floor(x); };
+                    cells.push({ cx: ox+c*cellSize+cellSize/2, cy: oy+r*cellSize+cellSize/2, base: rnd(1)<0.5 ? 0.5+rnd(2)*0.5 : 0.05+rnd(3)*0.18, speed: 0.6+rnd(4)*2.4, phase: rnd(5)*Math.PI*2 });
                 }
             }
-            draw() {
-                ctx.fillStyle = 'rgba(0, 240, 255, 0.4)';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fill();
-            }
         }
+        build();
 
-        const nodes = Array.from({ length: 80 }, () => new ConstellationNode());
+        function draw() {
+            ctx.clearRect(0, 0, w, h);
+            ctx.globalCompositeOperation = 'lighter';
+            ctx.fillStyle = '#FC731C';
+            const t = performance.now()/1000;
+            for (const p of cells) {
+                const tw = 0.55+0.45*Math.sin(t*p.speed+p.phase);
+                let a = p.base*tw*0.7;
+                if (a<0.01) continue;
+                ctx.globalAlpha = Math.min(1, a);
+                ctx.fillRect(p.cx-1, p.cy-1, 2, 2);
+            }
+            ctx.globalAlpha = 1;
+            ctx.globalCompositeOperation = 'source-over';
+            requestAnimationFrame(draw);
+        }
+        requestAnimationFrame(draw);
+    }
+    document.querySelectorAll('.sf-pixel-canvas').forEach(initPixelCanvas);
 
-        function renderCanvas() {
-            ctx.clearRect(0, 0, width, height);
-            for (let i = 0; i < nodes.length; i++) {
-                const p1 = nodes[i];
-                p1.update();
-                p1.draw();
-                for (let j = i + 1; j < nodes.length; j++) {
-                    const p2 = nodes[j];
-                    const dx = p1.x - p2.x;
-                    const dy = p1.y - p2.y;
-                    const distSq = dx*dx + dy*dy;
-                    if (distSq < 15000) { // ~122 maxDist
-                        const opacity = 1 - (distSq / 15000);
-                        ctx.strokeStyle = `rgba(0, 240, 255, ${opacity * 0.4})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.beginPath();
-                        ctx.moveTo(p1.x, p1.y);
-                        ctx.lineTo(p2.x, p2.y);
-                        ctx.stroke();
+    /* ================================================================
+       SECTION 6: LINK PREVIEW TOOLTIPS
+       ================================================================ */
+    const previewCard = document.getElementById('link-preview-card');
+    const previewImg = document.getElementById('link-preview-img');
+    document.querySelectorAll('.preview-link').forEach(link => {
+        const url = link.getAttribute('data-url') || link.href;
+        link.addEventListener('mouseenter', () => {
+            previewImg.src = `https://api.microlink.io/?url=${encodeURIComponent(url)}&embed=image.url`;
+            previewCard.classList.add('visible');
+        });
+        link.addEventListener('mouseleave', () => { previewCard.classList.remove('visible'); });
+        link.addEventListener('mousemove', e => {
+            previewCard.style.left = (e.clientX - 140) + 'px';
+            previewCard.style.top = (e.clientY - 190) + 'px';
+        });
+    });
+
+    /* ================================================================
+       SECTION 7: TRANSITION ORCHESTRATION
+       ================================================================ */
+    const welcomeEl = document.getElementById('welcome');
+    const portfolioEl = document.getElementById('portfolio');
+    let transitioned = false;
+
+    function launchTransition() {
+        if (transitioned) return;
+        transitioned = true;
+
+        // Start warp
+        warpRunning = true;
+        warpCtx.fillStyle = '#000';
+        warpCtx.fillRect(0, 0, wW, wH);
+        drawWarp();
+
+        const tl = gsap.timeline();
+
+        // Phase 1: Ramp up warp speed + fade warp in
+        tl.to(warpCanvas, { opacity: 1, duration: 0.3, ease: 'power2.in' }, 0);
+        tl.to({}, { duration: 1.5, onUpdate: function() {
+            warpSpeed = this.progress() * 50;
+        }}, 0);
+
+        // Phase 2: 3D transform welcome away
+        tl.to(welcomeEl, {
+            scale: 3, rotateX: 15, opacity: 0,
+            duration: 1.2, ease: 'power3.in',
+        }, 0.4);
+
+        // Phase 3: Show portfolio + start accretion disc
+        tl.call(() => {
+            constellationActive = false;
+            portfolioEl.style.display = 'block';
+            document.body.classList.add('portfolio-active');
+            adActive = true;
+            initAccretionDisc();
+            ScrollTrigger.refresh();
+        }, null, 1.2);
+
+        // Phase 4: Fade warp out
+        tl.to(warpCanvas, { opacity: 0, duration: 1, ease: 'power2.out' }, 1.6);
+        tl.to({}, { duration: 0.8, onUpdate: function() {
+            warpSpeed = 50 * (1 - this.progress());
+        }}, 1.6);
+
+        // Phase 5: Hide welcome completely
+        tl.call(() => {
+            warpRunning = false;
+            welcomeEl.style.display = 'none';
+        }, null, 2.8);
+    }
+
+    document.getElementById('explore-btn').addEventListener('click', launchTransition);
+
+    // Back Home
+    function returnHome() {
+        transitioned = false;
+        adActive = false;
+        document.body.classList.remove('portfolio-active');
+        window.scrollTo(0, 0);
+
+        welcomeEl.style.display = '';
+        gsap.set(welcomeEl, { scale: 1, rotateX: 0, opacity: 1 });
+
+        warpRunning = true;
+        warpCtx.fillStyle = '#000';
+        warpCtx.fillRect(0, 0, wW, wH);
+        drawWarp();
+
+        const tl = gsap.timeline();
+        tl.to(warpCanvas, { opacity: 1, duration: 0.3 }, 0);
+        tl.to({}, { duration: 1, onUpdate: function() { warpSpeed = this.progress() * 40; }}, 0);
+        tl.call(() => {
+            portfolioEl.style.display = 'none';
+            constellationActive = true;
+            (function drawConstellation2() {
+                if (!constellationActive) return;
+                cCtx.clearRect(0,0,cW,cH);
+                for (let i=0;i<cNodes.length;i++){
+                    const p=cNodes[i]; p.update();
+                    cCtx.fillStyle='rgba(0,240,255,0.35)'; cCtx.beginPath(); cCtx.arc(p.x,p.y,p.r,0,Math.PI*2); cCtx.fill();
+                    for (let j=i+1;j<cNodes.length;j++){
+                        const q=cNodes[j], dx=p.x-q.x, dy=p.y-q.y, ds=dx*dx+dy*dy;
+                        if (ds<16000){ const o=1-ds/16000; cCtx.strokeStyle=`rgba(0,240,255,${o*0.35})`; cCtx.lineWidth=0.5; cCtx.beginPath(); cCtx.moveTo(p.x,p.y); cCtx.lineTo(q.x,q.y); cCtx.stroke(); }
                     }
                 }
-            }
-            requestAnimationFrame(renderCanvas);
-        }
-        requestAnimationFrame(renderCanvas);
+                requestAnimationFrame(drawConstellation2);
+            })();
+        }, null, 0.8);
+        tl.to(warpCanvas, { opacity: 0, duration: 0.8 }, 1.2);
+        tl.to({}, { duration: 0.8, onUpdate: function() { warpSpeed = 40*(1-this.progress()); }}, 1.2);
+        tl.call(() => { warpRunning = false; }, null, 2.2);
+    }
+    document.getElementById('back-home-btn').addEventListener('click', e => { e.preventDefault(); returnHome(); });
 
-        /** ==========================================
-         *  GSAP SCROLL & 3D ANIMATIONS
-         *  ========================================== */
-        // Hero Intro
-        const heroTl = gsap.timeline();
-        heroTl.from(".subtitle", { y: 20, opacity: 0, duration: 1, ease: "power3.out", delay: 0.2 })
-              .from(".glitch-text", { y: 30, opacity: 0, duration: 1.2, ease: "power3.out" }, "-=0.6")
-              .from(".hero-desc", { y: 20, opacity: 0, duration: 1, ease: "power3.out" }, "-=0.8")
-              .from(".cta-button", { y: 20, opacity: 0, duration: 1, ease: "power3.out" }, "-=0.8")
-              .from(".cube-wrapper", { scale: 0, rotation: 90, opacity: 0, duration: 1.5, ease: "back.out(1.7)" }, "-=1");
+    /* ================================================================
+       SECTION 8: GSAP SCROLL ANIMATIONS (Portfolio page)
+       ================================================================ */
+    // Hero intro
+    gsap.from('.welcome-tag', { y: 20, opacity: 0, duration: 1, ease: 'power3.out', delay: 0.3 });
+    gsap.from('.glitch-text', { y: 30, opacity: 0, duration: 1.2, ease: 'power3.out', delay: 0.5 });
+    gsap.from('.welcome-subtitle', { y: 15, opacity: 0, duration: 1, ease: 'power3.out', delay: 0.7 });
+    gsap.from('#explore-btn', { y: 20, opacity: 0, duration: 1, ease: 'power3.out', delay: 1 });
 
-        // Floating 3D Parallax on Scroll
-        gsap.to(".gsap-float", {
-            yPercent: 150,
-            rotationX: 180,
-            rotationZ: 90,
-            ease: "none",
-            scrollTrigger: {
-                trigger: ".main-content",
-                start: "top top",
-                end: "bottom top",
-                scrub: 1
-            }
+    // Portfolio scroll reveals
+    gsap.utils.toArray('.pf-reveal').forEach(el => {
+        gsap.from(el, {
+            y: 60, opacity: 0, duration: 1, ease: 'power3.out',
+            scrollTrigger: { trigger: el, start: 'top 85%' }
         });
-
-        gsap.to(".gsap-float-reverse", {
-            yPercent: -150,
-            rotationY: -180,
-            ease: "none",
-            scrollTrigger: {
-                trigger: ".projects-section",
-                start: "top bottom",
-                end: "bottom top",
-                scrub: 1
-            }
+    });
+    gsap.utils.toArray('.pf-card').forEach((el, i) => {
+        gsap.from(el, {
+            y: 80, opacity: 0, rotation: (i%2===0 ? -3 : 3), duration: 0.9,
+            ease: 'power3.out', delay: i * 0.1,
+            scrollTrigger: { trigger: el, start: 'top 90%' }
         });
-
-        // Project Cards Staggered Reveal
-        gsap.from(".gsap-card", {
-            y: 100,
-            opacity: 0,
-            duration: 0.8,
-            stagger: 0.2,
-            ease: "power3.out",
-            scrollTrigger: {
-                trigger: ".projects-section",
-                start: "top 70%",
-            }
-        });
+    });
 
     </script>
 </body>
