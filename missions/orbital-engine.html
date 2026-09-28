@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orbital Mechanics</title>
+    <style>
+        body { margin: 0; background: #000; overflow: hidden; color: #fff; font-family: monospace; }
+        canvas { display: block; }
+        .hud { position: absolute; top: 20px; left: 20px; z-index: 10; background: rgba(0,0,0,0.7); border: 1px dashed rgba(255,100,0,0.5); padding: 20px; pointer-events: none; }
+        h1 { margin: 0 0 10px 0; color: #ff5f00; letter-spacing: 2px; font-size: 1rem; }
+        .back-btn { position: absolute; top: 20px; right: 20px; color: #fff; text-decoration: none; border: 1px solid #ff5f00; padding: 10px 20px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; z-index: 100; background: rgba(0,0,0,0.5); }
+        .back-btn:hover { background: #ff5f00; color: #000; }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="back-btn">Exit Simulation</a>
+    <div class="hud">
+        <h1>ORBITAL ENGINE V1.2</h1>
+        <p>N-Body Physics Simulation<br>Gravity Constant: 0.05</p>
+    </div>
+    <canvas id="c"></canvas>
+    <script>
+        const canvas = document.getElementById('c');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        const cx = canvas.width/2, cy = canvas.height/2;
+
+        const bodies = [];
+        for(let i=0; i<4; i++) {
+            bodies.push({
+                a: Math.random() * Math.PI * 2,
+                r: 100 + Math.random() * 300,
+                s: 0.005 + Math.random() * 0.015,
+                color: `hsl(${Math.random()*60 + 10}, 100%, 60%)`,
+                size: Math.random()*4 + 2,
+                trail: []
+            });
+        }
+
+        function loop() {
+            ctx.fillStyle = 'rgba(0,0,0,0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw Sun
+            ctx.beginPath();
+            ctx.arc(cx, cy, 20, 0, Math.PI*2);
+            ctx.fillStyle = '#fff';
+            ctx.shadowBlur = 40; ctx.shadowColor = '#ff5f00';
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            bodies.forEach(b => {
+                b.a += b.s;
+                const x = cx + Math.cos(b.a) * b.r;
+                const y = cy + Math.sin(b.a) * b.r;
+                b.trail.push({x,y});
+                if(b.trail.length > 50) b.trail.shift();
+                
+                ctx.beginPath();
+                ctx.moveTo(b.trail[0].x, b.trail[0].y);
+                for(let p of b.trail) ctx.lineTo(p.x, p.y);
+                ctx.strokeStyle = b.color;
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.arc(x, y, b.size, 0, Math.PI*2);
+                ctx.fillStyle = b.color;
+                ctx.fill();
+            });
+            requestAnimationFrame(loop);
+        }
+        loop();
+    </script>
+</body>
+</html>

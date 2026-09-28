@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Singularity</title>
+    <style>
+        body { margin: 0; background: #010102; overflow: hidden; font-family: monospace; }
+        canvas { display: block; }
+        .ui { position: absolute; bottom: 30px; width: 100%; text-align: center; color: rgba(255,255,255,0.5); pointer-events: none; }
+        h1 { color: #fff; letter-spacing: 5px; font-weight: 300; }
+        .back-btn { position: absolute; top: 20px; left: 20px; color: #fff; text-decoration: none; border: 1px solid rgba(255,255,255,0.2); padding: 10px 20px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; z-index: 100; }
+        .back-btn:hover { background: #fff; color: #000; }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="back-btn">Disconnect</a>
+    <canvas id="c"></canvas>
+    <div class="ui">
+        <h1>PROJECT SINGULARITY</h1>
+        <p>Global Node Network | Real-time WebSocket Sync</p>
+    </div>
+    <script>
+        const canvas = document.getElementById('c');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        let mouse = { x: -1000, y: -1000 };
+        window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+
+        class Node {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                if(this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if(this.y < 0 || this.y > canvas.height) this.vy *= -1;
+                const dx = mouse.x - this.x, dy = mouse.y - this.y, d = Math.sqrt(dx*dx + dy*dy);
+                if(d < 150) {
+                    this.x -= dx * 0.02;
+                    this.y -= dy * 0.02;
+                }
+            }
+            draw() {
+                ctx.fillStyle = '#fff';
+                ctx.beginPath(); ctx.arc(this.x, this.y, 2, 0, Math.PI*2); ctx.fill();
+            }
+        }
+        const nodes = Array.from({length: 150}, () => new Node());
+
+        function loop() {
+            ctx.fillStyle = 'rgba(1,1,2,0.2)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            for(let i=0; i<nodes.length; i++) {
+                nodes[i].update();
+                nodes[i].draw();
+                for(let j=i+1; j<nodes.length; j++) {
+                    const dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y, dist = dx*dx + dy*dy;
+                    if(dist < 10000) {
+                        ctx.strokeStyle = `rgba(0, 240, 255, ${1 - dist/10000})`;
+                        ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(nodes[j].x, nodes[j].y); ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(loop);
+        }
+        loop();
+    </script>
+</body>
+</html>

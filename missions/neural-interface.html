@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Interface UI</title>
+    <style>
+        body { margin: 0; background: #020205; color: #00f0ff; font-family: monospace; overflow: hidden; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .grid { position: absolute; width: 200vw; height: 200vh; background-image: linear-gradient(rgba(0, 240, 255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 240, 255, 0.1) 1px, transparent 1px); background-size: 40px 40px; transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px); animation: gridMove 10s linear infinite; }
+        @keyframes gridMove { 0% { transform: perspective(500px) rotateX(60deg) translateY(0) translateZ(-200px); } 100% { transform: perspective(500px) rotateX(60deg) translateY(40px) translateZ(-200px); } }
+        .ui-container { position: relative; z-index: 10; border: 1px solid rgba(0, 240, 255, 0.3); padding: 2rem; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px); display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; width: 80%; max-width: 800px; box-shadow: 0 0 50px rgba(0, 240, 255, 0.1); }
+        .data-stream { height: 300px; overflow: hidden; font-size: 0.8rem; line-height: 1.5; color: rgba(255,255,255,0.7); }
+        .radar { width: 150px; height: 150px; border-radius: 50%; border: 1px solid #00f0ff; position: relative; margin: 0 auto; overflow: hidden; }
+        .radar::before { content: ''; position: absolute; top: 50%; left: 50%; width: 50%; height: 2px; background: #00f0ff; transform-origin: 0 50%; animation: scan 2s linear infinite; box-shadow: 0 0 10px #00f0ff; }
+        @keyframes scan { 100% { transform: rotate(360deg); } }
+        .back-btn { position: absolute; top: 20px; left: 20px; color: #fff; text-decoration: none; border: 1px solid #00f0ff; padding: 10px 20px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; z-index: 100; background: rgba(0,0,0,0.5); }
+        .back-btn:hover { background: #00f0ff; color: #000; }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="back-btn">← Back to Terminal</a>
+    <div class="grid"></div>
+    <div class="ui-container">
+        <div>
+            <h2 style="margin-top:0; letter-spacing: 4px; border-bottom: 1px solid #00f0ff; padding-bottom: 10px;">NEURAL UPLINK</h2>
+            <div class="data-stream" id="stream"></div>
+        </div>
+        <div style="display: flex; flex-direction: column; justify-content: center; text-align: center;">
+            <div class="radar"></div>
+            <p style="margin-top: 2rem; letter-spacing: 2px;">SCANNING BIO-METRICS...</p>
+        </div>
+    </div>
+    <script>
+        const stream = document.getElementById('stream');
+        setInterval(() => {
+            const hex = Math.random().toString(16).substr(2, 8).toUpperCase();
+            const mem = (Math.random() * 100).toFixed(2);
+            stream.innerHTML = `[0x${hex}] MEM_ALLOC: ${mem}TB<br>` + stream.innerHTML;
+            if(stream.innerHTML.length > 1000) stream.innerHTML = stream.innerHTML.substring(0, 1000);
+        }, 100);
+    </script>
+</body>
+</html>

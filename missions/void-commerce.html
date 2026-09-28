@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Void Commerce</title>
+    <style>
+        body { margin: 0; background: #050505; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif; perspective: 1000px; color: #fff; }
+        .back-btn { position: absolute; top: 20px; left: 20px; color: #fff; text-decoration: none; border: 1px solid rgba(255,255,255,0.2); padding: 10px 20px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; border-radius: 4px; }
+        .card { width: 340px; height: 480px; background: rgba(20, 20, 25, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.5); transform-style: preserve-3d; transition: transform 0.1s; }
+        .product-img { width: 100%; height: 250px; background: linear-gradient(45deg, #1a1a2e, #16213e, #0f3460); border-radius: 12px; margin-bottom: 20px; transform: translateZ(60px); display: flex; justify-content: center; align-items: center; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); }
+        .product-img::after { content: 'V-001'; font-size: 3rem; font-weight: 900; opacity: 0.1; letter-spacing: 10px; }
+        .title { font-size: 1.5rem; transform: translateZ(40px); margin: 0 0 10px 0; font-weight: 300; letter-spacing: 2px; }
+        .price { font-size: 1.2rem; transform: translateZ(30px); color: #00f0ff; margin: 0 0 20px 0; }
+        .btn { display: block; width: 100%; padding: 15px; background: #fff; color: #000; text-align: center; text-transform: uppercase; font-weight: bold; letter-spacing: 2px; border: none; border-radius: 8px; transform: translateZ(50px); cursor: pointer; transition: 0.3s; }
+        .btn:hover { background: #00f0ff; box-shadow: 0 0 20px rgba(0,240,255,0.5); }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="back-btn">← Storefront</a>
+    <div class="card" id="card">
+        <div class="product-img"></div>
+        <h2 class="title">Quantum Sneaker</h2>
+        <p class="price">245.00 CR</p>
+        <button class="btn">Add to Cart</button>
+    </div>
+    <script>
+        const card = document.getElementById('card');
+        document.addEventListener('mousemove', e => {
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 20;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 20;
+            card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+        document.addEventListener('mouseleave', () => {
+            card.style.transform = `rotateY(0deg) rotateX(0deg)`;
+        });
+    </script>
+</body>
+</html>
