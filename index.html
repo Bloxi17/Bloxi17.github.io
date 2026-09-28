@@ -984,8 +984,11 @@
     let keys = '';
     let alarmOsc, alarmInterval;
     window.addEventListener('keydown', e => {
-        keys += e.key.toLowerCase();
-        if(keys.length > 6) keys = keys.slice(1);
+        // Only log single characters to avoid breaking the buffer with 'Backspace', 'Enter', etc.
+        if(e.key.length === 1) {
+            keys += e.key.toLowerCase();
+            keys = keys.slice(-6);
+        }
         if(keys === 'ainesh') {
             const isRed = document.body.classList.toggle('red-alert');
             if(isRed && actx) {
@@ -1005,6 +1008,8 @@
                 clearInterval(alarmInterval);
                 alarmOsc = null;
             }
+            // Clear keys so it doesn't immediately re-trigger if they press another key
+            keys = '';
         }
     });
 
