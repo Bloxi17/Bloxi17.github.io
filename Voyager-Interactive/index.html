@@ -3,24 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voyager: The Golden Record</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;600;900&display=swap" rel="stylesheet">
+    <title>Voyager: Edge of the Heliosphere</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛰️</text></svg>">
+    
+    <!-- Google Fonts: Instrument Serif, Inter Tight, JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS & Iconify -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
     <style>
         :root {
-            --bg: #020205;
-            --text: #ffffff;
-            --accent: #00f0ff;
-            --gold: #ffd700;
+            --gold: #F2B66D;
+            --gold-light: #F7D6A7;
+            --gold-glow: rgba(242, 182, 109, 0.35);
+            --bg-void: #050608;
+            --glass: rgba(255, 255, 255, 0.025);
+            --glass-card: rgba(8, 10, 15, 0.82);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-gold: rgba(242, 182, 109, 0.25);
+            --text-dim: rgba(255, 255, 255, 0.65);
         }
-        body, html {
+
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
         }
-        /* The Three.js Canvas stays fixed in the background */
+
+        body {
+            background-color: var(--bg-void);
+            color: #ffffff;
+            font-family: 'Inter Tight', -apple-system, sans-serif;
+            overflow-x: hidden;
+            margin: 0;
+            scroll-behavior: auto;
+        }
+
+        /* 3D Tactile Grain Texture Overlay */
+        .tactile-noise-layer {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 15;
+            opacity: 0.038;
+            mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .serif-display { font-family: 'Instrument Serif', Georgia, serif; }
+        .mono-hud { font-family: 'JetBrains Mono', monospace; }
+
+        .glass-panel {
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+        }
+
+        .glass-card-editorial {
+            background: var(--glass-card);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--border-gold);
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+        }
+
+        .nav-link {
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            position: relative;
+            transition: color 0.3s ease;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0%;
+            height: 1px;
+            background-color: var(--gold);
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-link:hover {
+            color: #ffffff;
+        }
+
+        .nav-link:hover::after { width: 100%; }
+
+        .cta-btn {
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            border: 1px solid rgba(242, 182, 109, 0.35);
+            background: rgba(242, 182, 109, 0.06);
+            color: #ffffff;
+            backdrop-filter: blur(12px);
+        }
+
+        .cta-btn:hover {
+            background: var(--gold);
+            color: var(--bg-void);
+            box-shadow: 0 0 35px rgba(242, 182, 109, 0.35);
+            border-color: var(--gold);
+            transform: translateY(-2px);
+        }
+
+        #preloader { z-index: 100; }
+        .char { display: inline-block; }
+
+        @keyframes bounce-subtle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(6px); }
+        }
+
+        .animate-bounce-subtle { animation: bounce-subtle 2s infinite ease-in-out; }
+        ::-webkit-scrollbar { display: none; }
+
+        /* Fixed Three.js WebGL canvas */
         #webgl-canvas {
             position: fixed;
             top: 0;
@@ -28,336 +136,2552 @@
             width: 100vw;
             height: 100vh;
             z-index: 0;
-            pointer-events: none;
-        }
-        
-        /* The scrollable content layer */
-        #scroll-container {
-            position: relative;
-            z-index: 1;
+            display: block;
         }
 
-        section {
-            height: 100vh;
+        /* Top Progress Bar */
+        .progress-bar-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.05);
+            z-index: 90;
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, rgba(242, 182, 109, 0.4), var(--gold));
+            box-shadow: 0 0 10px rgba(242, 182, 109, 0.5);
+            transition: width 0.1s linear;
+        }
+
+        /* Flight HUD Overlay (appears during scroll exploration) */
+        #flight-hud {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 40;
+            padding: 2.2rem 2.8rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto 1fr auto;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        #flight-hud.active {
+            opacity: 1;
+        }
+
+        .flight-hud-controls {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            z-index: 60;
+            pointer-events: auto;
+        }
+
+        .hud-btn {
+            background: rgba(8, 10, 16, 0.75);
+            border: 1px solid rgba(242, 182, 109, 0.25);
+            color: #ffffff;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            backdrop-filter: blur(12px);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-transform: uppercase;
+        }
+
+        .hud-btn:hover {
+            background: rgba(242, 182, 109, 0.18);
+            border-color: var(--gold);
+            color: var(--gold-light);
+            box-shadow: 0 0 20px rgba(242, 182, 109, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .hud-btn.active {
+            background: var(--gold);
+            color: var(--bg-void);
+            border-color: var(--gold);
+            box-shadow: 0 0 20px rgba(242, 182, 109, 0.4);
+        }
+
+        /* Interactive Mission Scrubber (Right Rail) */
+        .mission-scrubber-rail {
+            position: fixed;
+            right: 2.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 1.6rem;
+            z-index: 55;
+            pointer-events: auto;
+        }
+
+        .scrubber-track-line {
+            position: absolute;
+            right: 5px;
+            top: 6px;
+            bottom: 6px;
+            width: 1px;
+            background: rgba(255, 255, 255, 0.08);
+            z-index: -1;
+        }
+
+        .scrubber-node {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 14px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            outline: none;
+            opacity: 0.4;
+            transition: all 0.3s ease;
+        }
+
+        .scrubber-node:hover {
+            opacity: 0.9;
+        }
+
+        .scrubber-node.active {
+            opacity: 1;
+        }
+
+        .scrubber-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
+            color: rgba(255, 255, 255, 0.7);
+            transition: color 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .scrubber-node.active .scrubber-tag {
+            color: var(--gold);
+            font-weight: 500;
+        }
+
+        .scrubber-pip {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: var(--bg-void);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .scrubber-node.active .scrubber-pip {
+            border-color: var(--gold);
+            background: var(--gold);
+            box-shadow: 0 0 12px var(--gold);
+            transform: scale(1.2);
+        }
+
+        /* Scroll Content Chapters */
+        #scroll-container {
+            position: relative;
+            z-index: 30;
+            width: 100%;
+        }
+
+        .chapter-spacer {
+            height: 100vh;
+            pointer-events: none;
+        }
+
+        .chapter {
+            min-height: 140vh;
+            width: 100%;
             display: flex;
             align-items: center;
             position: relative;
+            padding: 0 8vw;
             box-sizing: border-box;
-            padding: 0 10vw;
+            pointer-events: none;
         }
 
-        .content-block {
-            max-width: 500px;
-            background: rgba(2, 2, 5, 0.6);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 240, 255, 0.2);
-            padding: 3rem;
-            border-radius: 4px;
-            opacity: 0; /* Animated by GSAP */
-            transform: translateY(50px);
+        .chapter.align-left {
+            justify-content: flex-start;
         }
 
-        h1, h2 {
-            font-family: 'Space Mono', monospace;
+        .chapter.align-right {
+            justify-content: flex-end;
+        }
+
+        .editorial-panel {
+            pointer-events: auto;
+            max-width: 540px;
+            width: 100%;
+            max-height: calc(100vh - 8rem);
+            overflow-y: auto;
+            scrollbar-width: none;
+            padding: 2.4rem 2.6rem;
+            border-radius: 14px;
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .editorial-panel::-webkit-scrollbar { display: none; }
+
+        .chapter-eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            letter-spacing: 0.25em;
+            color: var(--gold);
             text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-top: 0;
-        }
-        h1 { font-size: 3rem; color: var(--gold); text-shadow: 0 0 20px rgba(255, 215, 0, 0.4); }
-        h2 { font-size: 2rem; color: var(--accent); }
-        
-        p {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            color: rgba(255,255,255,0.8);
+            margin-bottom: 0.8rem;
+            display: block;
         }
 
-        .data-readout {
-            font-family: 'Space Mono', monospace;
+        .chapter-title {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: 3.2rem;
+            font-weight: 400;
+            line-height: 1.05;
+            color: #ffffff;
+            margin-bottom: 1.2rem;
+            letter-spacing: -0.02em;
+        }
+
+        .chapter-body {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.78);
+            margin-bottom: 1.6rem;
+            font-weight: 300;
+        }
+
+        /* Telemetry Metrics Quad */
+        .metrics-quad {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: rgba(242, 182, 109, 0.15);
+            border: 1px solid rgba(242, 182, 109, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 1.6rem;
+        }
+
+        .quad-cell {
+            background: rgba(5, 7, 12, 0.85);
+            padding: 0.9rem 1.1rem;
+        }
+
+        .quad-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 0.15em;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
+        }
+
+        .quad-val {
+            font-family: 'JetBrains Mono', monospace;
             font-size: 0.85rem;
-            color: var(--accent);
-            margin-top: 2rem;
-            border-top: 1px dashed rgba(0,240,255,0.3);
-            padding-top: 1rem;
+            font-weight: 500;
+            color: var(--gold-light);
+            letter-spacing: 0.05em;
         }
 
-        /* Alignment classes for sections */
-        .align-left { justify-content: flex-start; }
-        .align-right { justify-content: flex-end; }
-        .align-center { justify-content: center; text-align: center; }
+        .editorial-quote {
+            border-left: 1px solid var(--gold);
+            padding-left: 1.2rem;
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: 1.15rem;
+            line-height: 1.5;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.88);
+            margin-top: 1.2rem;
+        }
 
-        /* Scroll indicator */
-        .scroll-indicator {
+        .quote-author {
+            display: block;
+            font-family: 'Inter Tight', sans-serif;
+            font-size: 0.7rem;
+            font-style: normal;
+            letter-spacing: 0.15em;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-top: 0.5rem;
+        }
+
+        /* Golden Record Turntable Console (Chapter 4) */
+        .record-turntable {
+            margin-top: 1.6rem;
+            background: rgba(5, 7, 12, 0.9);
+            border: 1px solid rgba(242, 182, 109, 0.3);
+            border-radius: 10px;
+            padding: 1.2rem;
+        }
+
+        .turntable-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 0.5rem;
+        }
+
+        .phonograph-disk-wrap {
+            position: relative;
+            width: 84px;
+            height: 84px;
+            border-radius: 50%;
+            background: #000000;
+            border: 2px solid rgba(242, 182, 109, 0.6);
+            box-shadow: 0 0 25px rgba(242, 182, 109, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .phonograph-disk {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffd700 0%, #b8860b 28%, #1a160d 30%, #0d0c0a 70%, #ffd700 72%, #b8860b 100%);
+            position: relative;
+        }
+
+        .phonograph-disk.spinning {
+            animation: spin-record 3.66s linear infinite;
+        }
+
+        @keyframes spin-record {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .phonograph-center {
             position: absolute;
-            bottom: 40px;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
-            font-family: 'Space Mono', monospace;
-            font-size: 0.8rem;
-            color: rgba(255,255,255,0.5);
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 0.3; transform: translate(-50%, 0); }
-            50% { opacity: 1; transform: translate(-50%, 10px); }
+            transform: translate(-50%, -50%);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #ffd700;
+            border: 2px solid #5a4200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-size: 11px;
+            font-weight: 700;
         }
 
+        .track-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+        }
+
+        .track-item-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
+            padding: 0.5rem 0.8rem;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .track-item-btn:hover {
+            border-color: rgba(242, 182, 109, 0.5);
+            background: rgba(242, 182, 109, 0.08);
+        }
+
+        .track-item-btn.active {
+            border-color: var(--gold);
+            background: rgba(242, 182, 109, 0.16);
+        }
+
+        .track-play-toggle {
+            width: 100%;
+            margin-top: 0.8rem;
+            padding: 0.6rem;
+            background: var(--gold);
+            color: var(--bg-void);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .track-play-toggle:hover {
+            box-shadow: 0 0 20px rgba(242, 182, 109, 0.5);
+            transform: translateY(-1px);
+        }
+
+        /* 3D Craft Subsystem Inspector Overlay */
+        .subsystem-inspector-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 120;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            background: radial-gradient(circle at center, transparent 30%, rgba(3, 4, 7, 0.92) 100%);
+        }
+
+        .subsystem-inspector-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Inspector Hotspot Pins */
+        .aesthetic-hotspot {
+            position: absolute;
+            pointer-events: auto;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 125;
+            transition: transform 0.15s ease-out;
+        }
+
+        .aesthetic-hotspot-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 1.5px solid var(--gold);
+            background: rgba(242, 182, 109, 0.25);
+            box-shadow: 0 0 14px rgba(242, 182, 109, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .aesthetic-hotspot:hover .aesthetic-hotspot-dot {
+            transform: scale(1.3);
+            background: var(--gold);
+            box-shadow: 0 0 25px rgba(242, 182, 109, 0.8);
+        }
+
+        .aesthetic-hotspot-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.12em;
+            color: #ffffff;
+            background: rgba(8, 10, 15, 0.88);
+            border: 1px solid rgba(242, 182, 109, 0.3);
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            white-space: nowrap;
+            backdrop-filter: blur(8px);
+            transition: all 0.2s ease;
+        }
+
+        .aesthetic-hotspot:hover .aesthetic-hotspot-badge {
+            border-color: var(--gold);
+            color: var(--gold-light);
+        }
+
+        /* Telemetry Drawer in Inspector */
+        .aesthetic-drawer {
+            position: absolute;
+            right: 3rem;
+            top: 6rem;
+            width: 380px;
+            max-width: 90vw;
+            background: rgba(7, 9, 14, 0.92);
+            border: 1px solid var(--gold);
+            border-radius: 12px;
+            padding: 1.8rem;
+            box-shadow: 0 0 45px rgba(0, 0, 0, 0.8), 0 0 25px rgba(242, 182, 109, 0.2);
+            backdrop-filter: blur(20px);
+            z-index: 130;
+            transform: translateX(40px);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .aesthetic-drawer.visible {
+            transform: translateX(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Modals: Pale Blue Dot & Archival Certificate */
+        .aesthetic-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: rgba(2, 3, 5, 0.94);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+            backdrop-filter: blur(20px);
+            padding: 2rem;
+        }
+
+        .aesthetic-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Certificate Modal Specifics */
+        .cert-card-wrap {
+            background: #07090D;
+            border: 1px solid rgba(242, 182, 109, 0.4);
+            box-shadow: 0 0 80px rgba(0, 0, 0, 0.95), 0 0 35px rgba(242, 182, 109, 0.15);
+            border-radius: 14px;
+            padding: 2rem;
+            max-width: 96vw;
+            max-height: 94vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #cert-canvas {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
+            border: 1px solid rgba(242, 182, 109, 0.3);
+        }
+
+        /* Hide elements when inspecting */
+        body.inspector-active #scroll-container,
+        body.inspector-active #flight-hud,
+        body.inspector-active .mission-scrubber-rail,
+        body.inspector-active .progress-bar-container {
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+            transition: opacity 0.35s ease;
+        }
+
+        @media (max-width: 768px) {
+            .mission-scrubber-rail { display: none; }
+            .chapter { padding: 0 5vw; }
+            .editorial-panel { padding: 1.8rem 1.6rem; }
+            .chapter-title { font-size: 2.4rem; }
+            .flight-hud-controls { bottom: 1.2rem; top: auto; }
+        }
     </style>
 </head>
-<body>
+<body class="selection:bg-[#F2B66D] selection:text-[#050608]">
 
-    <canvas id="webgl-canvas"></canvas>
+    <!-- 3D Tactile Paper-Film Grain Layer -->
+    <div class="tactile-noise-layer"></div>
 
-    <div id="scroll-container">
-        
-        <!-- SECTION 1: Launch -->
-        <section class="align-left" id="sec-1">
-            <div class="content-block">
-                <h1>Voyager 1</h1>
-                <p>Launched in 1977, it was designed for a five-year mission to study Jupiter and Saturn. It became the farthest human-made object in existence.</p>
-                <div class="data-readout">
-                    STATUS: ONLINE<br>
-                    DISTANCE_FROM_EARTH: 15,000,000,000 MILES
-                </div>
-            </div>
-            <div class="scroll-indicator">SCROLL TO INITIATE TELEMETRY ↓</div>
-        </section>
-
-        <!-- SECTION 2: Jupiter -->
-        <section class="align-right" id="sec-2">
-            <div class="content-block">
-                <h2>The Grand Tour</h2>
-                <p>Voyager utilized a rare planetary alignment occurring once every 176 years. By using Jupiter's immense gravity, it slingshotted itself outward, gaining the velocity needed to escape the solar system.</p>
-                <div class="data-readout">
-                    GRAVITY_ASSIST: ENGAGED<br>
-                    CURRENT_VELOCITY: 38,000 MPH
-                </div>
-            </div>
-        </section>
-
-        <!-- SECTION 3: The Golden Record -->
-        <section class="align-left" id="sec-3">
-            <div class="content-block" style="border-color: rgba(255,215,0,0.4);">
-                <h2 style="color: var(--gold);">The Golden Record</h2>
-                <p>Attached to the side of the probe is a phonograph record containing sounds and images selected to portray the diversity of life and culture on Earth, intended for any intelligent extraterrestrial life.</p>
-                <div class="data-readout" style="color: var(--gold);">
-                    PAYLOAD: PHONOGRAPH_RECORD<br>
-                    MATERIAL: GOLD-PLATED COPPER
-                </div>
-            </div>
-        </section>
-
-        <!-- SECTION 4: Interstellar Space -->
-        <section class="align-center" id="sec-4">
-            <div class="content-block" style="margin: 0 auto; background: transparent; border: none;">
-                <h1 style="color: #fff; text-shadow: 0 0 30px #fff;">Interstellar Space</h1>
-                <p style="font-size: 1.5rem;">In August 2012, Voyager 1 crossed the heliopause. It is now drifting in the void between the stars, destined to wander the Milky Way eternally.</p>
-                <div class="data-readout" style="border: none;">
-                    [ TRANSMISSION ENDS ]
-                </div>
-            </div>
-        </section>
-
-        <!-- Extra spacing for smooth scrolling out -->
-        <div style="height: 50vh;"></div>
+    <!-- PRELOADER -->
+    <div id="preloader" class="fixed inset-0 bg-[#050608] flex flex-col items-center justify-center">
+        <div class="w-36 h-[1px] bg-white/10 relative overflow-hidden mb-4">
+            <div id="preloader-bar" class="absolute inset-0 bg-[var(--gold)] w-0 transition-all duration-75"></div>
+        </div>
+        <div id="preloader-counter" class="mono-hud text-xs tracking-[0.3em] text-[var(--gold)]">000</div>
     </div>
 
-    <!-- Scripts: Three.js and GSAP -->
+    <!-- Top Reading Progress Indicator -->
+    <div class="progress-bar-container">
+        <div class="progress-bar" id="page-progress"></div>
+    </div>
+
+    <!-- 3D WEBGL CANVAS -->
+    <canvas id="webgl-canvas"></canvas>
+
+    <!-- CINEMATIC SOLAR SYSTEM REVEAL / WELCOME HERO LAYER -->
+    <div id="ui-layer" class="fixed inset-0 z-20 min-h-screen flex flex-col justify-between p-8 md:p-12 opacity-0 pointer-events-auto transition-opacity duration-700">
+        
+        <!-- TOP NAV -->
+        <header class="w-full flex justify-between items-start">
+            <div class="flex flex-col gap-1 cursor-pointer" id="brand-logo-btn">
+                <div class="text-2xl md:text-3xl font-light tracking-tighter serif-display text-[var(--gold)]">V.1</div>
+                <div class="text-[9px] uppercase tracking-[0.3em] opacity-40 mono-hud">Deep Space Network</div>
+            </div>
+
+            <div class="flex flex-col items-end gap-6">
+                <nav class="hidden md:flex items-center gap-10">
+                    <a href="../" class="nav-link text-[var(--gold)] font-medium">← Portfolio</a>
+                    <a href="#mission" id="nav-mission-link" class="nav-link">Mission</a>
+                    <a href="#chapters" id="nav-chapters-link" class="nav-link">Chapters</a>
+                    <a href="#about" id="nav-about-link" class="nav-link">About</a>
+                    <a href="#contact" id="nav-contact-link" class="nav-link">Contact</a>
+                </nav>
+                <button id="skip-intro-btn" class="text-[10px] uppercase tracking-widest opacity-40 hover:opacity-100 transition-opacity underline-offset-4 underline md:no-underline font-light text-[var(--gold-light)]">
+                    Skip Cinematic Intro
+                </button>
+            </div>
+
+            <button id="mobile-menu-toggle" class="md:hidden flex flex-col gap-1.5 p-2">
+                <div class="w-6 h-[1px] bg-white"></div>
+                <div class="w-4 h-[1px] bg-white self-end"></div>
+            </button>
+        </header>
+
+        <!-- MAIN CONTENT -->
+        <main class="text-center flex flex-col items-center max-w-4xl px-4 mx-auto my-auto">
+            <h1 id="main-title" class="text-7xl md:text-[10rem] lg:text-[13rem] serif-display leading-[0.85] tracking-[0.1em] mb-4 text-white drop-shadow-2xl">
+                VOYAGER
+            </h1>
+            <p id="sub-title" class="text-xs md:text-sm uppercase tracking-[0.4em] text-[var(--gold)] font-light opacity-80 mb-12">
+                Edge of the Heliosphere &mdash; An Interactive Mission Log
+            </p>
+
+            <button id="cta-begin-btn" class="cta-btn px-10 py-4 rounded-full text-xs uppercase tracking-[0.2em] flex items-center gap-3">
+                <span>Begin the Journey</span>
+                <iconify-icon icon="lucide:arrow-down" class="text-lg"></iconify-icon>
+            </button>
+        </main>
+
+        <!-- HUD / FOOTER -->
+        <footer class="w-full grid grid-cols-2 md:grid-cols-3 items-end">
+            <div class="flex flex-col gap-6">
+                <div class="flex flex-col gap-4">
+                    <div class="flex flex-col">
+                        <span class="telemetry-item mono-hud text-[10px] opacity-60 uppercase">Dist. from Sun</span>
+                        <span id="telemetry-dist" class="telemetry-value mono-hud tracking-widest text-sm text-[var(--gold)]" data-telemetry-value="24352189102">24,352,189,102 KM</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="telemetry-item mono-hud text-[10px] opacity-60 uppercase">HELIOCENTRIC VECTOR</span>
+                        <span id="telemetry-time" class="telemetry-value mono-hud tracking-widest text-sm text-[var(--gold)]">V-INF: 17.02 KM/S</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <button id="toggle-audio-btn" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-white/5 transition-colors cursor-pointer" title="Toggle Interstellar Audio">
+                        <iconify-icon icon="lucide:volume-x" class="text-white/60 text-lg"></iconify-icon>
+                    </button>
+                </div>
+            </div>
+
+            <div id="scroll-indicator" class="hidden md:flex flex-col items-center gap-3 pb-4">
+                <span class="text-[10px] uppercase tracking-[0.3em] opacity-40 font-light">Scroll to Explore</span>
+                <div class="w-[1px] h-12 bg-gradient-to-b from-[var(--gold)] to-transparent animate-bounce-subtle"></div>
+            </div>
+
+            <div class="flex flex-col items-end gap-2">
+                <div class="text-[10px] uppercase tracking-widest text-right opacity-40 mono-hud">Orbital Elements: J2000</div>
+                <div class="text-[10px] uppercase tracking-widest text-right opacity-40 mono-hud">Coordinates: Interstellar Space</div>
+            </div>
+        </footer>
+
+        <!-- RIGHT RAIL -->
+        <div class="absolute right-4 top-1/2 -translate-y-1/2 h-64 flex flex-col items-center gap-8 z-20 pointer-events-none">
+            <div class="w-[1px] h-full bg-white/10 relative">
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-[var(--gold)] shadow-[0_0_10px_rgba(242,182,109,0.5)]"></div>
+                <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-white/10"></div>
+                <div class="absolute top-2/4 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-white/10"></div>
+                <div class="absolute top-3/4 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-white/10"></div>
+            </div>
+        </div>
+
+        <!-- Corner Accents -->
+        <div class="fixed top-0 left-0 w-28 h-28 border-l border-t border-white/5 pointer-events-none z-10"></div>
+        <div class="fixed bottom-0 right-0 w-28 h-28 border-r border-b border-white/5 pointer-events-none z-10"></div>
+    </div>
+
+    <!-- FLIGHT TELEMETRY HUD LAYER (ACTIVE IN MISSION MODE) -->
+    <div id="flight-hud">
+        <!-- Top Center Quick Actions -->
+        <div class="flight-hud-controls">
+            <button class="hud-btn" id="btn-inspect-craft" title="Inspect Voyager 1 in 360° 3D [I]">
+                <span>🛰️</span> <span>Inspect Craft</span>
+            </button>
+            <button class="hud-btn" id="btn-pale-blue-dot" title="Pale Blue Dot Reverence Archive (1990) [P]">
+                <span>🔭</span> <span>Pale Blue Dot</span>
+            </button>
+            <button class="hud-btn" id="btn-audio-hud" title="Toggle Sound [M]">
+                <span id="audio-icon-hud">🔊</span> <span id="audio-text-hud">Audio: Off</span>
+            </button>
+        </div>
+
+        <!-- Top Left: Live Status -->
+        <div style="grid-column: 1; grid-row: 1; align-self: start;">
+            <div class="text-[9px] uppercase tracking-[0.25em] text-[var(--gold)] opacity-70 mono-hud">Mission Identifier</div>
+            <div class="text-sm font-normal text-white serif-display tracking-wider mt-0.5">Voyager 1 &bull; VGR-77</div>
+            <div class="flex items-center gap-2 mt-1.5 text-[10px] text-white/50 mono-hud">
+                <span class="w-1.5 h-1.5 rounded-full bg-[var(--gold)] shadow-[0_0_8px_var(--gold)]"></span>
+                <span id="flight-dsn-status">DSN DSS-14 Goldstone [70m Lock]</span>
+            </div>
+        </div>
+
+        <!-- Top Right: Mission Clock -->
+        <div style="grid-column: 2; grid-row: 1; justify-self: end; text-align: right;">
+            <div class="text-[9px] uppercase tracking-[0.25em] text-[var(--gold)] opacity-70 mono-hud">Elapsed Flight Time</div>
+            <div class="text-sm font-normal text-white serif-display tracking-wider mt-0.5" id="flight-met">T+00Y 000D 00H</div>
+            <div class="text-[10px] text-white/40 mono-hud mt-1" id="flight-utc-clock">UTC 00:00:00</div>
+        </div>
+
+        <!-- Bottom Left: Velocity & Radio Delay -->
+        <div style="grid-column: 1; grid-row: 3; align-self: end;">
+            <div class="mb-3">
+                <div class="text-[9px] uppercase tracking-[0.2em] text-white/40 mono-hud">Heliocentric Velocity</div>
+                <div class="text-sm font-normal text-white mono-hud mt-0.5" id="flight-vel">38,026 <span class="text-[var(--gold)] text-xs">MPH</span> <span class="text-white/40 text-xs">(17.0 KM/S)</span></div>
+            </div>
+            <div>
+                <div class="text-[9px] uppercase tracking-[0.2em] text-white/40 mono-hud">One-Way Radio Delay</div>
+                <div class="text-sm font-normal text-white mono-hud mt-0.5" id="flight-light-time">22h 42m 14s</div>
+            </div>
+        </div>
+
+        <!-- Bottom Right: Distance from Sun & RTG Power -->
+        <div style="grid-column: 2; grid-row: 3; justify-self: end; align-self: end; text-align: right;">
+            <div class="mb-3">
+                <div class="text-[9px] uppercase tracking-[0.2em] text-white/40 mono-hud">Distance from Sol</div>
+                <div class="text-sm font-normal text-white mono-hud mt-0.5" id="flight-dist">163.8 <span class="text-[var(--gold)] text-xs">AU</span> <span class="text-white/40 text-xs">(24.5B KM)</span></div>
+            </div>
+            <div>
+                <div class="text-[9px] uppercase tracking-[0.2em] text-white/40 mono-hud">RTG Power Output</div>
+                <div class="text-sm font-normal text-white mono-hud mt-0.5" id="flight-power">240 <span class="text-[var(--gold)] text-xs">WATTS</span> <span class="text-[var(--gold)] text-xs">[NOMINAL]</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MISSION SCRUBBER (RIGHT RAIL) -->
+    <nav class="mission-scrubber-rail" id="mission-scrubber" aria-label="Mission Timeline">
+        <div class="scrubber-track-line"></div>
+        <button class="scrubber-node active" data-target="chapter-1">
+            <span class="scrubber-tag">01 // EARTH [1977]</span>
+            <span class="scrubber-pip"></span>
+        </button>
+        <button class="scrubber-node" data-target="chapter-2">
+            <span class="scrubber-tag">02 // JUPITER [1979]</span>
+            <span class="scrubber-pip"></span>
+        </button>
+        <button class="scrubber-node" data-target="chapter-3">
+            <span class="scrubber-tag">03 // SATURN [1980]</span>
+            <span class="scrubber-pip"></span>
+        </button>
+        <button class="scrubber-node" data-target="chapter-4">
+            <span class="scrubber-tag">04 // RECORD [1977-&infin;]</span>
+            <span class="scrubber-pip"></span>
+        </button>
+        <button class="scrubber-node" data-target="chapter-5">
+            <span class="scrubber-tag">05 // INTERSTELLAR [2012+]</span>
+            <span class="scrubber-pip"></span>
+        </button>
+    </nav>
+
+    <!-- SCROLL CONTAINER (EDITORIAL CHAPTERS) -->
+    <div id="scroll-container">
+        <!-- Spacer matching the initial solar system reveal view -->
+        <div class="chapter-spacer" id="chapter-hero-spacer"></div>
+
+        <!-- CHAPTER 01: EARTH DEPARTURE -->
+        <section class="chapter align-left" id="chapter-1">
+            <div class="editorial-panel glass-card-editorial">
+                <span class="chapter-eyebrow">Chapter 01 &mdash; 05 September 1977</span>
+                <h2 class="chapter-title">Voyager 1</h2>
+                <p class="chapter-body">
+                    Launched from Cape Canaveral atop a Titan IIIE-Centaur rocket into a hyperbolic solar escape trajectory, Voyager 1 embarked on humanity's grandest voyage. Engineered with a 3.7-meter parabolic dish and triply-redundant onboard computers, it was built to endure where no machine had ever ventured.
+                </p>
+                <div class="metrics-quad">
+                    <div class="quad-cell">
+                        <div class="quad-label">Launch Vehicle</div>
+                        <div class="quad-val">Titan IIIE-Centaur</div>
+                    </div>
+                    <div class="quad-cell">
+                        <div class="quad-label">Escape Velocity</div>
+                        <div class="quad-val">36,000 MPH (C3: 109)</div>
+                    </div>
+                    <div class="quad-cell">
+                        <div class="quad-label">Telecommunications</div>
+                        <div class="quad-val">23W X-Band / 3.7m HGA</div>
+                    </div>
+                    <div class="quad-cell">
+                        <div class="quad-label">Memory Buffer</div>
+                        <div class="quad-val">69.63 KB Tape Store</div>
+                    </div>
+                </div>
+                <div class="editorial-quote">
+                    "A rare celestial alignment occurring only once every 175 years enabled a single probe to visit all outer gas giants."
+                    <span class="quote-author">&mdash; Gary Flandro, JPL Celestial Mechanics</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- CHAPTER 02: THE GRAND TOUR (JUPITER) -->
+        <section class="chapter align-right" id="chapter-2">
+            <div class="editorial-panel glass-card-editorial">
+                <span class="chapter-eyebrow">Chapter 02 &mdash; 05 March 1979</span>
+                <h2 class="chapter-title">The Grand Tour</h2>
+                <p class="chapter-body">
+                    Reaching Jupiter in March 1979, Voyager 1 threaded the needle of the giant planet's immense gravitational well. Through the historic slingshot maneuver, it stole angular momentum from Jupiter's orbital path, hurtling outward toward the ringed jewel of the solar system.
+                </p>
+                <div class="metrics-quad">
+                    <div class="quad-cell">
+                        <div class="quad-label">Closest Approach</div>
+                        <div class="quad-val">349,000 KM (Clouds)</div>
+                    </div>
+                    <div class="quad-cell">
+                        <div class="quad-label">Slingshot Gain</div>
+                        <div class="quad-val">+15.7 KM/S Velocity</div>
+                    </div>
+                    <div class="quad-cell">
+                        <div class="quad-label">Major Discovery</div>
+                        <div class="quad-val">Active Volcanism on Io</div>
+                    </div>
+                    <div class="quad-cell">
+                        <div class="quad-label">Radiation Dosage</div>
+                        <div class="quad-val">1,000&times; Human Limit</div>
+                    </div>
+                </div>
+                <div class="editorial-quote">
+                    "The volcanic plumes of Io showed us for the first time an active, living moon in the frozen depths of the outer solar system."
+                    <span class="quote-author">&mdash; Linda Morabito, JPL Navigation Engineer</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- CHAPTER 03: SATURNIAN GATEWAY -->
+        <section class="chapter align-left" id="chapter-3">
+            <div class="editorial-panel glass-card-editorial">
+                <span class="chapter-eyebrow">Chapter 03 &mdash; 12 November 1980</span>
+                <h2 class="chapter-title">Saturnian Gateway</h2>
+                <p class="chapter-body">
+                    Voyager 1 made its closest approach to Saturn in November 1980, revealing thousands of intricate ringlets and sampling the nitrogen-rich atmosphere of giant moon Titan. Titan's gravity deflected the spacecraft northward, out of the ecliptic plane, on a permanent course toward the galaxy's rim.
+                </p>
+                <div class="metrics-quad">
+                    <div class="quad-cell">
+                        <div class="quad-label">Saturn Closest Pass</div>
+                        <div class="quad-val">124,000 KM</div>
+                    </div>
+                    <div class="quad-cell">
+                        <div class="quad-label">Titan Flyby Altitude</div>
+                        <div class="quad-val">6,490 KM</div>
+                    </div>
+                    <div class="quad-cell">
+                        <div class="quad-label">Ecliptic Deflection</div>
+                        <div class="quad-val">+35.5&deg; Out-of-Plane</div>
+                    </div>
+                    <div class="quad-cell">
+                        <div class="quad-label">Ring Composition</div>
+                        <div class="quad-val">99% Water Ice &amp; Dust</div>
+                    </div>
+                </div>
+                <div class="editorial-quote">
+                    "Sacrificing flybys of Uranus and Neptune to investigate prebiotic conditions on Titan sent Voyager out of the solar plane forever."
+                    <span class="quote-author">&mdash; Edward C. Stone, Voyager Project Scientist</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- CHAPTER 04: THE GOLDEN RECORD -->
+        <section class="chapter align-right" id="chapter-4">
+            <div class="editorial-panel glass-card-editorial">
+                <span class="chapter-eyebrow">Chapter 04 &mdash; Humanity's Time Capsule</span>
+                <h2 class="chapter-title">The Golden Record</h2>
+                <p class="chapter-body">
+                    Mounted securely on the probe's side bus sits a 12-inch gold-plated copper phonograph record. Curated by Carl Sagan, it holds 115 analog images, greetings in 55 languages, 90 minutes of global music, and the recorded brainwaves of Ann Druyan thinking of love.
+                </p>
+                <div class="metrics-quad">
+                    <div class="quad-cell">
+                        <div class="quad-label">Casing &amp; Plating</div>
+                        <div class="quad-val">Electroplated Gold</div>
+                    </div>
+                    <div class="quad-cell">
+                        <div class="quad-label">Expected Longevity</div>
+                        <div class="quad-val">&gt; 1,000,000,000 Yrs</div>
+                    </div>
+                    <div class="quad-cell">
+                        <div class="quad-label">Playback Velocity</div>
+                        <div class="quad-val">16&#8532; RPM (Grooves)</div>
+                    </div>
+                    <div class="quad-cell">
+                        <div class="quad-label">Stylus Needle</div>
+                        <div class="quad-val">U-238 Dated Ultra-Pure</div>
+                    </div>
+                </div>
+
+                <!-- Turntable Audio Console -->
+                <div class="record-turntable" id="record-turntable">
+                    <div class="turntable-header">
+                        <span class="text-[10px] tracking-[0.2em] uppercase text-[var(--gold)] mono-hud">Phonograph Archive // 16&#8532; RPM</span>
+                        <div class="flex items-center gap-1">
+                            <span class="w-1 h-3 bg-[var(--gold)] rounded-sm"></span>
+                            <span class="w-1 h-4 bg-[var(--gold)] rounded-sm"></span>
+                            <span class="w-1 h-2 bg-[var(--gold)] rounded-sm"></span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="phonograph-disk-wrap" id="phonograph-wrap">
+                            <div class="phonograph-disk" id="phonograph-disk">
+                                <div class="phonograph-center">☉</div>
+                            </div>
+                        </div>
+                        <div class="track-list">
+                            <button class="track-item-btn active" data-track="1">
+                                <span class="mono-hud text-xs text-[var(--gold)]">01</span>
+                                <div class="text-xs">
+                                    <div class="font-normal text-white">Earth Symphony</div>
+                                    <div class="text-[10px] text-white/40">Biosphere &amp; Thunder</div>
+                                </div>
+                            </button>
+                            <button class="track-item-btn" data-track="2">
+                                <span class="mono-hud text-xs text-[var(--gold)]">02</span>
+                                <div class="text-xs">
+                                    <div class="font-normal text-white">Analog Carrier</div>
+                                    <div class="text-[10px] text-white/40">Surface Grooves &amp; 1kHz Tone</div>
+                                </div>
+                            </button>
+                            <button class="track-item-btn" data-track="3">
+                                <span class="mono-hud text-xs text-[var(--gold)]">03</span>
+                                <div class="text-xs">
+                                    <div class="font-normal text-white">Interstellar Plasma</div>
+                                    <div class="text-[10px] text-white/40">3.2 kHz Heliopause Whistle</div>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                    <button class="track-play-toggle" id="btn-toggle-phonograph">
+                        <span id="phonograph-play-text">Engage Phonograph Playback</span>
+                    </button>
+                </div>
+
+                <div class="editorial-quote">
+                    "The spacecraft will be encountered and the record played only if there are advanced spacefaring civilizations in interstellar space."
+                    <span class="quote-author">&mdash; Carl Sagan, 1977</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- CHAPTER 05: INTERSTELLAR HORIZON -->
+        <section class="chapter align-left" id="chapter-5">
+            <div class="editorial-panel glass-card-editorial">
+                <span class="chapter-eyebrow">Chapter 05 &mdash; 25 August 2012 & Beyond</span>
+                <h2 class="chapter-title">Interstellar Horizon</h2>
+                <p class="chapter-body">
+                    On August 25, 2012, at a distance of 121 AU, Voyager 1 measured a cliff-edge plunge in solar wind ions and an unprecedented surge in galactic cosmic rays. It had officially crossed the heliopause into the pristine interstellar medium of the Milky Way.
+                </p>
+                <div class="metrics-quad">
+                    <div class="quad-cell">
+                        <div class="quad-label">Heliopause Boundary</div>
+                        <div class="quad-val">121.6 AU (25 Aug 2012)</div>
+                    </div>
+                    <div class="quad-cell">
+                        <div class="quad-label">Current Distance</div>
+                        <div class="quad-val">&gt; 163.8 AU (24.5B KM)</div>
+                    </div>
+                    <div class="quad-cell">
+                        <div class="quad-label">Power Longevity</div>
+                        <div class="quad-val">RTG Depletion Post-2025</div>
+                    </div>
+                    <div class="quad-cell">
+                        <div class="quad-label">Next Stellar Pass</div>
+                        <div class="quad-val">Gliese 445 (~40k Yrs)</div>
+                    </div>
+                </div>
+
+                <!-- Archival Flight Certificate Terminal -->
+                <div class="mt-6 p-5 bg-[#07090D] border border-[var(--border-gold)] rounded-lg">
+                    <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-3">
+                        <span class="text-[10px] uppercase tracking-[0.2em] text-[var(--gold)] mono-hud">JPL Deep Space Dispatch Accord</span>
+                        <span class="text-[10px] text-white/40 mono-hud">Encoder Active</span>
+                    </div>
+                    <p class="text-xs text-white/70 leading-relaxed mb-4">
+                        Register your human observer identifier to generate an official archival Deep Space Flight Certificate documenting your passage into interstellar space.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <div class="flex-1 flex items-center bg-black/60 border border-white/15 rounded px-3 py-2">
+                            <span class="text-[10px] mono-hud text-[var(--gold)] mr-2">CALLSIGN:</span>
+                            <input type="text" id="cert-callsign" placeholder="COMMANDER AINESH" maxlength="32" class="bg-transparent text-white text-xs mono-hud outline-none w-full uppercase">
+                        </div>
+                        <button id="btn-generate-cert" class="px-5 py-2.5 bg-[var(--gold)] text-[#050608] text-xs mono-hud font-medium uppercase tracking-wider rounded hover:bg-[#f7d6a7] transition-all whitespace-nowrap">
+                            Issue Certificate
+                        </button>
+                    </div>
+                </div>
+
+                <div class="editorial-quote">
+                    "Even after the generators die, Voyager will wander the Milky Way as an eternal ambassador of human curiosity."
+                    <span class="quote-author">&mdash; NASA Jet Propulsion Laboratory</span>
+                </div>
+            </div>
+        </section>
+
+        <div class="h-64"></div>
+    </div>
+
+    <!-- 3D CRAFT SUBSYSTEM INSPECTOR OVERLAY -->
+    <div class="subsystem-inspector-overlay" id="inspector-overlay">
+        <header class="absolute top-8 left-10 right-10 flex justify-between items-center z-30">
+            <div class="flex items-center gap-4">
+                <span class="text-2xl serif-display text-white">Voyager 1 Subsystem Inspector</span>
+                <span class="text-[10px] uppercase tracking-[0.25em] text-[var(--gold)] mono-hud px-2.5 py-1 border border-[var(--border-gold)] rounded-full">360&deg; Orbit Camera</span>
+            </div>
+            <button id="btn-close-inspector" class="hud-btn">
+                <span>✕</span> <span>Resume Mission [ESC]</span>
+            </button>
+        </header>
+
+        <!-- Hotspot Reticles -->
+        <div id="hotspot-container">
+            <div class="aesthetic-hotspot" id="hotspot-dish" data-subsystem="dish">
+                <div class="aesthetic-hotspot-dot"></div>
+                <div class="aesthetic-hotspot-badge">3.7M HIGH-GAIN DISH</div>
+            </div>
+            <div class="aesthetic-hotspot" id="hotspot-record" data-subsystem="record">
+                <div class="aesthetic-hotspot-dot" style="background: var(--gold); border-color: #fff;"></div>
+                <div class="aesthetic-hotspot-badge" style="border-color: var(--gold); color: var(--gold-light);">THE GOLDEN RECORD</div>
+            </div>
+            <div class="aesthetic-hotspot" id="hotspot-rtg" data-subsystem="rtg">
+                <div class="aesthetic-hotspot-dot"></div>
+                <div class="aesthetic-hotspot-badge">PU-238 RTG POWER UNITS</div>
+            </div>
+            <div class="aesthetic-hotspot" id="hotspot-camera" data-subsystem="camera">
+                <div class="aesthetic-hotspot-dot"></div>
+                <div class="aesthetic-hotspot-badge">SCAN PLATFORM &amp; CAMERAS</div>
+            </div>
+            <div class="aesthetic-hotspot" id="hotspot-mag" data-subsystem="mag">
+                <div class="aesthetic-hotspot-dot"></div>
+                <div class="aesthetic-hotspot-badge">13M MAGNETOMETER BOOM</div>
+            </div>
+        </div>
+
+        <!-- Telemetry Drawer -->
+        <aside class="aesthetic-drawer" id="hotspot-drawer">
+            <div class="text-[9px] uppercase tracking-[0.25em] text-[var(--gold)] mono-hud mb-2" id="drawer-tag">// Subsystem Telemetry</div>
+            <h3 class="text-2xl serif-display text-white mb-3" id="drawer-title">3.7m High-Gain Dish</h3>
+            <p class="text-xs text-white/75 leading-relaxed mb-5" id="drawer-desc">
+                A 3.66-meter parabolic Cassegrain reflector transmitting at 2.29 GHz (S-band) and 8.42 GHz (X-band). Its focused 0.5-degree microwave beam bridges 24.5 billion kilometers back to Earth's 70-meter Deep Space Network antennas.
+            </p>
+            <div class="grid grid-cols-2 gap-2 text-[10px] mono-hud border-t border-white/10 pt-4">
+                <div>
+                    <span class="text-white/40 block">RF TRANSMITTER</span>
+                    <span class="text-[var(--gold)] font-medium" id="spec-1">23W X-BAND</span>
+                </div>
+                <div>
+                    <span class="text-white/40 block">BEAMWIDTH</span>
+                    <span class="text-[var(--gold)] font-medium" id="spec-2">0.5&deg; HALF-POWER</span>
+                </div>
+                <div class="mt-2">
+                    <span class="text-white/40 block">DOWNLINK RATE</span>
+                    <span class="text-[var(--gold)] font-medium" id="spec-3">160 BITS / SEC</span>
+                </div>
+                <div class="mt-2">
+                    <span class="text-white/40 block">OPERATING LOCK</span>
+                    <span class="text-[var(--gold)] font-medium" id="spec-4">ACTIVE [DSS-14]</span>
+                </div>
+            </div>
+        </aside>
+
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 px-6 py-2.5 rounded-full border border-white/10 bg-black/75 backdrop-blur-md text-[11px] mono-hud text-white/60 tracking-wider flex items-center gap-4">
+            <span>🖱 Click &amp; drag to orbit</span>
+            <span>&bull;</span>
+            <span>🔍 Scroll to zoom</span>
+            <span>&bull;</span>
+            <span>🎯 Click reticles for specifications</span>
+        </div>
+    </div>
+
+    <!-- PALE BLUE DOT MODAL (1990 REVERENCE ARCHIVE) -->
+    <div class="aesthetic-modal" id="pbd-modal">
+        <div class="glass-card-editorial max-w-2xl w-full p-8 md:p-10 relative">
+            <header class="flex justify-between items-start mb-6">
+                <div>
+                    <div class="text-[10px] uppercase tracking-[0.25em] text-[var(--gold)] mono-hud">Voyager 1 Narrow-Angle Archive</div>
+                    <h2 class="text-3xl serif-display text-white mt-1">Pale Blue Dot &bull; 14 Feb 1990</h2>
+                </div>
+                <button id="btn-close-pbd" class="text-white/50 hover:text-white transition-colors mono-hud text-xs">✕ Close [ESC]</button>
+            </header>
+
+            <div class="relative w-full aspect-video bg-black rounded-lg overflow-hidden border border-white/15 mb-6 flex items-center justify-center">
+                <!-- Diagonal solar sunbeam ray -->
+                <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-[rgba(242,182,109,0.12)] to-transparent pointer-events-none"></div>
+                <!-- Earth reticle and dot -->
+                <div class="relative flex items-center gap-3">
+                    <div class="relative w-6 h-6 border border-[var(--gold)] flex items-center justify-center">
+                        <div class="w-1.5 h-1.5 rounded-full bg-[#8fd3ff] shadow-[0_0_8px_#8fd3ff] animate-ping"></div>
+                        <div class="absolute w-1.5 h-1.5 rounded-full bg-[#bfe3ff]"></div>
+                    </div>
+                    <span class="mono-hud text-[11px] text-[var(--gold)] tracking-wider">EARTH [0.12 PIXEL] // 40.5 AU</span>
+                </div>
+            </div>
+
+            <p class="font-serif italic text-base md:text-lg text-white/90 leading-relaxed mb-4 border-l border-[var(--gold)] pl-4">
+                "Look again at that dot. That's here. That's home. That's us. On it everyone you love, everyone you know, everyone you ever heard of, every human being who ever was, lived out their lives... on a mote of dust suspended in a sunbeam."
+            </p>
+            <div class="flex justify-between items-center text-[10px] mono-hud text-white/50">
+                <span>Distance: 6,000,000,000 KM (40.5 AU)</span>
+                <span class="text-[var(--gold)]">&mdash; Carl Sagan, 1994</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ARCHIVAL FLIGHT DISPATCH CERTIFICATE MODAL -->
+    <div class="aesthetic-modal" id="cert-modal">
+        <div class="cert-card-wrap">
+            <header class="flex justify-between items-center w-full mb-4">
+                <span class="text-xs uppercase tracking-[0.2em] text-[var(--gold)] mono-hud">Archival NASA / JPL Interstellar Dispatch</span>
+                <button id="btn-close-cert" class="text-white/50 hover:text-white mono-hud text-xs">✕ Close [ESC]</button>
+            </header>
+
+            <canvas id="cert-canvas" width="2400" height="1500"></canvas>
+
+            <div class="mt-6 flex justify-center gap-4">
+                <a id="cert-download-link" download="Voyager1_Interstellar_Certificate.png" class="px-8 py-3 bg-[var(--gold)] text-[#050608] font-medium mono-hud text-xs tracking-widest uppercase rounded hover:bg-[#f7d6a7] transition-all shadow-[0_0_25px_rgba(242,182,109,0.3)]">
+                    📥 Download High-Resolution Certificate (PNG)
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- VENDOR DEPENDENCIES -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
+    <!-- Three.js Post-Processing & Controls -->
+    <script src="public/vendor/OrbitControls.js"></script>
+    <script src="public/vendor/CopyShader.js"></script>
+    <script src="public/vendor/LuminosityHighPassShader.js"></script>
+    <script src="public/vendor/EffectComposer.js"></script>
+    <script src="public/vendor/RenderPass.js"></script>
+    <script src="public/vendor/ShaderPass.js"></script>
+    <script src="public/vendor/UnrealBloomPass.js"></script>
+    <!-- GSAP Animation Engine -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
     <script>
         gsap.registerPlugin(ScrollTrigger);
 
         // ==========================================
-        // 1. THREE.JS SCENE SETUP
+        // 1. THREE.JS INITIALIZATION & SCENE ARCHITECTURE
         // ==========================================
         const canvas = document.getElementById('webgl-canvas');
+        const progressBar = document.getElementById('page-progress');
+
         const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x020205, 0.02);
+        scene.fog = new THREE.FogExp2(0x050608, 0.005);
 
-        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 3000);
+        // Initial cinematic Solar System panorama position (matching user's uploaded image)
+        camera.position.set(0, 32, 95);
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({
+            canvas: canvas,
+            antialias: true,
+            alpha: false,
+            powerPreference: 'high-performance'
+        });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.05;
+        renderer.outputEncoding = THREE.sRGBEncoding;
 
-        // Lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+        // Post-Processing UnrealBloomPass
+        let composer = null;
+        let bloomPass = null;
+        try {
+            if (THREE.EffectComposer && THREE.RenderPass && THREE.UnrealBloomPass) {
+                const renderScene = new THREE.RenderPass(scene, camera);
+                bloomPass = new THREE.UnrealBloomPass(
+                    new THREE.Vector2(window.innerWidth, window.innerHeight),
+                    0.55, // Strength: subtle warm glow
+                    0.35, // Radius
+                    0.86  // Threshold
+                );
+                composer = new THREE.EffectComposer(renderer);
+                composer.addPass(renderScene);
+                composer.addPass(bloomPass);
+            }
+        } catch (err) {
+            console.warn('EffectComposer fallback to standard WebGL renderer:', err);
+            composer = null;
+        }
+
+        // Lighting Architecture
+        const ambientLight = new THREE.AmbientLight(0x090b10, 0.7);
         scene.add(ambientLight);
-        
-        const directionalLight = new THREE.DirectionalLight(0x00f0ff, 1.5);
-        directionalLight.position.set(5, 5, 5);
-        scene.add(directionalLight);
 
-        const sunLight = new THREE.PointLight(0xffd700, 2, 100);
-        sunLight.position.set(-20, 10, -20);
+        // Sol Central Sunlight (Warm gold light)
+        const sunLight = new THREE.PointLight(0xF2B66D, 3.8, 1200);
+        sunLight.position.set(0, 0, 0);
         scene.add(sunLight);
 
-        // ==========================================
-        // 2. PROCEDURAL VOYAGER MODEL
-        // ==========================================
-        const voyager = new THREE.Group();
+        // Directional Key Light for dramatic planet illumination
+        const keyLight = new THREE.DirectionalLight(0xfff1dc, 2.2);
+        keyLight.position.set(-60, 35, 45);
+        scene.add(keyLight);
 
-        // Material for the probe
-        const probeMat = new THREE.MeshStandardMaterial({ 
-            color: 0xcccccc, 
-            metalness: 0.8, 
-            roughness: 0.4,
-            wireframe: false 
-        });
-        const goldMat = new THREE.MeshStandardMaterial({
-            color: 0xffd700,
-            metalness: 1.0,
-            roughness: 0.2
-        });
+        // Rim Light (Celestial glow)
+        const rimLight = new THREE.DirectionalLight(0xf2b66d, 0.45);
+        rimLight.position.set(40, -20, -50);
+        scene.add(rimLight);
 
-        // High-Gain Antenna (The Dish)
-        const dishGeo = new THREE.CylinderGeometry(2.5, 0.1, 0.5, 32);
-        const dish = new THREE.Mesh(dishGeo, probeMat);
-        dish.rotation.x = Math.PI / 2;
-        voyager.add(dish);
+        // Starfield
+        const starCount = 5000;
+        const starGeo = new THREE.BufferGeometry();
+        const starPositions = new Float32Array(starCount * 3);
+        const starColors = new Float32Array(starCount * 3);
 
-        // Main Bus (Body)
-        const busGeo = new THREE.BoxGeometry(1.5, 1.5, 1);
-        const bus = new THREE.Mesh(busGeo, probeMat);
-        bus.position.z = -0.8;
-        voyager.add(bus);
+        for (let i = 0; i < starCount; i++) {
+            const idx = i * 3;
+            const r = 300 + Math.random() * 800;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos((Math.random() * 2) - 1);
 
-        // RTG (Power Source Boom)
-        const rtgBoomGeo = new THREE.CylinderGeometry(0.05, 0.05, 4);
-        const rtgBoom = new THREE.Mesh(rtgBoomGeo, probeMat);
-        rtgBoom.position.set(2, -0.5, -0.8);
-        rtgBoom.rotation.z = Math.PI / 2;
-        voyager.add(rtgBoom);
+            starPositions[idx] = r * Math.sin(phi) * Math.cos(theta);
+            starPositions[idx + 1] = r * Math.sin(phi) * Math.sin(theta);
+            starPositions[idx + 2] = r * Math.cos(phi);
 
-        const rtgGeo = new THREE.CylinderGeometry(0.3, 0.3, 1.5, 16);
-        const rtg = new THREE.Mesh(rtgGeo, probeMat);
-        rtg.position.set(4, -0.5, -0.8);
-        rtg.rotation.z = Math.PI / 2;
-        voyager.add(rtg);
-
-        // Magnetometer Boom (Long thin rod)
-        const magBoomGeo = new THREE.CylinderGeometry(0.02, 0.02, 8);
-        const magBoom = new THREE.Mesh(magBoomGeo, probeMat);
-        magBoom.position.set(-4, 1, -0.8);
-        magBoom.rotation.z = -Math.PI / 2.5;
-        voyager.add(magBoom);
-
-        // The Golden Record (Attached to bus)
-        const recordGeo = new THREE.CylinderGeometry(0.4, 0.4, 0.05, 32);
-        const record = new THREE.Mesh(recordGeo, goldMat);
-        record.position.set(0.8, 0, -0.8);
-        record.rotation.z = Math.PI / 2;
-        voyager.add(record);
-
-        scene.add(voyager);
-
-        // ==========================================
-        // 3. ENVIRONMENT (Stars & Planet)
-        // ==========================================
-        // Stars
-        const starsGeo = new THREE.BufferGeometry();
-        const starsCount = 3000;
-        const posArray = new Float32Array(starsCount * 3);
-        for(let i=0; i<starsCount * 3; i++) {
-            posArray[i] = (Math.random() - 0.5) * 200;
+            const b = 0.4 + Math.random() * 0.6;
+            starColors[idx] = b;
+            starColors[idx + 1] = b * (0.9 + Math.random() * 0.1);
+            starColors[idx + 2] = b * 0.85;
         }
-        starsGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const starsMat = new THREE.PointsMaterial({ size: 0.1, color: 0xffffff });
-        const starMesh = new THREE.Points(starsGeo, starsMat);
-        scene.add(starMesh);
 
-        // Jupiter-like planet in the distance
-        const planetGeo = new THREE.SphereGeometry(15, 64, 64);
-        const planetMat = new THREE.MeshStandardMaterial({ 
-            color: 0x111115, 
-            emissive: 0x00f0ff, 
-            emissiveIntensity: 0.1,
-            wireframe: true
+        starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+        starGeo.setAttribute('color', new THREE.BufferAttribute(starColors, 3));
+
+        const starMat = new THREE.PointsMaterial({
+            size: 1.3,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.85,
+            sizeAttenuation: true
         });
-        const planet = new THREE.Mesh(planetGeo, planetMat);
-        planet.position.set(-30, -10, -50);
-        scene.add(planet);
+        const starfield = new THREE.Points(starGeo, starMat);
+        scene.add(starfield);
+
+        // Loading Manager
+        let isModelLoaded = false;
+        window.isModelLoaded = false;
+        let voyagerModel = null;
+        const preloaderBar = document.getElementById('preloader-bar');
+        const preloaderCounter = document.getElementById('preloader-counter');
+
+        const loadingManager = new THREE.LoadingManager(
+            () => {
+                isModelLoaded = true;
+                window.isModelLoaded = true;
+                setTimeout(() => {
+                    startReveal();
+                }, 300);
+            },
+            (url, itemsLoaded, itemsTotal) => {
+                const pct = Math.round((itemsLoaded / itemsTotal) * 100);
+                if (preloaderCounter) preloaderCounter.innerText = pct.toString().padStart(3, '0');
+                if (preloaderBar) preloaderBar.style.width = `${pct}%`;
+            },
+            (err) => {
+                console.error('Asset load error:', err);
+            }
+        );
+
+        const dracoLoader = new THREE.DRACOLoader();
+        dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+        dracoLoader.preload();
+
+        const textureLoader = new THREE.TextureLoader(loadingManager);
+
+        // Milky Way Sky Dome
+        const milkyWayTex = textureLoader.load('public/textures/milkyway.jpg');
+        const skyGeo = new THREE.SphereGeometry(1200, 60, 40);
+        const skyMat = new THREE.MeshBasicMaterial({
+            map: milkyWayTex,
+            side: THREE.BackSide,
+            opacity: 0.32,
+            transparent: true
+        });
+        const skyDome = new THREE.Mesh(skyGeo, skyMat);
+        scene.add(skyDome);
 
         // ==========================================
-        // 4. CAMERA SETUP
+        // 2. COMPLETE SOLAR SYSTEM (MATCHING REFERENCE IMAGE)
         // ==========================================
-        // Start camera near the probe
-        camera.position.set(5, 2, 8);
-        camera.lookAt(voyager.position);
+        const solarSystemGroup = new THREE.Group();
+        scene.add(solarSystemGroup);
 
-        // ==========================================
-        // 5. ANIMATION LOOP
-        // ==========================================
-        let time = 0;
-        function animate() {
-            requestAnimationFrame(animate);
-            
-            // Subtle floating animation for the probe
-            time += 0.01;
-            voyager.position.y = Math.sin(time) * 0.2;
-            voyager.rotation.z = Math.sin(time * 0.5) * 0.05;
-            
-            // Rotate planet slowly
-            planet.rotation.y += 0.001;
-            starMesh.rotation.y += 0.0002;
-
-            renderer.render(scene, camera);
+        // Helper function for thin, elegant elliptical planetary orbits
+        function createPlanetOrbit(radiusX, radiusZ) {
+            const curve = new THREE.EllipseCurve(
+                0, 0,
+                radiusX, radiusZ,
+                0, 2 * Math.PI,
+                false,
+                0
+            );
+            const points = curve.getPoints(180);
+            const geo = new THREE.BufferGeometry().setFromPoints(
+                points.map(p => new THREE.Vector3(p.x, 0, p.y))
+            );
+            const mat = new THREE.LineBasicMaterial({
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.16,
+                linewidth: 1
+            });
+            return new THREE.Line(geo, mat);
         }
-        animate();
 
-        // Handle Resize
+        // 1. Central Sun (Sol)
+        const sunTex = textureLoader.load('public/textures/sun.jpg');
+        const sunGeo = new THREE.SphereGeometry(6.2, 64, 64);
+        const sunMat = new THREE.MeshStandardMaterial({
+            map: sunTex,
+            emissive: 0xF2B66D,
+            emissiveMap: sunTex,
+            emissiveIntensity: 1.8,
+            roughness: 0.4
+        });
+        const sunMesh = new THREE.Mesh(sunGeo, sunMat);
+        solarSystemGroup.add(sunMesh);
+
+        // Sun Corona Glow Mesh
+        const coronaGeo = new THREE.SphereGeometry(7.2, 48, 48);
+        const coronaMat = new THREE.MeshBasicMaterial({
+            color: 0xF2B66D,
+            transparent: true,
+            opacity: 0.22,
+            side: THREE.BackSide
+        });
+        const coronaMesh = new THREE.Mesh(coronaGeo, coronaMat);
+        solarSystemGroup.add(coronaMesh);
+
+        // Planets Configuration (Arranged as shown in user's panorama reference image)
+        const planetConfigs = [
+            { name: 'Mercury', rx: 11, rz: 10.5, size: 0.35, color: 0x8c8780, speed: 0.008, angle: 3.1 },
+            { name: 'Venus',   rx: 16, rz: 15.2, size: 0.55, color: 0xd6ad70, speed: 0.005, angle: 3.3 },
+            { name: 'Earth',   rx: 23, rz: 21.8, size: 0.65, isEarth: true, speed: 0.0035, angle: 3.45 },
+            { name: 'Mars',    rx: 31, rz: 29.5, size: 0.45, isMars: true, speed: 0.0025, angle: 3.7 },
+            { name: 'Jupiter', rx: 45, rz: 42.0, size: 1.85, isJupiter: true, speed: 0.0012, angle: 0.2 },
+            { name: 'Saturn',  rx: 60, rz: 56.0, size: 1.45, isSaturn: true, speed: 0.0008, angle: 0.4 },
+            { name: 'Uranus',  rx: 74, rz: 69.0, size: 0.85, color: 0x9be0e8, speed: 0.0005, angle: 0.55 },
+            { name: 'Neptune', rx: 88, rz: 82.0, size: 0.82, color: 0x4d75d6, speed: 0.0004, angle: 0.68 }
+        ];
+
+        const planets = [];
+        let earthGroup = null;
+        let earthMesh = null;
+        let cloudsMesh = null;
+        let marsMesh = null;
+        let jupiterMesh = null;
+        let saturnMesh = null;
+
+        planetConfigs.forEach(cfg => {
+            // Orbit line
+            const orbitLine = createPlanetOrbit(cfg.rx, cfg.rz);
+            solarSystemGroup.add(orbitLine);
+
+            const pGroup = new THREE.Group();
+
+            let mesh;
+            if (cfg.isEarth) {
+                earthGroup = pGroup;
+                const earthDayTex = textureLoader.load('public/textures/earth_day.jpg');
+                const earthGeo = new THREE.SphereGeometry(cfg.size, 48, 48);
+                const earthMat = new THREE.MeshStandardMaterial({
+                    map: earthDayTex,
+                    roughness: 0.75,
+                    metalness: 0.05
+                });
+                earthMesh = new THREE.Mesh(earthGeo, earthMat);
+                pGroup.add(earthMesh);
+
+                // Clouds
+                const cloudsTex = textureLoader.load('public/textures/earth_clouds.png');
+                const cloudsGeo = new THREE.SphereGeometry(cfg.size * 1.015, 48, 48);
+                const cloudsMat = new THREE.MeshStandardMaterial({
+                    map: cloudsTex,
+                    transparent: true,
+                    opacity: 0.85,
+                    roughness: 0.9,
+                    depthWrite: false
+                });
+                cloudsMesh = new THREE.Mesh(cloudsGeo, cloudsMat);
+                pGroup.add(cloudsMesh);
+                pGroup.rotation.z = -0.41;
+            } else if (cfg.isMars) {
+                const marsTex = textureLoader.load('public/textures/mars.jpg');
+                const geo = new THREE.SphereGeometry(cfg.size, 48, 48);
+                const mat = new THREE.MeshStandardMaterial({
+                    map: marsTex,
+                    roughness: 0.85
+                });
+                marsMesh = new THREE.Mesh(geo, mat);
+                pGroup.add(marsMesh);
+            } else if (cfg.isJupiter) {
+                const jupiterTex = textureLoader.load('public/textures/jupiter.jpg');
+                const geo = new THREE.SphereGeometry(cfg.size, 48, 48);
+                const mat = new THREE.MeshStandardMaterial({
+                    map: jupiterTex,
+                    roughness: 0.8
+                });
+                jupiterMesh = new THREE.Mesh(geo, mat);
+                pGroup.add(jupiterMesh);
+            } else if (cfg.isSaturn) {
+                const saturnTex = textureLoader.load('public/textures/saturn.jpg');
+                const geo = new THREE.SphereGeometry(cfg.size, 48, 48);
+                const mat = new THREE.MeshStandardMaterial({
+                    map: saturnTex,
+                    roughness: 0.85
+                });
+                saturnMesh = new THREE.Mesh(geo, mat);
+                pGroup.add(saturnMesh);
+
+                // Saturn Rings
+                const ringTex = textureLoader.load('public/textures/saturn_ring.png');
+                const innerR = cfg.size * 1.35;
+                const outerR = cfg.size * 2.45;
+                const ringGeo = new THREE.RingGeometry(innerR, outerR, 64);
+                
+                // Radial UV mapping
+                const pos = ringGeo.attributes.position;
+                const uv = ringGeo.attributes.uv;
+                for (let i = 0; i < pos.count; i++) {
+                    const vx = pos.getX(i);
+                    const vy = pos.getY(i);
+                    const dist = Math.sqrt(vx * vx + vy * vy);
+                    const u = (dist - innerR) / (outerR - innerR);
+                    uv.setXY(i, u, 0.5);
+                }
+                ringGeo.attributes.uv.needsUpdate = true;
+
+                const ringMat = new THREE.MeshStandardMaterial({
+                    map: ringTex,
+                    transparent: true,
+                    opacity: 0.95,
+                    side: THREE.DoubleSide,
+                    roughness: 0.85,
+                    depthWrite: false
+                });
+                const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+                ringMesh.rotation.x = Math.PI / 2;
+                pGroup.add(ringMesh);
+                pGroup.rotation.z = 0.45;
+                pGroup.rotation.x = 0.15;
+            } else {
+                const geo = new THREE.SphereGeometry(cfg.size, 32, 32);
+                const mat = new THREE.MeshStandardMaterial({
+                    color: cfg.color,
+                    roughness: 0.8
+                });
+                mesh = new THREE.Mesh(geo, mat);
+                pGroup.add(mesh);
+            }
+
+            // Set initial position
+            pGroup.position.x = Math.cos(cfg.angle) * cfg.rx;
+            pGroup.position.z = Math.sin(cfg.angle) * cfg.rz;
+            solarSystemGroup.add(pGroup);
+
+            planets.push({
+                group: pGroup,
+                config: cfg,
+                angle: cfg.angle
+            });
+        });
+
+        // 3D Hyperbolic Escape Trajectory Spline (Voyager's path out of the system)
+        const trajectoryPoints = [
+            new THREE.Vector3(-22, 0, 8),    // Earth departure
+            new THREE.Vector3(-14, 1.2, 5),
+            new THREE.Vector3(0, 2.5, 0),    // Crossing Sun mid-zone
+            new THREE.Vector3(18, 4.0, -10), // Jovian slingshot
+            new THREE.Vector3(38, 7.5, -28), // Saturnian deflection
+            new THREE.Vector3(75, 18.0, -65),
+            new THREE.Vector3(130, 36.0, -120) // Deep interstellar outbound
+        ];
+        const trajCurve = new THREE.CatmullRomCurve3(trajectoryPoints);
+        const trajGeo = new THREE.BufferGeometry().setFromPoints(trajCurve.getPoints(120));
+        const trajMat = new THREE.LineDashedMaterial({
+            color: 0xF2B66D,
+            dashSize: 1.5,
+            gapSize: 0.8,
+            transparent: true,
+            opacity: 0.35,
+            linewidth: 1
+        });
+        const trajLine = new THREE.Line(trajGeo, trajMat);
+        trajLine.computeLineDistances();
+        solarSystemGroup.add(trajLine);
+
+        // ==========================================
+        // 3. VOYAGER 1 SPACECRAFT MODEL SETUP
+        // ==========================================
+        const probeAnchor = new THREE.Group();
+        const probeOffset = new THREE.Group();
+        probeAnchor.add(probeOffset);
+        scene.add(probeAnchor);
+
+        // Radio pulse rings emitted from the 3.7m antenna dish
+        const radioPulseGroup = new THREE.Group();
+        const radioRings = [];
+        for (let i = 0; i < 3; i++) {
+            const rGeo = new THREE.RingGeometry(0.3, 0.45, 32);
+            const rMat = new THREE.MeshBasicMaterial({
+                color: 0xF2B66D,
+                transparent: true,
+                opacity: 0.4,
+                side: THREE.DoubleSide
+            });
+            const rMesh = new THREE.Mesh(rGeo, rMat);
+            rMesh.rotation.x = Math.PI / 2;
+            radioPulseGroup.add(rMesh);
+            radioRings.push({ mesh: rMesh, phase: i * 0.33 });
+        }
+        scene.add(radioPulseGroup);
+
+        const gltfLoader = new THREE.GLTFLoader(loadingManager);
+        gltfLoader.setDRACOLoader(dracoLoader);
+
+        gltfLoader.load(
+            'public/models/voyager.glb',
+            (gltf) => {
+                voyagerModel = gltf.scene;
+
+                const box = new THREE.Box3().setFromObject(voyagerModel);
+                const center = box.getCenter(new THREE.Vector3());
+                const size = box.getSize(new THREE.Vector3());
+                const maxDim = Math.max(size.x, size.y, size.z);
+
+                const targetScale = 5.2 / maxDim;
+                voyagerModel.scale.setScalar(targetScale);
+                voyagerModel.position.sub(center.multiplyScalar(targetScale));
+
+                voyagerModel.traverse((child) => {
+                    if (child.isMesh && child.material) {
+                        child.material.roughness = Math.min(child.material.roughness || 0.4, 0.55);
+                        child.material.metalness = Math.max(child.material.metalness || 0.5, 0.75);
+                        child.material.envMapIntensity = 1.3;
+                        child.material.needsUpdate = true;
+                    }
+                });
+
+                probeOffset.add(voyagerModel);
+
+                // In the solar system reveal view, place Voyager near its hyperbolic path (between Sun and Jupiter)
+                probeAnchor.position.set(12, 3.2, -6);
+                probeAnchor.rotation.set(0.2, -1.8, 0.15);
+
+                initScrollAndFlightTimeline();
+            },
+            undefined,
+            (error) => {
+                console.error('Error loading voyager.glb:', error);
+            }
+        );
+
+        // ==========================================
+        // 4. GSAP WELCOME REVEAL & CAMERA FLY-IN
+        // ==========================================
+        const TL = gsap.timeline();
+
+        function startReveal() {
+            // PHASE 1: Preloader fade out
+            TL.to('#preloader', {
+                opacity: 0,
+                duration: 1.0,
+                ease: 'expo.inOut',
+                onComplete: () => {
+                    const p = document.getElementById('preloader');
+                    if (p) p.style.display = 'none';
+                }
+            });
+
+            // PHASE 2: UI & Title Reveal
+            TL.to('#ui-layer', { opacity: 1, duration: 0.8 }, "-=0.3");
+
+            const title = document.getElementById('main-title');
+            if (title) {
+                const text = title.innerText.trim();
+                title.innerHTML = text.split('').map(c => `<span class="char">${c}</span>`).join('');
+                TL.from('.char', {
+                    opacity: 0,
+                    filter: 'blur(14px)',
+                    letterSpacing: '0.8em',
+                    duration: 1.8,
+                    stagger: 0.06,
+                    ease: 'power4.out'
+                }, "+0.1");
+            }
+
+            TL.from('#sub-title', { opacity: 0, y: 15, duration: 1.0, ease: 'power2.out' }, "-=1.0");
+
+            TL.from(['header', 'footer', '#cta-begin-btn', '.absolute.right-4'], {
+                opacity: 0,
+                y: 18,
+                duration: 1.2,
+                stagger: 0.12,
+                ease: 'power3.out'
+            }, "-=0.7");
+        }
+
+        // Mouse Parallax on Welcome Screen
+        if (window.innerWidth > 768) {
+            document.addEventListener('mousemove', (e) => {
+                if (window.scrollY < 200) {
+                    const x = (e.clientX / window.innerWidth - 0.5) * 20;
+                    const y = (e.clientY / window.innerHeight - 0.5) * 20;
+                    gsap.to(camera.position, {
+                        x: x * 0.4,
+                        y: 32 + y * 0.3,
+                        duration: 1.6,
+                        ease: 'power1.out'
+                    });
+                }
+            });
+        }
+
+        // ==========================================
+        // 5. MASTER SCROLLTIMELINE & MISSION KINEMATICS
+        // ==========================================
+        let hasBegunFlight = false;
+
+        function beginFlightJourney() {
+            if (hasBegunFlight) return;
+            hasBegunFlight = true;
+
+            // Fade out hero welcome UI layer
+            gsap.to('#ui-layer', {
+                opacity: 0,
+                duration: 0.6,
+                ease: 'power2.out',
+                onComplete: () => {
+                    document.getElementById('ui-layer').style.pointerEvents = 'none';
+                    document.getElementById('flight-hud').classList.add('active');
+                }
+            });
+
+            // Smoothly scroll down to Chapter 1
+            const ch1 = document.getElementById('chapter-1');
+            if (ch1) {
+                ch1.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        document.getElementById('cta-begin-btn').addEventListener('click', beginFlightJourney);
+        document.getElementById('skip-intro-btn').addEventListener('click', () => {
+            TL.progress(1);
+            beginFlightJourney();
+        });
+
+        // Brand logo click returns to top
+        document.getElementById('brand-logo-btn').addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Top Navigation Anchor handlers
+        document.getElementById('nav-mission-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            beginFlightJourney();
+        });
+        document.getElementById('nav-chapters-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            beginFlightJourney();
+        });
+
+        function initScrollAndFlightTimeline() {
+            // Editorial panels fade-in & fade-out trigger
+            gsap.utils.toArray('.chapter').forEach((chapter, index) => {
+                const panel = chapter.querySelector('.editorial-panel');
+                if (!panel) return;
+
+                gsap.fromTo(panel, 
+                    { opacity: 0, y: 40 },
+                    {
+                        scrollTrigger: {
+                            trigger: chapter,
+                            start: 'top 80%',
+                            end: 'bottom 20%',
+                            scrub: 1.2
+                        },
+                        opacity: 1,
+                        y: 0,
+                        ease: 'power2.out'
+                    }
+                );
+            });
+
+            // Master Timeline
+            const scrollTimeline = gsap.timeline({
+                scrollTrigger: {
+                    trigger: '#scroll-container',
+                    start: 'top top',
+                    end: 'bottom bottom',
+                    scrub: 1.8,
+                    onUpdate: (self) => {
+                        const p = self.progress;
+
+                        // Reading progress bar
+                        progressBar.style.width = (p * 100) + '%';
+
+                        // Toggle hero UI vs Flight HUD based on scroll position
+                        if (p > 0.03) {
+                            document.getElementById('ui-layer').style.opacity = '0';
+                            document.getElementById('ui-layer').style.pointerEvents = 'none';
+                            document.getElementById('flight-hud').classList.add('active');
+                        } else {
+                            document.getElementById('ui-layer').style.opacity = '1';
+                            document.getElementById('ui-layer').style.pointerEvents = 'auto';
+                            document.getElementById('flight-hud').classList.remove('active');
+                        }
+
+                        // Telemetry Calculations
+                        // 1. Distance from Sol
+                        const distAu = (1.0 + Math.pow(p, 1.28) * 162.8).toFixed(1);
+                        const distKmB = ((distAu * 149597870.7) / 1000000000).toFixed(2);
+                        const fDistEl = document.getElementById('flight-dist');
+                        if (fDistEl) {
+                            fDistEl.innerHTML = `${distAu} <span class="text-[var(--gold)] text-xs">AU</span> <span class="text-white/40 text-xs">(${distKmB}B KM)</span>`;
+                        }
+
+                        // 2. Velocity
+                        let curVel = 25000;
+                        if (p < 0.25) {
+                            curVel = 25000 + (p / 0.25) * 6000;
+                        } else if (p < 0.5) {
+                            curVel = 31000 + ((p - 0.25) / 0.25) * 7026;
+                        } else {
+                            curVel = 38026 - (p - 0.5) * 160;
+                        }
+                        const velMph = Math.round(curVel).toLocaleString();
+                        const velKms = (curVel * 0.00044704).toFixed(1);
+                        const fVelEl = document.getElementById('flight-vel');
+                        if (fVelEl) {
+                            fVelEl.innerHTML = `${velMph} <span class="text-[var(--gold)] text-xs">MPH</span> <span class="text-white/40 text-xs">(${velKms} KM/S)</span>`;
+                        }
+
+                        // 3. One-Way Radio Light Time
+                        const lightSecs = distAu * 499.00478;
+                        const lh = Math.floor(lightSecs / 3600);
+                        const lm = Math.floor((lightSecs % 3600) / 60);
+                        const ls = Math.floor(lightSecs % 60);
+                        const lightStr = `${String(lh).padStart(2, '0')}h ${String(lm).padStart(2, '0')}m ${String(ls).padStart(2, '0')}s`;
+                        const fLightEl = document.getElementById('flight-light-time');
+                        if (fLightEl) fLightEl.textContent = lightStr;
+
+                        // 4. Mission Elapsed Time & DSN Status
+                        const metEl = document.getElementById('flight-met');
+                        const dsnEl = document.getElementById('flight-dsn-status');
+                        if (p < 0.18) {
+                            if (metEl) metEl.textContent = 'T+00Y 000D 00H [LAUNCH]';
+                            if (dsnEl) dsnEl.textContent = 'DSN DSS-14 Goldstone [70m Lock]';
+                        } else if (p < 0.38) {
+                            if (metEl) metEl.textContent = 'T+01Y 181D 06H [JUPITER]';
+                            if (dsnEl) dsnEl.textContent = 'DSN DSS-43 Canberra [70m Lock]';
+                        } else if (p < 0.6) {
+                            if (metEl) metEl.textContent = 'T+03Y 068D 14H [SATURN]';
+                            if (dsnEl) dsnEl.textContent = 'DSN DSS-63 Madrid [70m Lock]';
+                        } else if (p < 0.8) {
+                            if (metEl) metEl.textContent = 'T+34Y 354D 10H [HELIOPAUSE]';
+                            if (dsnEl) dsnEl.textContent = 'DSN DSS-14 Goldstone [70m Lock]';
+                        } else {
+                            if (metEl) metEl.textContent = 'T+48Y 023D 14H [INTERSTELLAR]';
+                            if (dsnEl) dsnEl.textContent = 'DSN Interstellar Horizon Tracking';
+                        }
+
+                        // 5. RTG Power
+                        const years = p * 48.0;
+                        const watts = Math.round(470 * Math.pow(0.5, years / 87.7) * (1 - years * 0.005));
+                        const fPowerEl = document.getElementById('flight-power');
+                        if (fPowerEl) {
+                            fPowerEl.innerHTML = `${watts} <span class="text-[var(--gold)] text-xs">WATTS</span> <span class="text-[var(--gold)] text-xs">[NOMINAL]</span>`;
+                        }
+
+                        // 6. Mission Scrubber Active Node
+                        const activeIdx = p < 0.18 ? 0 : p < 0.38 ? 1 : p < 0.6 ? 2 : p < 0.8 ? 3 : 4;
+                        document.querySelectorAll('.scrubber-node').forEach((node, idx) => {
+                            node.classList.toggle('active', idx === activeIdx);
+                        });
+                    }
+                }
+            });
+
+            // Scrubber Click Handlers
+            document.querySelectorAll('.scrubber-node').forEach(node => {
+                node.addEventListener('click', () => {
+                    const targetId = node.getAttribute('data-target');
+                    const el = document.getElementById(targetId);
+                    if (el) {
+                        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                });
+            });
+
+            // UTC Clock updater
+            function updateUtc() {
+                const now = new Date();
+                const h = String(now.getUTCHours()).padStart(2, '0');
+                const m = String(now.getUTCMinutes()).padStart(2, '0');
+                const s = String(now.getUTCSeconds()).padStart(2, '0');
+                const el = document.getElementById('flight-utc-clock');
+                if (el) el.textContent = `UTC ${h}:${m}:${s}`;
+            }
+            setInterval(updateUtc, 1000);
+            updateUtc();
+
+            // SCROLL TRAJECTORY CAMERA ANIMATION
+            // Hero -> Chapter 1 (Earth Departure): Camera flies from wide solar system down to Voyager
+            scrollTimeline.to(camera.position, {
+                x: 0,
+                y: 1.5,
+                z: 11,
+                ease: 'power2.inOut'
+            }, 0);
+
+            scrollTimeline.to(probeAnchor.position, {
+                x: 1.4,
+                y: -0.4,
+                z: 0,
+                ease: 'power2.inOut'
+            }, 0);
+
+            scrollTimeline.to(probeAnchor.rotation, {
+                x: 0.2,
+                y: -0.85,
+                z: 0.1,
+                ease: 'power2.inOut'
+            }, 0);
+
+            // Chapter 1 -> Chapter 2 (Jovian Encounter)
+            scrollTimeline.to(camera.position, {
+                x: -3.2,
+                y: 1.2,
+                z: 9.5,
+                ease: 'power1.inOut'
+            }, 1);
+
+            scrollTimeline.to(probeAnchor.position, {
+                x: -1.6,
+                y: 0.2,
+                z: 0.5,
+                ease: 'power1.inOut'
+            }, 1);
+
+            scrollTimeline.to(probeAnchor.rotation, {
+                x: 0.45,
+                y: 0.9,
+                z: -0.25,
+                ease: 'power1.inOut'
+            }, 1);
+
+            // Chapter 2 -> Chapter 3 (Saturnian Gateway)
+            scrollTimeline.to(camera.position, {
+                x: 3.8,
+                y: -1.1,
+                z: 7.8,
+                ease: 'power1.inOut'
+            }, 2);
+
+            scrollTimeline.to(probeAnchor.position, {
+                x: 1.8,
+                y: -0.3,
+                z: -0.8,
+                ease: 'power1.inOut'
+            }, 2);
+
+            scrollTimeline.to(probeAnchor.rotation, {
+                x: -0.3,
+                y: 2.4,
+                z: 0.35,
+                ease: 'power1.inOut'
+            }, 2);
+
+            // Chapter 3 -> Chapter 4 (The Golden Record)
+            scrollTimeline.to(camera.position, {
+                x: -1.8,
+                y: 0.4,
+                z: 5.6,
+                ease: 'power1.inOut'
+            }, 3);
+
+            scrollTimeline.to(probeAnchor.position, {
+                x: -0.9,
+                y: 0.1,
+                z: 0.2,
+                ease: 'power1.inOut'
+            }, 3);
+
+            scrollTimeline.to(probeAnchor.rotation, {
+                x: 0.1,
+                y: 3.75, // Reveal Golden Record face
+                z: -0.15,
+                ease: 'power1.inOut'
+            }, 3);
+
+            // Chapter 4 -> Chapter 5 (Interstellar Horizon)
+            scrollTimeline.to(camera.position, {
+                x: -1.2,
+                y: 0.6,
+                z: 12.5,
+                ease: 'power2.inOut'
+            }, 4);
+
+            scrollTimeline.to(probeAnchor.position, {
+                x: 3.2,
+                y: 0.2,
+                z: -26.0,
+                ease: 'power2.inOut'
+            }, 4);
+
+            scrollTimeline.to(probeAnchor.rotation, {
+                x: 0.5,
+                y: 4.8,
+                z: 0.1,
+                ease: 'power2.inOut'
+            }, 4);
+        }
+
+        // ==========================================
+        // 6. ZERO-DEPENDENCY PROCEDURAL AUDIO ENGINE
+        // ==========================================
+        class DeepSpaceSynthesizer {
+            constructor() {
+                this.ctx = null;
+                this.isPlaying = false;
+                this.currentTrack = 1;
+                this.masterGain = null;
+                this.nodes = [];
+            }
+
+            init() {
+                if (!this.ctx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    this.ctx = new AudioContext();
+                    this.masterGain = this.ctx.createGain();
+                    this.masterGain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+                    this.masterGain.connect(this.ctx.destination);
+                }
+                if (this.ctx.state === 'suspended') {
+                    this.ctx.resume();
+                }
+            }
+
+            stop() {
+                this.nodes.forEach(n => {
+                    try {
+                        if (n.stop) n.stop();
+                        n.disconnect();
+                    } catch (e) {}
+                });
+                this.nodes = [];
+                this.isPlaying = false;
+            }
+
+            playTrack(trackNum) {
+                this.init();
+                this.stop();
+                this.currentTrack = trackNum;
+                this.isPlaying = true;
+
+                const now = this.ctx.currentTime;
+
+                if (trackNum === 1) {
+                    // Track 1: Earth Symphony (Harmonic warm drone & ocean swells)
+                    const osc1 = this.ctx.createOscillator();
+                    const osc2 = this.ctx.createOscillator();
+                    const filter = this.ctx.createBiquadFilter();
+
+                    osc1.type = 'triangle';
+                    osc1.frequency.setValueAtTime(110, now); // A2
+                    osc2.type = 'sine';
+                    osc2.frequency.setValueAtTime(164.81, now); // E3
+
+                    filter.type = 'lowpass';
+                    filter.frequency.setValueAtTime(350, now);
+
+                    const lfo = this.ctx.createOscillator();
+                    lfo.frequency.setValueAtTime(0.15, now);
+                    const lfoGain = this.ctx.createGain();
+                    lfoGain.gain.setValueAtTime(180, now);
+                    lfo.connect(lfoGain);
+                    lfoGain.connect(filter.frequency);
+
+                    const trackGain = this.ctx.createGain();
+                    trackGain.gain.setValueAtTime(0.25, now);
+
+                    osc1.connect(filter);
+                    osc2.connect(filter);
+                    filter.connect(trackGain);
+                    trackGain.connect(this.masterGain);
+
+                    osc1.start();
+                    osc2.start();
+                    lfo.start();
+                    this.nodes.push(osc1, osc2, lfo, lfoGain, filter, trackGain);
+
+                } else if (trackNum === 2) {
+                    // Track 2: Analog Vinyl Carrier Grooves & 1kHz Tone
+                    const bufferSize = this.ctx.sampleRate * 2;
+                    const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+                    const output = noiseBuffer.getChannelData(0);
+                    for (let i = 0; i < bufferSize; i++) {
+                        output[i] = (Math.random() * 2 - 1) * 0.04;
+                    }
+                    const noise = this.ctx.createBufferSource();
+                    noise.buffer = noiseBuffer;
+                    noise.loop = true;
+
+                    const noiseFilter = this.ctx.createBiquadFilter();
+                    noiseFilter.type = 'bandpass';
+                    noiseFilter.frequency.setValueAtTime(1200, now);
+
+                    const osc = this.ctx.createOscillator();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(1000, now); // 1 kHz telemetry carrier
+                    const toneGain = this.ctx.createGain();
+                    toneGain.gain.setValueAtTime(0.06, now);
+
+                    osc.connect(toneGain);
+                    toneGain.connect(this.masterGain);
+                    noise.connect(noiseFilter);
+                    noiseFilter.connect(this.masterGain);
+
+                    osc.start();
+                    noise.start();
+                    this.nodes.push(osc, toneGain, noise, noiseFilter);
+
+                } else if (trackNum === 3) {
+                    // Track 3: Interstellar Plasma Wave Whistle (3.2 kHz glissando)
+                    const osc = this.ctx.createOscillator();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(2800, now);
+                    osc.frequency.exponentialRampToValueAtTime(3400, now + 2.5);
+
+                    const lfo = this.ctx.createOscillator();
+                    lfo.frequency.setValueAtTime(0.4, now);
+                    const lfoGain = this.ctx.createGain();
+                    lfoGain.gain.setValueAtTime(200, now);
+                    lfo.connect(lfoGain);
+                    lfoGain.connect(osc.frequency);
+
+                    const plasmaGain = this.ctx.createGain();
+                    plasmaGain.gain.setValueAtTime(0.18, now);
+
+                    osc.connect(plasmaGain);
+                    plasmaGain.connect(this.masterGain);
+
+                    osc.start();
+                    lfo.start();
+                    this.nodes.push(osc, lfo, lfoGain, plasmaGain);
+                }
+            }
+
+            toggle() {
+                if (this.isPlaying) {
+                    this.stop();
+                    return false;
+                } else {
+                    this.playTrack(this.currentTrack);
+                    return true;
+                }
+            }
+        }
+
+        const audioEngine = new DeepSpaceSynthesizer();
+
+        function syncAudioUI(playing) {
+            const togglePhonoBtn = document.getElementById('btn-toggle-phonograph');
+            const phonoDisk = document.getElementById('phonograph-disk');
+            const phonoText = document.getElementById('phonograph-play-text');
+            const hudIcon = document.getElementById('audio-icon-hud');
+            const hudText = document.getElementById('audio-text-hud');
+            const footerBtn = document.getElementById('toggle-audio-btn');
+
+            if (playing) {
+                if (phonoDisk) phonoDisk.classList.add('spinning');
+                if (phonoText) phonoText.textContent = 'Halt Phonograph Playback';
+                if (hudIcon) hudIcon.textContent = '🔊';
+                if (hudText) hudText.textContent = 'Audio: On';
+                if (footerBtn) footerBtn.innerHTML = '<iconify-icon icon="lucide:volume-2" class="text-[var(--gold)] text-lg"></iconify-icon>';
+            } else {
+                if (phonoDisk) phonoDisk.classList.remove('spinning');
+                if (phonoText) phonoText.textContent = 'Engage Phonograph Playback';
+                if (hudIcon) hudIcon.textContent = '🔇';
+                if (hudText) hudText.textContent = 'Audio: Off';
+                if (footerBtn) footerBtn.innerHTML = '<iconify-icon icon="lucide:volume-x" class="text-white/60 text-lg"></iconify-icon>';
+            }
+        }
+
+        document.getElementById('btn-toggle-phonograph').addEventListener('click', () => {
+            const isPlaying = audioEngine.toggle();
+            syncAudioUI(isPlaying);
+        });
+
+        document.getElementById('toggle-audio-btn').addEventListener('click', () => {
+            const isPlaying = audioEngine.toggle();
+            syncAudioUI(isPlaying);
+        });
+
+        document.getElementById('btn-audio-hud').addEventListener('click', () => {
+            const isPlaying = audioEngine.toggle();
+            syncAudioUI(isPlaying);
+        });
+
+        document.querySelectorAll('.track-item-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.track-item-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const t = parseInt(btn.getAttribute('data-track'), 10);
+                audioEngine.playTrack(t);
+                syncAudioUI(true);
+            });
+        });
+
+        // ==========================================
+        // 7. 3D CRAFT SUBSYSTEM INSPECTOR MODE
+        // ==========================================
+        let isInspectorActive = false;
+        let inspectorControls = null;
+        let savedCamPos = new THREE.Vector3();
+        let savedTargetPos = new THREE.Vector3();
+
+        const subsystemsData = {
+            dish: {
+                localPos: new THREE.Vector3(0, 1.2, 0),
+                tag: "// S/X-Band Telecommunications",
+                title: "3.7m High-Gain Dish (HGA)",
+                desc: "A 3.66-meter parabolic Cassegrain reflector transmitting at 2.29 GHz (S-band) and 8.42 GHz (X-band). Its focused 0.5-degree microwave beam bridges 24.5 billion km back to Earth's 70-meter Deep Space Network antennas.",
+                specs: ["23 WATTS (X-BAND)", "0.5° FOCUSED", "160 BPS", "LOCKED [DSS-14]"]
+            },
+            record: {
+                localPos: new THREE.Vector3(-1.1, -0.2, 0.4),
+                tag: "// Humanity's Diplomatic Time Capsule",
+                title: "The Golden Record",
+                desc: "Mounted on the probe's side bus sits a 12-inch gold-plated copper phonograph disk carrying 115 analog images, greetings in 55 languages, 90 minutes of music, and Ann Druyan's recorded brainwaves.",
+                specs: ["GOLD-PLATED CU", "16⅔ RPM DUAL", "U-238 STYLUS", "> 1 BILLION YRS"]
+            },
+            rtg: {
+                localPos: new THREE.Vector3(1.6, -0.4, -0.6),
+                tag: "// Thermoelectric Power Source",
+                title: "Pu-238 RTG Generators",
+                desc: "Three Radioisotope Thermoelectric Generators producing heat via the alpha decay of Plutonium-238. Silicon-germanium thermocouples convert heat into electrical wattage.",
+                specs: ["470W (LAUNCH)", "240W (CURRENT)", "PU-238 DIOXIDE", "DECAY: 4W / YEAR"]
+            },
+            camera: {
+                localPos: new THREE.Vector3(-1.8, 0.4, -0.5),
+                tag: "// Imaging Science Subsystem",
+                title: "Scan Platform & Cameras",
+                desc: "Equipped with wide-angle and narrow-angle vidicon cameras, infrared radiometer (IRIS), and ultraviolet spectrometer. Responsible for capturing iconic portraits of Jupiter, Saturn, and Pale Blue Dot.",
+                specs: ["1500MM OPTICS", "VIDICON TUBE", "DISABLED (1990)", "POWER CONSERVED"]
+            },
+            mag: {
+                localPos: new THREE.Vector3(0, -1.8, -1.2),
+                tag: "// Interstellar Magnetic Field Sensor",
+                title: "13m Magnetometer Boom",
+                desc: "A lightweight fiberglass deployable boom isolating sensitive triaxial fluxgate magnetometers far from spacecraft electrical noise. It confirmed passage through the heliopause into pristine interstellar galactic magnetic fields.",
+                specs: ["13M EXTENSION", "TRIAXIAL FLUX", "SENS: 0.002 NT", "ACTIVE SENSING"]
+            }
+        };
+
+        const inspectorOverlay = document.getElementById('inspector-overlay');
+        const hotspotDrawer = document.getElementById('hotspot-drawer');
+
+        function openInspector() {
+            if (isInspectorActive) return;
+            isInspectorActive = true;
+            document.body.classList.add('inspector-active');
+
+            savedCamPos.copy(camera.position);
+            savedTargetPos.copy(probeAnchor.position);
+
+            // Animate camera close to probe
+            gsap.to(camera.position, {
+                x: probeAnchor.position.x + 3.2,
+                y: probeAnchor.position.y + 2.0,
+                z: probeAnchor.position.z + 5.5,
+                duration: 1.4,
+                ease: 'power2.inOut',
+                onComplete: () => {
+                    if (THREE.OrbitControls) {
+                        inspectorControls = new THREE.OrbitControls(camera, renderer.domElement);
+                        inspectorControls.target.copy(probeAnchor.position);
+                        inspectorControls.enableDamping = true;
+                        inspectorControls.dampingFactor = 0.05;
+                        inspectorControls.minDistance = 3.5;
+                        inspectorControls.maxDistance = 14.0;
+                    }
+                    inspectorOverlay.classList.add('active');
+                }
+            });
+        }
+
+        function closeInspector() {
+            if (!isInspectorActive) return;
+            inspectorOverlay.classList.remove('active');
+            hotspotDrawer.classList.remove('visible');
+
+            if (inspectorControls) {
+                inspectorControls.dispose();
+                inspectorControls = null;
+            }
+
+            gsap.to(camera.position, {
+                x: savedCamPos.x,
+                y: savedCamPos.y,
+                z: savedCamPos.z,
+                duration: 1.2,
+                ease: 'power2.inOut',
+                onComplete: () => {
+                    document.body.classList.remove('inspector-active');
+                    isInspectorActive = false;
+                }
+            });
+        }
+
+        document.getElementById('btn-inspect-craft').addEventListener('click', openInspector);
+        document.getElementById('btn-close-inspector').addEventListener('click', closeInspector);
+
+        // Hotspot selection handlers
+        document.querySelectorAll('.aesthetic-hotspot').forEach(pin => {
+            pin.addEventListener('click', () => {
+                const key = pin.getAttribute('data-subsystem');
+                const data = subsystemsData[key];
+                if (!data) return;
+
+                document.getElementById('drawer-tag').textContent = data.tag;
+                document.getElementById('drawer-title').textContent = data.title;
+                document.getElementById('drawer-desc').textContent = data.desc;
+                document.getElementById('spec-1').textContent = data.specs[0];
+                document.getElementById('spec-2').textContent = data.specs[1];
+                document.getElementById('spec-3').textContent = data.specs[2];
+                document.getElementById('spec-4').textContent = data.specs[3];
+
+                hotspotDrawer.classList.add('visible');
+            });
+        });
+
+        // Pale Blue Dot Modal handlers
+        const pbdModal = document.getElementById('pbd-modal');
+        document.getElementById('btn-pale-blue-dot').addEventListener('click', () => {
+            pbdModal.classList.add('active');
+        });
+        document.getElementById('btn-close-pbd').addEventListener('click', () => {
+            pbdModal.classList.remove('active');
+        });
+
+        // ==========================================
+        // 8. PREMIUM ARCHIVAL FLIGHT CERTIFICATE GENERATOR
+        // ==========================================
+        const certCanvas = document.getElementById('cert-canvas');
+        const certModal = document.getElementById('cert-modal');
+        const certDownloadLink = document.getElementById('cert-download-link');
+
+        function generateArchivalCertificate(callsign) {
+            const ctx = certCanvas.getContext('2d');
+            const w = certCanvas.width;
+            const h = certCanvas.height;
+
+            // 1. Deep Obsidian Parchment Background
+            ctx.fillStyle = '#07090D';
+            ctx.fillRect(0, 0, w, h);
+
+            // Subtle radial cosmic illumination
+            const radGrad = ctx.createRadialGradient(w / 2, h / 2, 50, w / 2, h / 2, w * 0.7);
+            radGrad.addColorStop(0, 'rgba(242, 182, 109, 0.045)');
+            radGrad.addColorStop(1, 'rgba(0, 0, 0, 0.85)');
+            ctx.fillStyle = radGrad;
+            ctx.fillRect(0, 0, w, h);
+
+            // Stardust particles
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
+            for (let i = 0; i < 300; i++) {
+                const sx = (Math.sin(i * 123.45) * 10000) % w;
+                const sy = (Math.cos(i * 67.89) * 10000) % h;
+                const r = (i % 4 === 0) ? 1.8 : 0.9;
+                ctx.beginPath();
+                ctx.arc(Math.abs(sx), Math.abs(sy), r, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // 2. High-End Double Gold Guilloché Hairline Borders
+            ctx.strokeStyle = '#F2B66D';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(50, 50, w - 100, h - 100);
+
+            ctx.strokeStyle = 'rgba(242, 182, 109, 0.4)';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(62, 62, w - 124, h - 124);
+
+            // Ornate neoclassical corner brackets
+            const cLen = 45;
+            ctx.strokeStyle = '#F2B66D';
+            ctx.lineWidth = 2.5;
+            // Top-left
+            ctx.strokeRect(38, 38, cLen, cLen);
+            // Top-right
+            ctx.strokeRect(w - 38 - cLen, 38, cLen, cLen);
+            // Bottom-left
+            ctx.strokeRect(38, h - 38 - cLen, cLen, cLen);
+            // Bottom-right
+            ctx.strokeRect(w - 38 - cLen, h - 38 - cLen, cLen, cLen);
+
+            // 3. Official NASA / JPL Archival Header
+            ctx.fillStyle = '#F2B66D';
+            ctx.font = '500 24px "JetBrains Mono", monospace';
+            ctx.textAlign = 'center';
+            ctx.letterSpacing = '0.3em';
+            ctx.fillText('NATIONAL AERONAUTICS AND SPACE ADMINISTRATION  //  JET PROPULSION LABORATORY', w / 2, 160);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'normal 68px "Instrument Serif", Georgia, serif';
+            ctx.fillText('Interstellar Flight Dispatch Certificate', w / 2, 250);
+
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.55)';
+            ctx.font = '300 20px "JetBrains Mono", monospace';
+            ctx.fillText('DEEP SPACE NETWORK AUTONOMOUS TRACKING ARCHIVE  &bull;  HELIOPAUSE BOUNDARY', w / 2, 300);
+
+            // Hairline separator
+            ctx.strokeStyle = 'rgba(242, 182, 109, 0.3)';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(250, 340);
+            ctx.lineTo(w - 250, 340);
+            ctx.stroke();
+
+            // 4. Formal Diplomatic Proclamation
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+            ctx.font = '400 24px "Inter Tight", sans-serif';
+            ctx.fillText('THIS ARCHIVAL RECORD OFFICIALLY CERTIFIES THAT OBSERVER', w / 2, 420);
+
+            // Observer Callsign
+            ctx.fillStyle = '#F2B66D';
+            ctx.font = 'italic 76px "Instrument Serif", Georgia, serif';
+            ctx.fillText(callsign.toUpperCase(), w / 2, 510);
+
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+            ctx.font = '300 26px "Inter Tight", sans-serif';
+            ctx.fillText('has tracked, witnessed, and officially validated the historic passage of spacecraft', w / 2, 600);
+            ctx.fillText('Voyager 1 (VGR-77) past the solar heliopause into the pristine interstellar medium of the Milky Way.', w / 2, 645);
+
+            // 5. Telemetry Quadrant Matrix
+            const qX = 220;
+            const qY = 720;
+            const qW = w - 440;
+            const qH = 340;
+
+            ctx.fillStyle = 'rgba(10, 13, 19, 0.85)';
+            ctx.fillRect(qX, qY, qW, qH);
+            ctx.strokeStyle = 'rgba(242, 182, 109, 0.35)';
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(qX, qY, qW, qH);
+
+            // Inner divider grid
+            ctx.beginPath();
+            ctx.moveTo(qX, qY + qH / 2);
+            ctx.lineTo(qX + qW, qY + qH / 2);
+            ctx.moveTo(qX + qW / 2, qY);
+            ctx.lineTo(qX + qW / 2, qY + qH);
+            ctx.stroke();
+
+            // Cell 1: Distance
+            ctx.textAlign = 'left';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.font = '20px "JetBrains Mono", monospace';
+            ctx.fillText('HELIOCENTRIC DISTANCE', qX + 45, qY + 65);
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '500 32px "JetBrains Mono", monospace';
+            ctx.fillText('163.8 AU (24,504,000,000 KM)', qX + 45, qY + 115);
+
+            // Cell 2: Velocity
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.font = '20px "JetBrains Mono", monospace';
+            ctx.fillText('HELIOCENTRIC VELOCITY', qX + qW / 2 + 45, qY + 65);
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '500 32px "JetBrains Mono", monospace';
+            ctx.fillText('38,026 MPH (17.00 KM/S)', qX + qW / 2 + 45, qY + 115);
+
+            // Cell 3: Light Time
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.font = '20px "JetBrains Mono", monospace';
+            ctx.fillText('ONE-WAY RADIO LIGHT DELAY', qX + 45, qY + qH / 2 + 65);
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '500 32px "JetBrains Mono", monospace';
+            ctx.fillText('22h 42m 14s (81,734 SECONDS)', qX + 45, qY + qH / 2 + 115);
+
+            // Cell 4: Target & Coordinates
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.font = '20px "JetBrains Mono", monospace';
+            ctx.fillText('TARGET STELLAR PASSAGE', qX + qW / 2 + 45, qY + qH / 2 + 65);
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '500 32px "JetBrains Mono", monospace';
+            ctx.fillText('STAR GLIESE 445 (~40,000 YRS)', qX + qW / 2 + 45, qY + qH / 2 + 115);
+
+            // 6. Cryptographic Signatures & Hash Footer
+            const now = new Date();
+            const dateStr = now.toUTCString().toUpperCase();
+            const hash = 'SHA256: ' + Array.from({length: 4}, () => Math.random().toString(36).substring(2, 6).toUpperCase()).join('-');
+
+            ctx.textAlign = 'center';
+            ctx.fillStyle = 'rgba(242, 182, 109, 0.85)';
+            ctx.font = '400 22px "JetBrains Mono", monospace';
+            ctx.fillText(`AUTHENTICATED DISPATCH ISSUED: ${dateStr}`, w / 2, 1140);
+
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+            ctx.font = '300 18px "JetBrains Mono", monospace';
+            ctx.fillText(`VERIFICATION SIGNATURE: ${hash}  &bull;  GOLDEN RECORD AMBASSADOR ACCORD`, w / 2, 1190);
+
+            // Update modal download link
+            certDownloadLink.href = certCanvas.toDataURL('image/png');
+            certDownloadLink.download = `Voyager1_Archival_Certificate_${callsign.replace(/\s+/g, '_')}.png`;
+
+            certModal.classList.add('active');
+        }
+
+        document.getElementById('btn-generate-cert').addEventListener('click', () => {
+            const name = document.getElementById('cert-callsign').value.trim() || 'COMMANDER OBSERVER';
+            generateArchivalCertificate(name);
+        });
+
+        document.getElementById('btn-close-cert').addEventListener('click', () => {
+            certModal.classList.remove('active');
+        });
+
+        // Keyboard Shortcuts
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeInspector();
+                pbdModal.classList.remove('active');
+                certModal.classList.remove('active');
+            } else if (e.key.toLowerCase() === 'i' && !e.target.matches('input')) {
+                document.getElementById('btn-inspect-craft').click();
+            } else if (e.key.toLowerCase() === 'p' && !e.target.matches('input')) {
+                document.getElementById('btn-pale-blue-dot').click();
+            } else if (e.key.toLowerCase() === 'm' && !e.target.matches('input')) {
+                document.getElementById('btn-audio-hud').click();
+            }
+        });
+
+        // ==========================================
+        // 9. ANIMATION & RENDER LOOP
+        // ==========================================
+        const clock = new THREE.Clock();
+
+        function renderFrame() {
+            requestAnimationFrame(renderFrame);
+
+            const elapsedTime = clock.getElapsedTime();
+
+            // Solar System slow celestial revolution
+            planets.forEach(p => {
+                p.angle += p.config.speed * 0.4;
+                p.group.position.x = Math.cos(p.angle) * p.config.rx;
+                p.group.position.z = Math.sin(p.angle) * p.config.rz;
+            });
+
+            // Planetary axial rotations
+            if (earthMesh) earthMesh.rotation.y = elapsedTime * 0.002;
+            if (cloudsMesh) cloudsMesh.rotation.y = elapsedTime * 0.0028;
+            if (marsMesh) marsMesh.rotation.y = elapsedTime * 0.0016;
+            if (jupiterMesh) jupiterMesh.rotation.y = elapsedTime * 0.0035;
+            if (saturnMesh) saturnMesh.rotation.y = elapsedTime * 0.0028;
+            if (sunMesh) sunMesh.rotation.y = elapsedTime * 0.0005;
+
+            // Probe micro-drift in flight mode
+            if (!isInspectorActive && isModelLoaded && voyagerModel) {
+                probeOffset.position.y = Math.sin(elapsedTime * 0.7) * 0.06;
+                probeOffset.rotation.z = Math.sin(elapsedTime * 0.35) * 0.012;
+            }
+
+            // Radio Wavefront Pulses
+            if (isModelLoaded && voyagerModel) {
+                radioPulseGroup.position.copy(probeAnchor.position);
+                radioPulseGroup.rotation.copy(probeAnchor.rotation);
+                radioRings.forEach(r => {
+                    r.phase = (r.phase + 0.008) % 1.0;
+                    const s = 1.0 + r.phase * 4.2;
+                    r.mesh.scale.set(s, s, s);
+                    r.mesh.material.opacity = (1.0 - r.phase) * 0.4;
+                    r.mesh.position.y = 0.8 + r.phase * 2.4;
+                });
+            }
+
+            // Subsystem Hotspot Projection in 3D Inspector Mode
+            if (isInspectorActive) {
+                if (inspectorControls) inspectorControls.update();
+                const tempV = new THREE.Vector3();
+                for (const [key, data] of Object.entries(subsystemsData)) {
+                    tempV.copy(data.localPos).applyMatrix4(probeAnchor.matrixWorld);
+                    tempV.project(camera);
+                    const el = document.getElementById(`hotspot-${key}`);
+                    if (el) {
+                        if (tempV.z > 1.0) {
+                            el.style.display = 'none';
+                        } else {
+                            el.style.display = 'flex';
+                            const px = (tempV.x * 0.5 + 0.5) * window.innerWidth;
+                            const py = (-tempV.y * 0.5 + 0.5) * window.innerHeight;
+                            el.style.left = px + 'px';
+                            el.style.top = py + 'px';
+                        }
+                    }
+                }
+            } else if (hasBegunFlight) {
+                // Tracking lookAt during flight
+                camera.lookAt(
+                    probeAnchor.position.x * 0.4,
+                    probeAnchor.position.y * 0.4,
+                    probeAnchor.position.z * 0.4
+                );
+            } else {
+                // Solar System overview lookAt
+                camera.lookAt(0, 0, 0);
+            }
+
+            // Render via UnrealBloomPass or fallback
+            if (composer && !isInspectorActive) {
+                composer.render();
+            } else {
+                renderer.render(scene, camera);
+            }
+        }
+
+        renderFrame();
+
+        // Responsive resize
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        // ==========================================
-        // 6. GSAP SCROLL-TELLING LOGIC
-        // ==========================================
-        // Fade in text blocks as they enter the screen
-        gsap.utils.toArray('.content-block').forEach(block => {
-            gsap.to(block, {
-                scrollTrigger: {
-                    trigger: block,
-                    start: "top 80%",
-                    end: "top 50%",
-                    scrub: 1
-                },
-                opacity: 1,
-                y: 0
-            });
-        });
-
-        // Camera & Object Animation Timeline tied to entire scroll container
-        const tl = gsap.timeline({
-            scrollTrigger: {
-                trigger: "#scroll-container",
-                start: "top top",
-                end: "bottom bottom",
-                scrub: 2 // smooth scrubbing
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            if (composer) {
+                composer.setSize(window.innerWidth, window.innerHeight);
             }
+            ScrollTrigger.refresh();
         });
-
-        // State 1 -> State 2 (Moving towards Jupiter)
-        tl.to(camera.position, { x: -8, y: 0, z: 12, duration: 1 }, 0)
-          .to(voyager.rotation, { x: Math.PI / 6, y: -Math.PI / 4, duration: 1 }, 0)
-          .to(planet.position, { x: -15, z: -30, duration: 1 }, 0);
-
-        // State 2 -> State 3 (Focusing on the Golden Record)
-        tl.to(camera.position, { x: 3, y: 0, z: 3, duration: 1 }, 1)
-          .to(voyager.rotation, { x: 0, y: Math.PI / 2, duration: 1 }, 1)
-          .to(planet.position, { x: -50, z: -100, duration: 1 }, 1); // planet fades into distance
-
-        // State 3 -> State 4 (Interstellar Space / Flying away)
-        tl.to(camera.position, { x: 0, y: 0, z: 20, duration: 1 }, 2)
-          .to(voyager.rotation, { x: Math.PI / 8, y: Math.PI, duration: 1 }, 2)
-          .to(voyager.position, { z: -50, duration: 1 }, 2) // probe shoots off into the distance
-          .to(directionalLight, { intensity: 0, duration: 1 }, 2); // gets darker
-
     </script>
 </body>
 </html>
