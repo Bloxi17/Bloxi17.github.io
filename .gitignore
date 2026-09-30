@@ -1,3 +1,7 @@
 node_modules/
 .DS_Store
 *.log
+Cosmic-Engine/
+stage*_test.js
+Voyager-Interactive/tests/aesthetic/frames/
+Voyager-Interactive/3d models/*.zip

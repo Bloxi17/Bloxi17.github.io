@@ -157,6 +157,15 @@
             transition: width 0.1s linear;
         }
 
+        /* Hero UI Layer */
+        #ui-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 45;
+            pointer-events: auto;
+            opacity: 0;
+        }
+
         /* Flight HUD Overlay (appears during scroll exploration) */
         #flight-hud {
             position: fixed;
@@ -187,7 +196,14 @@
             align-items: center;
             gap: 0.8rem;
             z-index: 60;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        #flight-hud.active .flight-hud-controls {
             pointer-events: auto;
+            opacity: 1;
         }
 
         .hud-btn {
@@ -223,6 +239,102 @@
             box-shadow: 0 0 20px rgba(242, 182, 109, 0.4);
         }
 
+        /* NASA WebGL HUD Styles (matching reference image) */
+        .glass-hud-panel {
+            background: rgba(8, 10, 15, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+        }
+
+        .hud-pill-green {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 0.3rem 0.75rem;
+            background: rgba(10, 35, 24, 0.85);
+            border: 1px solid rgba(74, 222, 128, 0.4);
+            border-radius: 9999px;
+            color: #4ade80;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            box-shadow: 0 0 12px rgba(34, 197, 94, 0.2);
+        }
+
+        .hud-dock-btn {
+            background: rgba(12, 14, 22, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.85);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+            padding: 0.55rem 0.9rem;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            backdrop-filter: blur(12px);
+            transition: all 0.25s ease;
+        }
+
+        .hud-dock-btn:hover {
+            border-color: var(--gold);
+            color: #ffffff;
+            background: rgba(242, 182, 109, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(242, 182, 109, 0.25);
+        }
+
+        /* 3D Planet & Moon Projected Leader Labels */
+        #planet-hud-labels {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 38;
+            overflow: hidden;
+        }
+
+        .planet-hud-marker {
+            position: absolute;
+            transform: translate(-50%, -100%);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .planet-hud-marker .planet-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            color: #ffffff;
+            text-shadow: 0 0 8px rgba(0, 0, 0, 0.9), 0 0 16px rgba(242, 182, 109, 0.4);
+            white-space: nowrap;
+        }
+
+        .planet-hud-marker .planet-pin {
+            width: 1px;
+            height: 18px;
+            background: linear-gradient(180deg, rgba(242, 182, 109, 0.8), rgba(255, 255, 255, 0.1));
+            margin-top: 3px;
+        }
+
+        .planet-hud-marker .planet-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--gold);
+            box-shadow: 0 0 8px var(--gold);
+        }
+
         /* Interactive Mission Scrubber (Right Rail) */
         .mission-scrubber-rail {
             position: fixed;
@@ -233,7 +345,14 @@
             flex-direction: column;
             gap: 1.6rem;
             z-index: 55;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .mission-scrubber-rail.active {
             pointer-events: auto;
+            opacity: 1;
         }
 
         .scrubber-track-line {
@@ -303,6 +422,7 @@
             position: relative;
             z-index: 30;
             width: 100%;
+            pointer-events: none;
         }
 
         .chapter-spacer {
@@ -713,7 +833,7 @@
     <div class="tactile-noise-layer"></div>
 
     <!-- PRELOADER -->
-    <div id="preloader" class="fixed inset-0 bg-[#050608] flex flex-col items-center justify-center">
+    <div id="preloader" class="fixed inset-0 z-[100] bg-[#050608] flex flex-col items-center justify-center">
         <div class="w-36 h-[1px] bg-white/10 relative overflow-hidden mb-4">
             <div id="preloader-bar" class="absolute inset-0 bg-[var(--gold)] w-0 transition-all duration-75"></div>
         </div>
@@ -729,7 +849,7 @@
     <canvas id="webgl-canvas"></canvas>
 
     <!-- CINEMATIC SOLAR SYSTEM REVEAL / WELCOME HERO LAYER -->
-    <div id="ui-layer" class="fixed inset-0 z-20 min-h-screen flex flex-col justify-between p-8 md:p-12 opacity-0 pointer-events-auto transition-opacity duration-700">
+    <div id="ui-layer" class="fixed inset-0 z-[45] h-screen max-h-screen flex flex-col justify-between p-6 md:p-8 pointer-events-auto overflow-hidden">
         
         <!-- TOP NAV -->
         <header class="w-full flex justify-between items-start">
@@ -758,17 +878,17 @@
         </header>
 
         <!-- MAIN CONTENT -->
-        <main class="text-center flex flex-col items-center max-w-4xl px-4 mx-auto my-auto">
-            <h1 id="main-title" class="text-7xl md:text-[10rem] lg:text-[13rem] serif-display leading-[0.85] tracking-[0.1em] mb-4 text-white drop-shadow-2xl">
+        <main class="text-center flex flex-col items-center max-w-6xl w-full px-4 mx-auto pt-6 md:pt-10 mb-auto z-10">
+            <h1 id="main-title" class="text-6xl sm:text-7xl md:text-8xl lg:text-[7.2rem] xl:text-[8rem] serif-display leading-none tracking-[0.05em] whitespace-nowrap mb-2 text-white drop-shadow-2xl">
                 VOYAGER
             </h1>
-            <p id="sub-title" class="text-xs md:text-sm uppercase tracking-[0.4em] text-[var(--gold)] font-light opacity-80 mb-12">
+            <p id="sub-title" class="text-xs md:text-sm uppercase tracking-[0.35em] text-[var(--gold)] font-light opacity-85 mb-5">
                 Edge of the Heliosphere &mdash; An Interactive Mission Log
             </p>
 
-            <button id="cta-begin-btn" class="cta-btn px-10 py-4 rounded-full text-xs uppercase tracking-[0.2em] flex items-center gap-3">
+            <button id="cta-begin-btn" class="cta-btn px-8 py-3 rounded-full text-xs uppercase tracking-[0.2em] flex items-center gap-3 cursor-pointer">
                 <span>Begin the Journey</span>
-                <iconify-icon icon="lucide:arrow-down" class="text-lg"></iconify-icon>
+                <iconify-icon icon="lucide:arrow-down" class="text-base"></iconify-icon>
             </button>
         </main>
 
@@ -834,45 +954,108 @@
             </button>
         </div>
 
-        <!-- Top Left: Live Status -->
-        <div style="grid-column: 1; grid-row: 1; align-self: start;">
-            <div class="text-[9px] uppercase tracking-[0.25em] text-[var(--gold)] opacity-70 mono-hud">Mission Identifier</div>
-            <div class="text-sm font-normal text-white serif-display tracking-wider mt-0.5">Voyager 1 &bull; VGR-77</div>
-            <div class="flex items-center gap-2 mt-1.5 text-[10px] text-white/50 mono-hud">
-                <span class="w-1.5 h-1.5 rounded-full bg-[var(--gold)] shadow-[0_0_8px_var(--gold)]"></span>
-                <span id="flight-dsn-status">DSN DSS-14 Goldstone [70m Lock]</span>
+        <!-- Top Left: Authentic NASA WebGL Mission Status Card (Matching Reference) -->
+        <div style="grid-column: 1; grid-row: 1; align-self: start;" class="max-w-md pointer-events-auto">
+            <div class="glass-hud-panel p-4 border border-white/10">
+                <div class="text-[9px] uppercase tracking-[0.25em] text-[var(--gold)] opacity-80 mono-hud mb-1">INTERSTELLAR MISSION STATUS | VOYAGER 1</div>
+                <div class="text-xs text-white/90 mono-hud flex items-center gap-1.5">
+                    <span>Distance from Sun:</span>
+                    <span id="flight-dist" class="text-white font-medium">161.85 <span class="text-[var(--gold)]">AU</span> <span class="text-white/40">(Updating, 24.2 Bn km)</span></span>
+                </div>
+                <div class="text-xs text-white/80 mono-hud mt-0.5">
+                    Speed: <span id="flight-vel" class="text-white font-medium">16.99 <span class="text-[var(--gold)]">KM/S</span> <span class="text-white/40">(38,026 MPH)</span></span>
+                </div>
+                <div class="text-xs text-white/70 mono-hud mt-0.5 flex justify-between">
+                    <span>Coordinates: <span class="text-white/90">17h 13m +12&deg; 08'</span></span>
+                    <span id="flight-light-time" class="text-[var(--gold)]">22h 42m 14s RT</span>
+                </div>
+                <div class="mt-2.5 flex items-center justify-between">
+                    <div class="hud-pill-green">
+                        <span class="w-1.5 h-1.5 rounded-full bg-[#22c55e] animate-ping"></span>
+                        <span class="w-1.5 h-1.5 -ml-3 rounded-full bg-[#22c55e]"></span>
+                        <span>Science Data Active (LECP, CRS, MAG)</span>
+                    </div>
+                    <span id="flight-dsn-status" class="text-[9px] text-white/40 mono-hud ml-2">DSS-14 [70m Lock]</span>
+                </div>
             </div>
         </div>
 
-        <!-- Top Right: Mission Clock -->
-        <div style="grid-column: 2; grid-row: 1; justify-self: end; text-align: right;">
-            <div class="text-[9px] uppercase tracking-[0.25em] text-[var(--gold)] opacity-70 mono-hud">Elapsed Flight Time</div>
-            <div class="text-sm font-normal text-white serif-display tracking-wider mt-0.5" id="flight-met">T+00Y 000D 00H</div>
-            <div class="text-[10px] text-white/40 mono-hud mt-1" id="flight-utc-clock">UTC 00:00:00</div>
-        </div>
-
-        <!-- Bottom Left: Velocity & Radio Delay -->
-        <div style="grid-column: 1; grid-row: 3; align-self: end;">
-            <div class="mb-3">
-                <div class="text-[9px] uppercase tracking-[0.2em] text-white/40 mono-hud">Heliocentric Velocity</div>
-                <div class="text-sm font-normal text-white mono-hud mt-0.5" id="flight-vel">38,026 <span class="text-[var(--gold)] text-xs">MPH</span> <span class="text-white/40 text-xs">(17.0 KM/S)</span></div>
-            </div>
-            <div>
-                <div class="text-[9px] uppercase tracking-[0.2em] text-white/40 mono-hud">One-Way Radio Delay</div>
-                <div class="text-sm font-normal text-white mono-hud mt-0.5" id="flight-light-time">22h 42m 14s</div>
+        <!-- Top Right: Mission Clock & UTC -->
+        <div style="grid-column: 2; grid-row: 1; justify-self: end; text-align: right;" class="pointer-events-auto">
+            <div class="glass-hud-panel px-4 py-2 border border-white/10">
+                <div class="text-[9px] uppercase tracking-[0.25em] text-[var(--gold)] opacity-70 mono-hud">Elapsed Flight Time</div>
+                <div class="text-sm font-normal text-white serif-display tracking-wider mt-0.5" id="flight-met">T+00Y 000D 00H</div>
+                <div class="text-[10px] text-white/40 mono-hud mt-0.5" id="flight-utc-clock">UTC 00:00:00</div>
             </div>
         </div>
 
-        <!-- Bottom Right: Distance from Sun & RTG Power -->
-        <div style="grid-column: 2; grid-row: 3; justify-self: end; align-self: end; text-align: right;">
-            <div class="mb-3">
-                <div class="text-[9px] uppercase tracking-[0.2em] text-white/40 mono-hud">Distance from Sol</div>
-                <div class="text-sm font-normal text-white mono-hud mt-0.5" id="flight-dist">163.8 <span class="text-[var(--gold)] text-xs">AU</span> <span class="text-white/40 text-xs">(24.5B KM)</span></div>
+        <!-- Floating Right: Telemetry Readout Card (Matching Reference Image) -->
+        <div class="fixed right-8 top-1/2 -translate-y-1/2 glass-hud-panel p-3 border border-white/10 z-40 hidden md:block" style="width: 140px;">
+            <div class="text-[10px] text-white/50 mono-hud uppercase tracking-wider mb-2 font-medium border-b border-white/10 pb-1">Telemetry</div>
+            <div class="space-y-1.5 text-[11px] mono-hud">
+                <div class="flex justify-between items-center"><span class="text-white/40">Power</span> <span id="flight-power" class="text-[var(--gold)] font-medium">228W</span></div>
+                <div class="flex justify-between items-center"><span class="text-white/40">Temp</span> <span class="text-white/80">-212&deg;C</span></div>
+                <div class="flex justify-between items-center"><span class="text-white/40">Attitude</span> <span class="text-emerald-400 font-medium">Nominal</span></div>
+                <div class="flex justify-between items-center"><span class="text-white/40">Signal</span> <span class="text-emerald-400 font-medium">Strong</span></div>
             </div>
-            <div>
-                <div class="text-[9px] uppercase tracking-[0.2em] text-white/40 mono-hud">RTG Power Output</div>
-                <div class="text-sm font-normal text-white mono-hud mt-0.5" id="flight-power">240 <span class="text-[var(--gold)] text-xs">WATTS</span> <span class="text-[var(--gold)] text-xs">[NOMINAL]</span></div>
+        </div>
+
+        <!-- Bottom Left: Active Scene Indicator (Matching Reference Image) -->
+        <div class="fixed bottom-8 left-8 pointer-events-none z-40">
+            <div class="text-lg md:text-2xl font-normal text-white serif-display tracking-wider" id="active-scene-title">"CRUISING THROUGH INTERSTELLAR SPACE"</div>
+            <div class="text-[9px] uppercase tracking-[0.25em] text-[var(--gold)] mono-hud mt-1 flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-[var(--gold)] animate-pulse"></span>
+                <span>Active Scene</span>
             </div>
+        </div>
+
+        <!-- Bottom Right: Interactive Actions Dock (Matching Reference Image) -->
+        <div class="fixed bottom-8 right-8 pointer-events-auto z-40 flex items-center gap-2">
+            <button class="hud-dock-btn" id="dock-btn-explore" title="Orbit & Explore Current Scene">
+                <span class="text-sm">🔍</span>
+                <span>Explore</span>
+            </button>
+            <button class="hud-dock-btn" id="dock-btn-timeline" title="Toggle Mission Timeline Scrubber">
+                <span class="text-sm">⏱</span>
+                <span>Timeline</span>
+            </button>
+            <button class="hud-dock-btn" id="dock-btn-data" title="Inspect 3D Craft Subsystems">
+                <span class="text-sm">📊</span>
+                <span>Data</span>
+            </button>
+            <button class="hud-dock-btn" id="dock-btn-info" title="Pale Blue Dot Reverence Archive">
+                <span class="text-sm">ℹ</span>
+                <span>Info</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 3D SCREEN-PROJECTED PLANET & MOON LEADER LABELS (MATCHING REFERENCE IMAGE) -->
+    <div id="planet-hud-labels">
+        <div class="planet-hud-marker" id="marker-jupiter">
+            <div class="planet-title">JUPITER</div>
+            <div class="planet-pin"></div>
+            <div class="planet-dot"></div>
+        </div>
+        <div class="planet-hud-marker" id="marker-io">
+            <div class="planet-title text-[9px] text-white/70">Io</div>
+            <div class="planet-pin h-3"></div>
+            <div class="planet-dot w-1 h-1"></div>
+        </div>
+        <div class="planet-hud-marker" id="marker-europa">
+            <div class="planet-title text-[9px] text-white/70">Europa</div>
+            <div class="planet-pin h-3"></div>
+            <div class="planet-dot w-1 h-1"></div>
+        </div>
+        <div class="planet-hud-marker" id="marker-saturn">
+            <div class="planet-title">SATURN</div>
+            <div class="planet-pin"></div>
+            <div class="planet-dot"></div>
+        </div>
+        <div class="planet-hud-marker" id="marker-titan">
+            <div class="planet-title text-[9px] text-white/70">Titan</div>
+            <div class="planet-pin h-3"></div>
+            <div class="planet-dot w-1 h-1"></div>
         </div>
     </div>
 
@@ -1291,12 +1474,12 @@
         const progressBar = document.getElementById('page-progress');
 
         const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x050608, 0.005);
+        scene.fog = new THREE.FogExp2(0x020306, 0.00015);
 
-        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 3000);
-        // Initial cinematic Solar System panorama position (matching user's uploaded image)
-        camera.position.set(0, 32, 95);
-        camera.lookAt(0, 0, 0);
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 4000);
+        // Initial cinematic Solar System panorama position
+        camera.position.set(0, 22, 105);
+        camera.lookAt(0, -12, 0);
 
         const renderer = new THREE.WebGLRenderer({
             canvas: canvas,
@@ -1307,7 +1490,7 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.05;
+        renderer.toneMappingExposure = 1.15;
         renderer.outputEncoding = THREE.sRGBEncoding;
 
         // Post-Processing UnrealBloomPass
@@ -1331,24 +1514,29 @@
             composer = null;
         }
 
-        // Lighting Architecture
-        const ambientLight = new THREE.AmbientLight(0x090b10, 0.7);
+        // Lighting Architecture (Matching reference celestial illumination)
+        const ambientLight = new THREE.AmbientLight(0xffffff, 1.1);
         scene.add(ambientLight);
 
-        // Sol Central Sunlight (Warm gold light)
-        const sunLight = new THREE.PointLight(0xF2B66D, 3.8, 1200);
-        sunLight.position.set(0, 0, 0);
+        // Directional celestial key sunlight from top-right matching reference photo star flare:
+        const sunGlintLight = new THREE.DirectionalLight(0xfffaed, 3.5);
+        sunGlintLight.position.set(40, 28, 35);
+        scene.add(sunGlintLight);
+
+        // Soft frontal fill light for planetary surfaces:
+        const frontLight = new THREE.DirectionalLight(0xffffff, 1.4);
+        frontLight.position.set(5, 15, 60);
+        scene.add(frontLight);
+
+        // Cool space rim fill light:
+        const rimFillLight = new THREE.DirectionalLight(0x7fb5ff, 0.75);
+        rimFillLight.position.set(-35, -15, -25);
+        scene.add(rimFillLight);
+
+        // Sol Central Sunlight (PointLight at Sun core)
+        const sunLight = new THREE.PointLight(0xF2B66D, 3.5, 1200);
+        sunLight.position.set(0, -18, 0);
         scene.add(sunLight);
-
-        // Directional Key Light for dramatic planet illumination
-        const keyLight = new THREE.DirectionalLight(0xfff1dc, 2.2);
-        keyLight.position.set(-60, 35, 45);
-        scene.add(keyLight);
-
-        // Rim Light (Celestial glow)
-        const rimLight = new THREE.DirectionalLight(0xf2b66d, 0.45);
-        rimLight.position.set(40, -20, -50);
-        scene.add(rimLight);
 
         // Starfield
         const starCount = 5000;
@@ -1385,15 +1573,30 @@
         const starfield = new THREE.Points(starGeo, starMat);
         scene.add(starfield);
 
-        // Loading Manager
+        // ==========================================
+        // 2. COMPREHENSIVE ASSET & MODEL MANAGEMENT
+        // ==========================================
         let isModelLoaded = false;
         window.isModelLoaded = false;
         let voyagerModel = null;
+        let skyDome = null;
+        let milkyWayTex = null;
+
         const preloaderBar = document.getElementById('preloader-bar');
         const preloaderCounter = document.getElementById('preloader-counter');
 
+        // Preloader safety fallback
+        const preloaderSafetyTimeout = setTimeout(() => {
+            if (!window.isModelLoaded) {
+                console.warn('Safety fallback triggered: launching cinematic reveal');
+                window.isModelLoaded = true;
+                startReveal();
+            }
+        }, 8000);
+
         const loadingManager = new THREE.LoadingManager(
             () => {
+                clearTimeout(preloaderSafetyTimeout);
                 isModelLoaded = true;
                 window.isModelLoaded = true;
                 setTimeout(() => {
@@ -1414,233 +1617,60 @@
         dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
         dracoLoader.preload();
 
-        const textureLoader = new THREE.TextureLoader(loadingManager);
+        const gltfLoader = new THREE.GLTFLoader(loadingManager);
+        gltfLoader.setDRACOLoader(dracoLoader);
 
-        // Milky Way Sky Dome
-        const milkyWayTex = textureLoader.load('public/textures/milkyway.jpg');
-        const skyGeo = new THREE.SphereGeometry(1200, 60, 40);
-        const skyMat = new THREE.MeshBasicMaterial({
-            map: milkyWayTex,
-            side: THREE.BackSide,
-            opacity: 0.32,
-            transparent: true
+        // Sun Glow Sprite Helper
+        function createSunGlowTexture() {
+            const c = document.createElement('canvas');
+            c.width = 512;
+            c.height = 512;
+            const ctx = c.getContext('2d');
+            const g = ctx.createRadialGradient(256, 256, 0, 256, 256, 256);
+            g.addColorStop(0, 'rgba(255, 250, 220, 1.0)');
+            g.addColorStop(0.18, 'rgba(255, 185, 60, 0.95)');
+            g.addColorStop(0.38, 'rgba(240, 120, 20, 0.45)');
+            g.addColorStop(0.65, 'rgba(190, 60, 0, 0.12)');
+            g.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            ctx.fillStyle = g;
+            ctx.fillRect(0, 0, 512, 512);
+            const tex = new THREE.CanvasTexture(c);
+            tex.needsUpdate = true;
+            return tex;
+        }
+
+        const sunGlowTex = createSunGlowTexture();
+        const sunGlowMat = new THREE.SpriteMaterial({
+            map: sunGlowTex,
+            blending: THREE.AdditiveBlending,
+            transparent: true,
+            depthTest: false,
+            depthWrite: false,
+            fog: false
         });
-        const skyDome = new THREE.Mesh(skyGeo, skyMat);
-        scene.add(skyDome);
+        const sunGlowSprite = new THREE.Sprite(sunGlowMat);
+        sunGlowSprite.scale.set(24, 24, 1);
+        sunGlowSprite.renderOrder = 10;
 
-        // ==========================================
-        // 2. COMPLETE SOLAR SYSTEM (MATCHING REFERENCE IMAGE)
-        // ==========================================
-        const solarSystemGroup = new THREE.Group();
-        scene.add(solarSystemGroup);
-
-        // Helper function for thin, elegant elliptical planetary orbits
-        function createPlanetOrbit(radiusX, radiusZ) {
-            const curve = new THREE.EllipseCurve(
-                0, 0,
-                radiusX, radiusZ,
-                0, 2 * Math.PI,
-                false,
-                0
-            );
+        // Thin orbital ellipse helper
+        function createPlanetOrbit(radiusX, radiusZ, color = 0xffffff, opacity = 0.16) {
+            const curve = new THREE.EllipseCurve(0, 0, radiusX, radiusZ, 0, 2 * Math.PI, false, 0);
             const points = curve.getPoints(180);
-            const geo = new THREE.BufferGeometry().setFromPoints(
-                points.map(p => new THREE.Vector3(p.x, 0, p.y))
-            );
+            const geo = new THREE.BufferGeometry().setFromPoints(points.map(p => new THREE.Vector3(p.x, 0, p.y)));
             const mat = new THREE.LineBasicMaterial({
-                color: 0xffffff,
+                color: color,
                 transparent: true,
-                opacity: 0.16,
+                opacity: opacity,
                 linewidth: 1
             });
             return new THREE.Line(geo, mat);
         }
 
-        // 1. Central Sun (Sol)
-        const sunTex = textureLoader.load('public/textures/sun.jpg');
-        const sunGeo = new THREE.SphereGeometry(6.2, 64, 64);
-        const sunMat = new THREE.MeshStandardMaterial({
-            map: sunTex,
-            emissive: 0xF2B66D,
-            emissiveMap: sunTex,
-            emissiveIntensity: 1.8,
-            roughness: 0.4
-        });
-        const sunMesh = new THREE.Mesh(sunGeo, sunMat);
-        solarSystemGroup.add(sunMesh);
+        // Scene Groups
+        const solarSystemGroup = new THREE.Group();
+        solarSystemGroup.position.set(0, -18, 0);
+        scene.add(solarSystemGroup);
 
-        // Sun Corona Glow Mesh
-        const coronaGeo = new THREE.SphereGeometry(7.2, 48, 48);
-        const coronaMat = new THREE.MeshBasicMaterial({
-            color: 0xF2B66D,
-            transparent: true,
-            opacity: 0.22,
-            side: THREE.BackSide
-        });
-        const coronaMesh = new THREE.Mesh(coronaGeo, coronaMat);
-        solarSystemGroup.add(coronaMesh);
-
-        // Planets Configuration (Arranged as shown in user's panorama reference image)
-        const planetConfigs = [
-            { name: 'Mercury', rx: 11, rz: 10.5, size: 0.35, color: 0x8c8780, speed: 0.008, angle: 3.1 },
-            { name: 'Venus',   rx: 16, rz: 15.2, size: 0.55, color: 0xd6ad70, speed: 0.005, angle: 3.3 },
-            { name: 'Earth',   rx: 23, rz: 21.8, size: 0.65, isEarth: true, speed: 0.0035, angle: 3.45 },
-            { name: 'Mars',    rx: 31, rz: 29.5, size: 0.45, isMars: true, speed: 0.0025, angle: 3.7 },
-            { name: 'Jupiter', rx: 45, rz: 42.0, size: 1.85, isJupiter: true, speed: 0.0012, angle: 0.2 },
-            { name: 'Saturn',  rx: 60, rz: 56.0, size: 1.45, isSaturn: true, speed: 0.0008, angle: 0.4 },
-            { name: 'Uranus',  rx: 74, rz: 69.0, size: 0.85, color: 0x9be0e8, speed: 0.0005, angle: 0.55 },
-            { name: 'Neptune', rx: 88, rz: 82.0, size: 0.82, color: 0x4d75d6, speed: 0.0004, angle: 0.68 }
-        ];
-
-        const planets = [];
-        let earthGroup = null;
-        let earthMesh = null;
-        let cloudsMesh = null;
-        let marsMesh = null;
-        let jupiterMesh = null;
-        let saturnMesh = null;
-
-        planetConfigs.forEach(cfg => {
-            // Orbit line
-            const orbitLine = createPlanetOrbit(cfg.rx, cfg.rz);
-            solarSystemGroup.add(orbitLine);
-
-            const pGroup = new THREE.Group();
-
-            let mesh;
-            if (cfg.isEarth) {
-                earthGroup = pGroup;
-                const earthDayTex = textureLoader.load('public/textures/earth_day.jpg');
-                const earthGeo = new THREE.SphereGeometry(cfg.size, 48, 48);
-                const earthMat = new THREE.MeshStandardMaterial({
-                    map: earthDayTex,
-                    roughness: 0.75,
-                    metalness: 0.05
-                });
-                earthMesh = new THREE.Mesh(earthGeo, earthMat);
-                pGroup.add(earthMesh);
-
-                // Clouds
-                const cloudsTex = textureLoader.load('public/textures/earth_clouds.png');
-                const cloudsGeo = new THREE.SphereGeometry(cfg.size * 1.015, 48, 48);
-                const cloudsMat = new THREE.MeshStandardMaterial({
-                    map: cloudsTex,
-                    transparent: true,
-                    opacity: 0.85,
-                    roughness: 0.9,
-                    depthWrite: false
-                });
-                cloudsMesh = new THREE.Mesh(cloudsGeo, cloudsMat);
-                pGroup.add(cloudsMesh);
-                pGroup.rotation.z = -0.41;
-            } else if (cfg.isMars) {
-                const marsTex = textureLoader.load('public/textures/mars.jpg');
-                const geo = new THREE.SphereGeometry(cfg.size, 48, 48);
-                const mat = new THREE.MeshStandardMaterial({
-                    map: marsTex,
-                    roughness: 0.85
-                });
-                marsMesh = new THREE.Mesh(geo, mat);
-                pGroup.add(marsMesh);
-            } else if (cfg.isJupiter) {
-                const jupiterTex = textureLoader.load('public/textures/jupiter.jpg');
-                const geo = new THREE.SphereGeometry(cfg.size, 48, 48);
-                const mat = new THREE.MeshStandardMaterial({
-                    map: jupiterTex,
-                    roughness: 0.8
-                });
-                jupiterMesh = new THREE.Mesh(geo, mat);
-                pGroup.add(jupiterMesh);
-            } else if (cfg.isSaturn) {
-                const saturnTex = textureLoader.load('public/textures/saturn.jpg');
-                const geo = new THREE.SphereGeometry(cfg.size, 48, 48);
-                const mat = new THREE.MeshStandardMaterial({
-                    map: saturnTex,
-                    roughness: 0.85
-                });
-                saturnMesh = new THREE.Mesh(geo, mat);
-                pGroup.add(saturnMesh);
-
-                // Saturn Rings
-                const ringTex = textureLoader.load('public/textures/saturn_ring.png');
-                const innerR = cfg.size * 1.35;
-                const outerR = cfg.size * 2.45;
-                const ringGeo = new THREE.RingGeometry(innerR, outerR, 64);
-                
-                // Radial UV mapping
-                const pos = ringGeo.attributes.position;
-                const uv = ringGeo.attributes.uv;
-                for (let i = 0; i < pos.count; i++) {
-                    const vx = pos.getX(i);
-                    const vy = pos.getY(i);
-                    const dist = Math.sqrt(vx * vx + vy * vy);
-                    const u = (dist - innerR) / (outerR - innerR);
-                    uv.setXY(i, u, 0.5);
-                }
-                ringGeo.attributes.uv.needsUpdate = true;
-
-                const ringMat = new THREE.MeshStandardMaterial({
-                    map: ringTex,
-                    transparent: true,
-                    opacity: 0.95,
-                    side: THREE.DoubleSide,
-                    roughness: 0.85,
-                    depthWrite: false
-                });
-                const ringMesh = new THREE.Mesh(ringGeo, ringMat);
-                ringMesh.rotation.x = Math.PI / 2;
-                pGroup.add(ringMesh);
-                pGroup.rotation.z = 0.45;
-                pGroup.rotation.x = 0.15;
-            } else {
-                const geo = new THREE.SphereGeometry(cfg.size, 32, 32);
-                const mat = new THREE.MeshStandardMaterial({
-                    color: cfg.color,
-                    roughness: 0.8
-                });
-                mesh = new THREE.Mesh(geo, mat);
-                pGroup.add(mesh);
-            }
-
-            // Set initial position
-            pGroup.position.x = Math.cos(cfg.angle) * cfg.rx;
-            pGroup.position.z = Math.sin(cfg.angle) * cfg.rz;
-            solarSystemGroup.add(pGroup);
-
-            planets.push({
-                group: pGroup,
-                config: cfg,
-                angle: cfg.angle
-            });
-        });
-
-        // 3D Hyperbolic Escape Trajectory Spline (Voyager's path out of the system)
-        const trajectoryPoints = [
-            new THREE.Vector3(-22, 0, 8),    // Earth departure
-            new THREE.Vector3(-14, 1.2, 5),
-            new THREE.Vector3(0, 2.5, 0),    // Crossing Sun mid-zone
-            new THREE.Vector3(18, 4.0, -10), // Jovian slingshot
-            new THREE.Vector3(38, 7.5, -28), // Saturnian deflection
-            new THREE.Vector3(75, 18.0, -65),
-            new THREE.Vector3(130, 36.0, -120) // Deep interstellar outbound
-        ];
-        const trajCurve = new THREE.CatmullRomCurve3(trajectoryPoints);
-        const trajGeo = new THREE.BufferGeometry().setFromPoints(trajCurve.getPoints(120));
-        const trajMat = new THREE.LineDashedMaterial({
-            color: 0xF2B66D,
-            dashSize: 1.5,
-            gapSize: 0.8,
-            transparent: true,
-            opacity: 0.35,
-            linewidth: 1
-        });
-        const trajLine = new THREE.Line(trajGeo, trajMat);
-        trajLine.computeLineDistances();
-        solarSystemGroup.add(trajLine);
-
-        // ==========================================
-        // 3. VOYAGER 1 SPACECRAFT MODEL SETUP
-        // ==========================================
         const probeAnchor = new THREE.Group();
         const probeOffset = new THREE.Group();
         probeAnchor.add(probeOffset);
@@ -1664,100 +1694,389 @@
         }
         scene.add(radioPulseGroup);
 
-        const gltfLoader = new THREE.GLTFLoader(loadingManager);
-        gltfLoader.setDRACOLoader(dracoLoader);
+        // Planetary Encounter Groups for continuous flight
+        let earthEncounterGroup = new THREE.Group();
+        let encounterEarth = null;
+        let encounterMoon = null;
 
-        gltfLoader.load(
-            'public/models/voyager.glb',
-            (gltf) => {
-                voyagerModel = gltf.scene;
+        let jupiterEncounterGroup = new THREE.Group();
+        let encounterJupiter = null;
+        const galileanMoonMeshes = [];
 
+        let saturnEncounterGroup = new THREE.Group();
+        let encounterSaturn = null;
+        let encounterTitan = null;
+
+        // Master Trajectory Spline & Camera Spline
+        const flightPathSpline = new THREE.CatmullRomCurve3([
+            new THREE.Vector3(10.5, -17.8, 1.5),  // 0.00: Hero (Solar System overview)
+            new THREE.Vector3(1.2, -0.4, 0.5),     // 0.15: Chapter 1 - Earth Departure
+            new THREE.Vector3(6.5, 2.0, -18.0),    // 0.28: Inner cruise corridor
+            new THREE.Vector3(18.0, 5.5, -45.0),   // 0.42: Chapter 2 - Jupiter Slingshot
+            new THREE.Vector3(30.0, 11.0, -85.0),  // 0.54: Transit corridor toward Saturn
+            new THREE.Vector3(44.0, 18.0, -130.0), // 0.68: Chapter 3 - Saturn Flyby & Northward Deflection
+            new THREE.Vector3(56.0, 27.0, -175.0), // 0.82: Chapter 4 - Golden Record Inspection
+            new THREE.Vector3(72.0, 38.0, -230.0)  // 1.00: Chapter 5 - Interstellar Horizon
+        ]);
+
+        const cameraPathSpline = new THREE.CatmullRomCurve3([
+            new THREE.Vector3(0, 22, 105),         // 0.00: Hero wide overview
+            new THREE.Vector3(0, 1.2, 11.5),       // 0.15: Ch 1 (Close look at Voyager with Earth behind)
+            new THREE.Vector3(3.5, 3.2, -8.0),     // 0.28: Transit
+            new THREE.Vector3(14.0, 6.5, -34.0),   // 0.42: Ch 2 (Voyager in foreground, Jupiter & moons to right)
+            new THREE.Vector3(26.0, 12.0, -74.0),  // 0.54: Transit
+            new THREE.Vector3(40.0, 19.5, -118.0), // 0.68: Ch 3 (Voyager in foreground, Saturn & rings tilted)
+            new THREE.Vector3(54.0, 27.5, -168.0), // 0.82: Ch 4 (Tight angle on the Golden Record)
+            new THREE.Vector3(67.0, 39.0, -216.0)  // 1.00: Ch 5 (Cinematic wide view into interstellar void)
+        ]);
+
+        // Glowing 3D Trajectory Ribbons
+        const trajPoints = flightPathSpline.getPoints(240);
+        const trajGeo = new THREE.BufferGeometry().setFromPoints(trajPoints);
+        const trajMat = new THREE.LineDashedMaterial({
+            color: 0xF2B66D,
+            dashSize: 2.2,
+            gapSize: 1.1,
+            transparent: true,
+            opacity: 0.75,
+            linewidth: 2
+        });
+        const masterTrajLine = new THREE.Line(trajGeo, trajMat);
+        masterTrajLine.computeLineDistances();
+        scene.add(masterTrajLine);
+
+        // Glowing Green Planetary Orbit Ribbons (Matching reference image)
+        function createGreenOrbitRibbon(centerX, centerY, centerZ, radiusX, radiusZ, tiltZ = 0) {
+            const curve = new THREE.EllipseCurve(0, 0, radiusX, radiusZ, 0, 2 * Math.PI, false, 0);
+            const pts = curve.getPoints(160);
+            const geo = new THREE.BufferGeometry().setFromPoints(pts.map(p => new THREE.Vector3(p.x, 0, p.y)));
+            const mat = new THREE.LineBasicMaterial({
+                color: 0x34d399,
+                transparent: true,
+                opacity: 0.45,
+                linewidth: 1.5
+            });
+            const line = new THREE.Line(geo, mat);
+            line.position.set(centerX, centerY, centerZ);
+            line.rotation.z = tiltZ;
+            return line;
+        }
+
+        const jupiterOrbitRibbon = createGreenOrbitRibbon(22.0, 7.0, -48.0, 48, 42, 0.08);
+        scene.add(jupiterOrbitRibbon);
+
+        const saturnOrbitRibbon = createGreenOrbitRibbon(52.0, 19.0, -135.0, 75, 68, 0.16);
+        scene.add(saturnOrbitRibbon);
+
+        // Kinematic flight progress variables
+        let currentFlightProgress = 0;
+        let smoothFlightProgress = 0;
+        const planets = [];
+
+        // Models to Load
+        const modelList = [
+            { key: 'sky', path: 'public/models/planets/sky_pano_-_milkyway.glb' },
+            { key: 'sun', path: 'public/models/planets/Sun.glb' },
+            { key: 'mercury', path: 'public/models/planets/Mercury.glb' },
+            { key: 'venus', path: 'public/models/planets/Venus.glb' },
+            { key: 'earth', path: 'public/models/planets/Earth.glb' },
+            { key: 'moon', path: 'public/models/planets/Moon.glb' },
+            { key: 'mars', path: 'public/models/planets/Mars.glb' },
+            { key: 'jupiter', path: 'public/models/planets/Jupiter.glb' },
+            { key: 'saturn', path: 'public/models/planets/Saturn.glb' },
+            { key: 'uranus', path: 'public/models/planets/Uranus.glb' },
+            { key: 'neptune', path: 'public/models/planets/Neptune.glb' },
+            { key: 'voyager', path: 'public/models/voyager.glb' }
+        ];
+
+        const loadedModels = {};
+        let loadedCount = 0;
+
+        modelList.forEach(item => {
+            gltfLoader.load(
+                item.path,
+                (gltf) => {
+                    loadedModels[item.key] = gltf;
+                    loadedCount++;
+                    if (loadedCount === modelList.length) {
+                        assembleSpaceScene();
+                    }
+                },
+                undefined,
+                (err) => {
+                    console.error(`Failed to load ${item.path}:`, err);
+                }
+            );
+        });
+
+        function assembleSpaceScene() {
+            // 1. SKY PANORAMA & IBL ENVIRONMENT REFLECTIONS
+            if (loadedModels.sky) {
+                loadedModels.sky.scene.traverse(c => {
+                    if (c.isMesh && c.material && c.material.emissiveMap) {
+                        milkyWayTex = c.material.emissiveMap;
+                    }
+                });
+
+                if (milkyWayTex) {
+                    milkyWayTex.mapping = THREE.EquirectangularReflectionMapping;
+                    try {
+                        const pmrem = new THREE.PMREMGenerator(renderer);
+                        pmrem.compileEquirectangularShader();
+                        scene.environment = pmrem.fromEquirectangular(milkyWayTex).texture;
+                    } catch (e) {
+                        scene.environment = milkyWayTex;
+                    }
+
+                    const skyGeo = new THREE.SphereGeometry(1600, 64, 32);
+                    const skyMat = new THREE.MeshBasicMaterial({
+                        map: milkyWayTex,
+                        side: THREE.BackSide,
+                        depthWrite: false
+                    });
+                    skyDome = new THREE.Mesh(skyGeo, skyMat);
+                    // Orient galactic dust band and stellar core behind Jupiter and Voyager
+                    skyDome.rotation.set(0.12, -1.25, 0.4);
+                    scene.add(skyDome);
+                }
+            }
+
+            // 2. VOYAGER 1 MODEL & ADVANCED PBR SHADERS
+            if (loadedModels.voyager) {
+                voyagerModel = loadedModels.voyager.scene;
                 const box = new THREE.Box3().setFromObject(voyagerModel);
                 const center = box.getCenter(new THREE.Vector3());
                 const size = box.getSize(new THREE.Vector3());
                 const maxDim = Math.max(size.x, size.y, size.z);
-
                 const targetScale = 5.2 / maxDim;
                 voyagerModel.scale.setScalar(targetScale);
                 voyagerModel.position.sub(center.multiplyScalar(targetScale));
 
                 voyagerModel.traverse((child) => {
                     if (child.isMesh && child.material) {
-                        child.material.roughness = Math.min(child.material.roughness || 0.4, 0.55);
-                        child.material.metalness = Math.max(child.material.metalness || 0.5, 0.75);
-                        child.material.envMapIntensity = 1.3;
+                        if (child.name === 'tex_01') {
+                            // 3.7m High-Gain Parabolic Dish: Satin-metallic reflection mirroring the Milky Way!
+                            child.material.metalness = 0.82;
+                            child.material.roughness = 0.22;
+                            child.material.envMapIntensity = 2.8;
+                        } else if (child.name === 'tex_02_AO') {
+                            // Gold MLI Thermal Insulation: Brilliant golden specular reflection
+                            child.material.color = new THREE.Color(0xffd768);
+                            child.material.metalness = 0.94;
+                            child.material.roughness = 0.26;
+                            child.material.envMapIntensity = 2.5;
+                        } else if (child.name === 'tex_02_AO_dark') {
+                            // Dark Titanium/Graphite Booms & RTG Canisters
+                            child.material.metalness = 0.88;
+                            child.material.roughness = 0.35;
+                            child.material.emissive = new THREE.Color(0x280e03);
+                            child.material.emissiveIntensity = 0.45;
+                            child.material.envMapIntensity = 1.8;
+                        } else {
+                            child.material.metalness = 0.8;
+                            child.material.roughness = 0.3;
+                            child.material.envMapIntensity = 2.0;
+                        }
                         child.material.needsUpdate = true;
                     }
                 });
 
                 probeOffset.add(voyagerModel);
-
-                // In the solar system reveal view, place Voyager near its hyperbolic path (between Sun and Jupiter)
-                probeAnchor.position.set(12, 3.2, -6);
-                probeAnchor.rotation.set(0.2, -1.8, 0.15);
-
-                initScrollAndFlightTimeline();
-            },
-            undefined,
-            (error) => {
-                console.error('Error loading voyager.glb:', error);
+                probeAnchor.position.set(10.5, -17.8, 1.5);
+                probeAnchor.rotation.set(0.1, -1.6, 0);
             }
-        );
+
+            // 3. SOLAR SYSTEM OVERVIEW (HERO SCENE)
+            if (loadedModels.sun) {
+                const heroSun = loadedModels.sun.scene.clone();
+                heroSun.scale.setScalar(2.2);
+                heroSun.traverse(c => {
+                    if (c.isMesh && c.material) {
+                        c.material.emissive = new THREE.Color(0xffeedd);
+                        c.material.emissiveIntensity = 2.2;
+                        c.material.roughness = 0.1;
+                        c.material.fog = false;
+                    }
+                });
+                solarSystemGroup.add(heroSun);
+                solarSystemGroup.add(sunGlowSprite);
+            }
+
+            const heroPlanetConfigs = [
+                { modelKey: 'mercury', rx: 11, rz: 10.5, scale: 0.38, speed: 0.008, angle: 3.12 },
+                { modelKey: 'venus',   rx: 17, rz: 16.0, scale: 0.60, speed: 0.005, angle: 3.10 },
+                { modelKey: 'earth',   rx: 24, rz: 22.5, scale: 0.75, speed: 0.0035, angle: 3.08 },
+                { modelKey: 'mars',    rx: 32, rz: 30.0, scale: 0.50, speed: 0.0025, angle: 3.06 },
+                { modelKey: 'jupiter', rx: 46, rz: 43.0, scale: 2.10, speed: 0.0012, angle: 0.28 },
+                { modelKey: 'saturn',  rx: 62, rz: 57.5, scale: 1.70, speed: 0.0008, angle: 0.18 },
+                { modelKey: 'uranus',  rx: 76, rz: 70.5, scale: 0.95, speed: 0.0005, angle: 0.12 },
+                { modelKey: 'neptune', rx: 90, rz: 83.5, scale: 0.90, speed: 0.0004, angle: 0.08 }
+            ];
+
+            heroPlanetConfigs.forEach(cfg => {
+                const orbitLine = createPlanetOrbit(cfg.rx, cfg.rz);
+                solarSystemGroup.add(orbitLine);
+
+                const pGroup = new THREE.Group();
+                if (loadedModels[cfg.modelKey]) {
+                    const m = loadedModels[cfg.modelKey].scene.clone();
+                    m.scale.setScalar(cfg.scale);
+                    pGroup.add(m);
+                }
+
+                pGroup.position.x = Math.cos(cfg.angle) * cfg.rx;
+                pGroup.position.z = Math.sin(cfg.angle) * cfg.rz;
+                solarSystemGroup.add(pGroup);
+
+                planets.push({
+                    group: pGroup,
+                    config: cfg,
+                    angle: cfg.angle
+                });
+            });
+
+            // 4. PLANETARY ENCOUNTERS ALONG CONTINUOUS FLIGHT TRAJECTORY
+            // Encounter 1: Earth & Moon
+            if (loadedModels.earth && loadedModels.moon) {
+                earthEncounterGroup.position.set(-10.0, -0.5, -6.0);
+                encounterEarth = loadedModels.earth.scene.clone();
+                encounterEarth.scale.setScalar(2.6);
+                encounterEarth.rotation.z = -0.41;
+                earthEncounterGroup.add(encounterEarth);
+
+                encounterMoon = loadedModels.moon.scene.clone();
+                encounterMoon.scale.setScalar(0.7);
+                encounterMoon.position.set(5.5, 1.8, -2.5);
+                earthEncounterGroup.add(encounterMoon);
+                scene.add(earthEncounterGroup);
+            }
+
+            // Encounter 2: Jupiter & Galilean Moons (Matching Reference Image)
+            if (loadedModels.jupiter) {
+                jupiterEncounterGroup.position.set(22.0, 7.0, -48.0);
+                encounterJupiter = loadedModels.jupiter.scene.clone();
+                encounterJupiter.scale.setScalar(6.5);
+                jupiterEncounterGroup.add(encounterJupiter);
+
+                const moonsData = [
+                    { id: 'io', r: 8.5, size: 0.28, speed: 0.025, color: 0xe5c158 },
+                    { id: 'europa', r: 11.5, size: 0.24, speed: 0.018, color: 0xd9e5eb },
+                    { id: 'ganymede', r: 15.5, size: 0.38, speed: 0.012, color: 0x9e998f },
+                    { id: 'callisto', r: 20.0, size: 0.35, speed: 0.008, color: 0x736c64 }
+                ];
+
+                moonsData.forEach((m, idx) => {
+                    const mGroup = new THREE.Group();
+                    const mMesh = new THREE.Mesh(
+                        new THREE.SphereGeometry(m.size, 24, 24),
+                        new THREE.MeshStandardMaterial({ color: m.color, roughness: 0.75 })
+                    );
+                    mGroup.add(mMesh);
+                    jupiterEncounterGroup.add(mGroup);
+
+                    const orbit = createPlanetOrbit(m.r, m.r * 0.95, 0x34d399, 0.35);
+                    orbit.rotation.x = Math.PI / 2;
+                    jupiterEncounterGroup.add(orbit);
+
+                    galileanMoonMeshes.push({
+                        id: m.id,
+                        group: mGroup,
+                        mesh: mMesh,
+                        radius: m.r,
+                        speed: m.speed,
+                        angle: idx * 1.57
+                    });
+                });
+
+                scene.add(jupiterEncounterGroup);
+            }
+
+            // Encounter 3: Saturn & Rings & Titan (Matching Reference Image)
+            if (loadedModels.saturn) {
+                saturnEncounterGroup.position.set(52.0, 19.0, -135.0);
+                encounterSaturn = loadedModels.saturn.scene.clone();
+                encounterSaturn.scale.setScalar(4.8);
+                encounterSaturn.rotation.z = 0.45;
+                encounterSaturn.rotation.x = 0.22;
+                saturnEncounterGroup.add(encounterSaturn);
+
+                const titanOrbit = createPlanetOrbit(16, 14.5, 0x34d399, 0.4);
+                titanOrbit.rotation.x = Math.PI / 2;
+                saturnEncounterGroup.add(titanOrbit);
+
+                encounterTitan = new THREE.Mesh(
+                    new THREE.SphereGeometry(0.48, 24, 24),
+                    new THREE.MeshStandardMaterial({ color: 0xdd9e4b, roughness: 0.7 })
+                );
+                encounterTitan.position.set(16, 0, 0);
+                saturnEncounterGroup.add(encounterTitan);
+
+                scene.add(saturnEncounterGroup);
+            }
+
+            initScrollAndFlightTimeline();
+            isModelLoaded = true;
+            window.isModelLoaded = true;
+        }
 
         // ==========================================
         // 4. GSAP WELCOME REVEAL & CAMERA FLY-IN
         // ==========================================
-        const TL = gsap.timeline();
-
         function startReveal() {
             // PHASE 1: Preloader fade out
-            TL.to('#preloader', {
+            gsap.to('#preloader', {
                 opacity: 0,
-                duration: 1.0,
-                ease: 'expo.inOut',
+                duration: 0.5,
+                ease: 'power2.inOut',
                 onComplete: () => {
                     const p = document.getElementById('preloader');
-                    if (p) p.style.display = 'none';
+                    if (p) {
+                        p.style.display = 'none';
+                        p.style.pointerEvents = 'none';
+                    }
                 }
             });
 
             // PHASE 2: UI & Title Reveal
-            TL.to('#ui-layer', { opacity: 1, duration: 0.8 }, "-=0.3");
-
-            const title = document.getElementById('main-title');
-            if (title) {
-                const text = title.innerText.trim();
-                title.innerHTML = text.split('').map(c => `<span class="char">${c}</span>`).join('');
-                TL.from('.char', {
-                    opacity: 0,
-                    filter: 'blur(14px)',
-                    letterSpacing: '0.8em',
-                    duration: 1.8,
-                    stagger: 0.06,
-                    ease: 'power4.out'
-                }, "+0.1");
+            const ui = document.getElementById('ui-layer');
+            if (ui) {
+                ui.style.pointerEvents = 'auto';
+                gsap.to(ui, {
+                    opacity: 1,
+                    duration: 0.7,
+                    ease: 'power2.out',
+                    delay: 0.1
+                });
             }
 
-            TL.from('#sub-title', { opacity: 0, y: 15, duration: 1.0, ease: 'power2.out' }, "-=1.0");
+            const title = document.getElementById('main-title');
+            if (title && !title.classList.contains('split-done')) {
+                title.classList.add('split-done');
+                const text = title.innerText.trim();
+                title.innerHTML = text.split('').map(c => `<span class="char" style="display:inline-block;">${c}</span>`).join('');
+                gsap.from('.char', {
+                    opacity: 0,
+                    y: 28,
+                    filter: 'blur(10px)',
+                    duration: 1.1,
+                    stagger: 0.035,
+                    ease: 'power3.out',
+                    delay: 0.2
+                });
+            }
 
-            TL.from(['header', 'footer', '#cta-begin-btn', '.absolute.right-4'], {
-                opacity: 0,
-                y: 18,
-                duration: 1.2,
-                stagger: 0.12,
-                ease: 'power3.out'
-            }, "-=0.7");
+            gsap.from('#sub-title', { opacity: 0, y: 14, duration: 0.8, ease: 'power2.out', delay: 0.35 });
         }
 
         // Mouse Parallax on Welcome Screen
         if (window.innerWidth > 768) {
             document.addEventListener('mousemove', (e) => {
-                if (window.scrollY < 200) {
+                if (window.scrollY < 200 && !hasBegunFlight) {
                     const x = (e.clientX / window.innerWidth - 0.5) * 20;
                     const y = (e.clientY / window.innerHeight - 0.5) * 20;
                     gsap.to(camera.position, {
                         x: x * 0.4,
-                        y: 32 + y * 0.3,
+                        y: 22 + y * 0.3,
                         duration: 1.6,
                         ease: 'power1.out'
                     });
@@ -1766,7 +2085,7 @@
         }
 
         // ==========================================
-        // 5. MASTER SCROLLTIMELINE & MISSION KINEMATICS
+        // 5. MASTER SCROLLTIMELINE & CONTINUOUS TRAJECTORY
         // ==========================================
         let hasBegunFlight = false;
 
@@ -1782,6 +2101,8 @@
                 onComplete: () => {
                     document.getElementById('ui-layer').style.pointerEvents = 'none';
                     document.getElementById('flight-hud').classList.add('active');
+                    const scrubber = document.getElementById('mission-scrubber');
+                    if (scrubber) scrubber.classList.add('active');
                 }
             });
 
@@ -1794,7 +2115,6 @@
 
         document.getElementById('cta-begin-btn').addEventListener('click', beginFlightJourney);
         document.getElementById('skip-intro-btn').addEventListener('click', () => {
-            TL.progress(1);
             beginFlightJourney();
         });
 
@@ -1812,6 +2132,33 @@
             e.preventDefault();
             beginFlightJourney();
         });
+
+        // Bottom Dock Button handlers
+        const dockExplore = document.getElementById('dock-btn-explore');
+        if (dockExplore) {
+            dockExplore.addEventListener('click', () => {
+                document.getElementById('btn-inspect-craft').click();
+            });
+        }
+        const dockTimeline = document.getElementById('dock-btn-timeline');
+        if (dockTimeline) {
+            dockTimeline.addEventListener('click', () => {
+                const s = document.getElementById('mission-scrubber');
+                if (s) s.classList.toggle('active');
+            });
+        }
+        const dockData = document.getElementById('dock-btn-data');
+        if (dockData) {
+            dockData.addEventListener('click', () => {
+                document.getElementById('btn-inspect-craft').click();
+            });
+        }
+        const dockInfo = document.getElementById('dock-btn-info');
+        if (dockInfo) {
+            dockInfo.addEventListener('click', () => {
+                document.getElementById('btn-pale-blue-dot').click();
+            });
+        }
 
         function initScrollAndFlightTimeline() {
             // Editorial panels fade-in & fade-out trigger
@@ -1835,94 +2182,117 @@
                 );
             });
 
-            // Master Timeline
+            // Master Continuous Scroll Timeline
             const scrollTimeline = gsap.timeline({
                 scrollTrigger: {
                     trigger: '#scroll-container',
                     start: 'top top',
                     end: 'bottom bottom',
-                    scrub: 1.8,
+                    scrub: 1.2,
                     onUpdate: (self) => {
                         const p = self.progress;
+                        currentFlightProgress = p;
 
                         // Reading progress bar
                         progressBar.style.width = (p * 100) + '%';
 
                         // Toggle hero UI vs Flight HUD based on scroll position
-                        if (p > 0.03) {
+                        if (p > 0.02) {
+                            hasBegunFlight = true;
                             document.getElementById('ui-layer').style.opacity = '0';
                             document.getElementById('ui-layer').style.pointerEvents = 'none';
                             document.getElementById('flight-hud').classList.add('active');
+                            const scrubber = document.getElementById('mission-scrubber');
+                            if (scrubber) scrubber.classList.add('active');
                         } else {
+                            hasBegunFlight = false;
                             document.getElementById('ui-layer').style.opacity = '1';
                             document.getElementById('ui-layer').style.pointerEvents = 'auto';
                             document.getElementById('flight-hud').classList.remove('active');
+                            const scrubber = document.getElementById('mission-scrubber');
+                            if (scrubber) scrubber.classList.remove('active');
                         }
 
-                        // Telemetry Calculations
-                        // 1. Distance from Sol
-                        const distAu = (1.0 + Math.pow(p, 1.28) * 162.8).toFixed(1);
+                        // Dynamic Active Scene Title (matching reference photo)
+                        const sceneTitleEl = document.getElementById('active-scene-title');
+                        if (sceneTitleEl) {
+                            if (p < 0.22) {
+                                sceneTitleEl.textContent = '"EARTH ORBITAL ASCENT & INJECTION"';
+                            } else if (p < 0.46) {
+                                sceneTitleEl.textContent = '"JOVIAN GRAVITATIONAL SLINGSHOT"';
+                            } else if (p < 0.70) {
+                                sceneTitleEl.textContent = '"SATURNIAN RING DEFLECTION"';
+                            } else if (p < 0.86) {
+                                sceneTitleEl.textContent = '"THE GOLDEN RECORD ARCHIVE"';
+                            } else {
+                                sceneTitleEl.textContent = '"CRUISING THROUGH INTERSTELLAR SPACE"';
+                            }
+                        }
+
+                        // Distance from Sol (interpolating up to 163.8 AU)
+                        const distAu = (1.0 + Math.pow(p, 1.28) * 162.8).toFixed(2);
                         const distKmB = ((distAu * 149597870.7) / 1000000000).toFixed(2);
                         const fDistEl = document.getElementById('flight-dist');
                         if (fDistEl) {
-                            fDistEl.innerHTML = `${distAu} <span class="text-[var(--gold)] text-xs">AU</span> <span class="text-white/40 text-xs">(${distKmB}B KM)</span>`;
+                            fDistEl.innerHTML = `${distAu} <span class="text-[var(--gold)]">AU</span> <span class="text-white/40">(Updating, ${distKmB} Bn km)</span>`;
                         }
 
-                        // 2. Velocity
-                        let curVel = 25000;
+                        // Velocity (interpolating with gravitational slingshot boost at Jupiter/Saturn)
+                        let curVel = 16.5;
                         if (p < 0.25) {
-                            curVel = 25000 + (p / 0.25) * 6000;
+                            curVel = 16.5 + (p / 0.25) * 1.5;
                         } else if (p < 0.5) {
-                            curVel = 31000 + ((p - 0.25) / 0.25) * 7026;
+                            curVel = 18.0 + Math.sin(((p - 0.25) / 0.25) * Math.PI) * 4.2;
                         } else {
-                            curVel = 38026 - (p - 0.5) * 160;
+                            curVel = 17.02 - (p - 0.5) * 0.4;
                         }
-                        const velMph = Math.round(curVel).toLocaleString();
-                        const velKms = (curVel * 0.00044704).toFixed(1);
+                        const curVelKms = curVel.toFixed(2);
+                        const curVelMph = Math.round(curVel / 0.00044704).toLocaleString();
                         const fVelEl = document.getElementById('flight-vel');
                         if (fVelEl) {
-                            fVelEl.innerHTML = `${velMph} <span class="text-[var(--gold)] text-xs">MPH</span> <span class="text-white/40 text-xs">(${velKms} KM/S)</span>`;
+                            fVelEl.innerHTML = `${curVelKms} <span class="text-[var(--gold)]">KM/S</span> <span class="text-white/40">(${curVelMph} MPH)</span>`;
                         }
 
-                        // 3. One-Way Radio Light Time
+                        // One-Way Radio Light Time
                         const lightSecs = distAu * 499.00478;
                         const lh = Math.floor(lightSecs / 3600);
                         const lm = Math.floor((lightSecs % 3600) / 60);
                         const ls = Math.floor(lightSecs % 60);
-                        const lightStr = `${String(lh).padStart(2, '0')}h ${String(lm).padStart(2, '0')}m ${String(ls).padStart(2, '0')}s`;
                         const fLightEl = document.getElementById('flight-light-time');
-                        if (fLightEl) fLightEl.textContent = lightStr;
+                        if (fLightEl) {
+                            fLightEl.textContent = `${String(lh).padStart(2, '0')}h ${String(lm).padStart(2, '0')}m ${String(ls).padStart(2, '0')}s RT`;
+                        }
 
-                        // 4. Mission Elapsed Time & DSN Status
+                        // Elapsed Flight Time & DSN Status
                         const metEl = document.getElementById('flight-met');
                         const dsnEl = document.getElementById('flight-dsn-status');
-                        if (p < 0.18) {
+                        if (p < 0.22) {
                             if (metEl) metEl.textContent = 'T+00Y 000D 00H [LAUNCH]';
-                            if (dsnEl) dsnEl.textContent = 'DSN DSS-14 Goldstone [70m Lock]';
-                        } else if (p < 0.38) {
+                            if (dsnEl) dsnEl.textContent = 'DSS-14 Goldstone [70m Lock]';
+                        } else if (p < 0.46) {
                             if (metEl) metEl.textContent = 'T+01Y 181D 06H [JUPITER]';
-                            if (dsnEl) dsnEl.textContent = 'DSN DSS-43 Canberra [70m Lock]';
-                        } else if (p < 0.6) {
+                            if (dsnEl) dsnEl.textContent = 'DSS-43 Canberra [70m Lock]';
+                        } else if (p < 0.70) {
                             if (metEl) metEl.textContent = 'T+03Y 068D 14H [SATURN]';
-                            if (dsnEl) dsnEl.textContent = 'DSN DSS-63 Madrid [70m Lock]';
-                        } else if (p < 0.8) {
+                            if (dsnEl) dsnEl.textContent = 'DSS-63 Madrid [70m Lock]';
+                        } else if (p < 0.86) {
                             if (metEl) metEl.textContent = 'T+34Y 354D 10H [HELIOPAUSE]';
-                            if (dsnEl) dsnEl.textContent = 'DSN DSS-14 Goldstone [70m Lock]';
+                            if (dsnEl) dsnEl.textContent = 'DSS-14 Goldstone [70m Lock]';
                         } else {
                             if (metEl) metEl.textContent = 'T+48Y 023D 14H [INTERSTELLAR]';
                             if (dsnEl) dsnEl.textContent = 'DSN Interstellar Horizon Tracking';
                         }
 
-                        // 5. RTG Power
+                        // RTG Power Output
                         const years = p * 48.0;
                         const watts = Math.round(470 * Math.pow(0.5, years / 87.7) * (1 - years * 0.005));
                         const fPowerEl = document.getElementById('flight-power');
                         if (fPowerEl) {
-                            fPowerEl.innerHTML = `${watts} <span class="text-[var(--gold)] text-xs">WATTS</span> <span class="text-[var(--gold)] text-xs">[NOMINAL]</span>`;
+                            fPowerEl.innerHTML = `${watts}W`;
                         }
 
-                        // 6. Mission Scrubber Active Node
-                        const activeIdx = p < 0.18 ? 0 : p < 0.38 ? 1 : p < 0.6 ? 2 : p < 0.8 ? 3 : 4;
+                        // Scrubber node active
+                        const activeIdx = p < 0.22 ? 0 : p < 0.46 ? 1 : p < 0.70 ? 2 : p < 0.86 ? 3 : 4;
                         document.querySelectorAll('.scrubber-node').forEach((node, idx) => {
                             node.classList.toggle('active', idx === activeIdx);
                         });
@@ -1952,117 +2322,6 @@
             }
             setInterval(updateUtc, 1000);
             updateUtc();
-
-            // SCROLL TRAJECTORY CAMERA ANIMATION
-            // Hero -> Chapter 1 (Earth Departure): Camera flies from wide solar system down to Voyager
-            scrollTimeline.to(camera.position, {
-                x: 0,
-                y: 1.5,
-                z: 11,
-                ease: 'power2.inOut'
-            }, 0);
-
-            scrollTimeline.to(probeAnchor.position, {
-                x: 1.4,
-                y: -0.4,
-                z: 0,
-                ease: 'power2.inOut'
-            }, 0);
-
-            scrollTimeline.to(probeAnchor.rotation, {
-                x: 0.2,
-                y: -0.85,
-                z: 0.1,
-                ease: 'power2.inOut'
-            }, 0);
-
-            // Chapter 1 -> Chapter 2 (Jovian Encounter)
-            scrollTimeline.to(camera.position, {
-                x: -3.2,
-                y: 1.2,
-                z: 9.5,
-                ease: 'power1.inOut'
-            }, 1);
-
-            scrollTimeline.to(probeAnchor.position, {
-                x: -1.6,
-                y: 0.2,
-                z: 0.5,
-                ease: 'power1.inOut'
-            }, 1);
-
-            scrollTimeline.to(probeAnchor.rotation, {
-                x: 0.45,
-                y: 0.9,
-                z: -0.25,
-                ease: 'power1.inOut'
-            }, 1);
-
-            // Chapter 2 -> Chapter 3 (Saturnian Gateway)
-            scrollTimeline.to(camera.position, {
-                x: 3.8,
-                y: -1.1,
-                z: 7.8,
-                ease: 'power1.inOut'
-            }, 2);
-
-            scrollTimeline.to(probeAnchor.position, {
-                x: 1.8,
-                y: -0.3,
-                z: -0.8,
-                ease: 'power1.inOut'
-            }, 2);
-
-            scrollTimeline.to(probeAnchor.rotation, {
-                x: -0.3,
-                y: 2.4,
-                z: 0.35,
-                ease: 'power1.inOut'
-            }, 2);
-
-            // Chapter 3 -> Chapter 4 (The Golden Record)
-            scrollTimeline.to(camera.position, {
-                x: -1.8,
-                y: 0.4,
-                z: 5.6,
-                ease: 'power1.inOut'
-            }, 3);
-
-            scrollTimeline.to(probeAnchor.position, {
-                x: -0.9,
-                y: 0.1,
-                z: 0.2,
-                ease: 'power1.inOut'
-            }, 3);
-
-            scrollTimeline.to(probeAnchor.rotation, {
-                x: 0.1,
-                y: 3.75, // Reveal Golden Record face
-                z: -0.15,
-                ease: 'power1.inOut'
-            }, 3);
-
-            // Chapter 4 -> Chapter 5 (Interstellar Horizon)
-            scrollTimeline.to(camera.position, {
-                x: -1.2,
-                y: 0.6,
-                z: 12.5,
-                ease: 'power2.inOut'
-            }, 4);
-
-            scrollTimeline.to(probeAnchor.position, {
-                x: 3.2,
-                y: 0.2,
-                z: -26.0,
-                ease: 'power2.inOut'
-            }, 4);
-
-            scrollTimeline.to(probeAnchor.rotation, {
-                x: 0.5,
-                y: 4.8,
-                z: 0.1,
-                ease: 'power2.inOut'
-            }, 4);
         }
 
         // ==========================================
@@ -2462,7 +2721,7 @@
 
             ctx.fillStyle = 'rgba(255, 255, 255, 0.55)';
             ctx.font = '300 20px "JetBrains Mono", monospace';
-            ctx.fillText('DEEP SPACE NETWORK AUTONOMOUS TRACKING ARCHIVE  &bull;  HELIOPAUSE BOUNDARY', w / 2, 300);
+            ctx.fillText('DEEP SPACE NETWORK AUTONOMOUS TRACKING ARCHIVE  \u2022  HELIOPAUSE BOUNDARY', w / 2, 300);
 
             // Hairline separator
             ctx.strokeStyle = 'rgba(242, 182, 109, 0.3)';
@@ -2552,7 +2811,7 @@
 
             ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
             ctx.font = '300 18px "JetBrains Mono", monospace';
-            ctx.fillText(`VERIFICATION SIGNATURE: ${hash}  &bull;  GOLDEN RECORD AMBASSADOR ACCORD`, w / 2, 1190);
+            ctx.fillText(`VERIFICATION SIGNATURE: ${hash}  \u2022  GOLDEN RECORD AMBASSADOR ACCORD`, w / 2, 1190);
 
             // Update modal download link
             certDownloadLink.href = certCanvas.toDataURL('image/png');
@@ -2588,35 +2847,111 @@
         // ==========================================
         // 9. ANIMATION & RENDER LOOP
         // ==========================================
+        // 9. ANIMATION & RENDER LOOP
+        // ==========================================
         const clock = new THREE.Clock();
+        const _markerTempVec = new THREE.Vector3();
+
+        function projectMarker(id, worldPos, minProg, maxProg) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            if (isInspectorActive || smoothFlightProgress < minProg || smoothFlightProgress > maxProg) {
+                el.style.display = 'none';
+                return;
+            }
+            _markerTempVec.copy(worldPos).project(camera);
+            if (_markerTempVec.z > 1.0 || _markerTempVec.z < -1.0) {
+                el.style.display = 'none';
+                return;
+            }
+            const px = (_markerTempVec.x * 0.5 + 0.5) * window.innerWidth;
+            const py = (-_markerTempVec.y * 0.5 + 0.5) * window.innerHeight;
+
+            if (px < -60 || px > window.innerWidth + 60 || py < -60 || py > window.innerHeight + 60) {
+                el.style.display = 'none';
+                return;
+            }
+
+            el.style.display = 'flex';
+            el.style.left = `${px}px`;
+            el.style.top = `${py}px`;
+        }
 
         function renderFrame() {
             requestAnimationFrame(renderFrame);
 
             const elapsedTime = clock.getElapsedTime();
 
-            // Solar System slow celestial revolution
+            // Smooth Flight Progress Interpolation (Prevents Stutter & Getting Stuck)
+            const progressDelta = currentFlightProgress - smoothFlightProgress;
+            smoothFlightProgress += progressDelta * 0.08;
+
+            // Solar System slow celestial revolution (Hero Scene)
             planets.forEach(p => {
                 p.angle += p.config.speed * 0.4;
                 p.group.position.x = Math.cos(p.angle) * p.config.rx;
                 p.group.position.z = Math.sin(p.angle) * p.config.rz;
+                p.group.rotation.y += 0.008;
             });
 
-            // Planetary axial rotations
-            if (earthMesh) earthMesh.rotation.y = elapsedTime * 0.002;
-            if (cloudsMesh) cloudsMesh.rotation.y = elapsedTime * 0.0028;
-            if (marsMesh) marsMesh.rotation.y = elapsedTime * 0.0016;
-            if (jupiterMesh) jupiterMesh.rotation.y = elapsedTime * 0.0035;
-            if (saturnMesh) saturnMesh.rotation.y = elapsedTime * 0.0028;
-            if (sunMesh) sunMesh.rotation.y = elapsedTime * 0.0005;
+            // Planetary close encounters axial rotations
+            if (encounterEarth) encounterEarth.rotation.y += 0.0025;
+            if (encounterMoon) encounterMoon.rotation.y += 0.0012;
+            if (encounterJupiter) encounterJupiter.rotation.y += 0.004;
+            if (encounterSaturn) encounterSaturn.rotation.y += 0.0035;
 
-            // Probe micro-drift in flight mode
-            if (!isInspectorActive && isModelLoaded && voyagerModel) {
-                probeOffset.position.y = Math.sin(elapsedTime * 0.7) * 0.06;
-                probeOffset.rotation.z = Math.sin(elapsedTime * 0.35) * 0.012;
+            // Galilean moons orbiting Jupiter
+            galileanMoonMeshes.forEach(m => {
+                m.angle += m.speed * 0.5;
+                m.group.position.x = Math.cos(m.angle) * m.radius;
+                m.group.position.z = Math.sin(m.angle) * (m.radius * 0.95);
+            });
+
+            // Titan orbiting Saturn
+            if (encounterTitan) {
+                const titanAngle = elapsedTime * 0.06;
+                encounterTitan.position.x = Math.cos(titanAngle) * 16.0;
+                encounterTitan.position.z = Math.sin(titanAngle) * 14.5;
             }
 
-            // Radio Wavefront Pulses
+            // Continuous 3D Spacecraft Kinematics & Camera Path Spline Tracking
+            if (!isInspectorActive && isModelLoaded) {
+                if (smoothFlightProgress > 0.001 || hasBegunFlight) {
+                    const clampedProg = THREE.MathUtils.clamp(smoothFlightProgress, 0.0001, 0.9999);
+                    
+                    // 1. Probe Position along Flight Path Spline
+                    const probePos = flightPathSpline.getPointAt(clampedProg);
+                    probeAnchor.position.copy(probePos);
+
+                    // 2. Spacecraft Trajectory Tangent & Velocity Banking
+                    const tangent = flightPathSpline.getTangentAt(clampedProg).normalize();
+                    const lookTarget = probePos.clone().add(tangent);
+                    probeAnchor.lookAt(lookTarget);
+
+                    // Celestial roll banking along hyperbolic trajectory curve
+                    const bankAngle = Math.sin(clampedProg * Math.PI * 3.5) * 0.22;
+                    probeAnchor.rotateZ(bankAngle);
+
+                    // 3. Camera Position along Camera Path Spline
+                    const targetCamPos = cameraPathSpline.getPointAt(clampedProg);
+                    camera.position.lerp(targetCamPos, 0.12);
+
+                    // Smooth lead tracking camera lookAt
+                    const camLookTarget = probePos.clone().add(tangent.clone().multiplyScalar(1.2));
+                    camera.lookAt(camLookTarget);
+                } else {
+                    // Solar System Overview initial welcome lookAt
+                    camera.lookAt(0, -12, 0);
+                }
+
+                // Micro-drift in flight mode
+                if (voyagerModel) {
+                    probeOffset.position.y = Math.sin(elapsedTime * 0.7) * 0.05;
+                    probeOffset.rotation.z = Math.sin(elapsedTime * 0.35) * 0.012;
+                }
+            }
+
+            // Radio Wavefront Pulses from High-Gain Dish
             if (isModelLoaded && voyagerModel) {
                 radioPulseGroup.position.copy(probeAnchor.position);
                 radioPulseGroup.rotation.copy(probeAnchor.rotation);
@@ -2629,6 +2964,32 @@
                 });
             }
 
+            // 3D Screen-Projected HUD Markers for Planets & Moons (Matching reference image)
+            if (!isInspectorActive && hasBegunFlight) {
+                if (encounterJupiter) {
+                    projectMarker('marker-jupiter', jupiterEncounterGroup.position, 0.22, 0.56);
+                    if (galileanMoonMeshes.length >= 2) {
+                        const ioWorld = jupiterEncounterGroup.position.clone().add(galileanMoonMeshes[0].group.position);
+                        projectMarker('marker-io', ioWorld, 0.28, 0.52);
+
+                        const europaWorld = jupiterEncounterGroup.position.clone().add(galileanMoonMeshes[1].group.position);
+                        projectMarker('marker-europa', europaWorld, 0.30, 0.54);
+                    }
+                }
+                if (encounterSaturn) {
+                    projectMarker('marker-saturn', saturnEncounterGroup.position, 0.52, 0.78);
+                    if (encounterTitan) {
+                        const titanWorld = saturnEncounterGroup.position.clone().add(encounterTitan.position);
+                        projectMarker('marker-titan', titanWorld, 0.56, 0.76);
+                    }
+                }
+            } else {
+                ['marker-jupiter', 'marker-io', 'marker-europa', 'marker-saturn', 'marker-titan'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.style.display = 'none';
+                });
+            }
+
             // Subsystem Hotspot Projection in 3D Inspector Mode
             if (isInspectorActive) {
                 if (inspectorControls) inspectorControls.update();
@@ -2638,7 +2999,7 @@
                     tempV.project(camera);
                     const el = document.getElementById(`hotspot-${key}`);
                     if (el) {
-                        if (tempV.z > 1.0) {
+                        if (tempV.z > 1.0 || tempV.z < -1.0) {
                             el.style.display = 'none';
                         } else {
                             el.style.display = 'flex';
@@ -2649,16 +3010,6 @@
                         }
                     }
                 }
-            } else if (hasBegunFlight) {
-                // Tracking lookAt during flight
-                camera.lookAt(
-                    probeAnchor.position.x * 0.4,
-                    probeAnchor.position.y * 0.4,
-                    probeAnchor.position.z * 0.4
-                );
-            } else {
-                // Solar System overview lookAt
-                camera.lookAt(0, 0, 0);
             }
 
             // Render via UnrealBloomPass or fallback

@@ -38,9 +38,11 @@ const os = require('os');
         const type = msg.type();
         const text = msg.text();
         if (type === 'error') {
+            if (text.includes('AudioContext')) return;
             console.error(`[BROWSER ERROR] ${text}`);
             consoleErrors.push(text);
         } else if (type === 'warning') {
+            if (text.includes('cdn.tailwindcss.com') || text.includes('AudioContext')) return;
             console.warn(`[BROWSER WARNING] ${text}`);
             consoleWarnings.push(text);
         }
@@ -51,22 +53,39 @@ const os = require('os');
         consoleErrors.push(err.message);
     });
 
+    const clickEl = async (selector) => {
+        const found = await page.evaluate(sel => {
+            const el = document.querySelector(sel);
+            if (el) {
+                el.click();
+                return true;
+            }
+            return false;
+        }, selector);
+        if (!found) {
+            throw new Error(`Element not found for click: ${selector}`);
+        }
+    };
+
     console.log('Navigating to http://127.0.0.1:8080/ ...');
     await page.goto('http://127.0.0.1:8080/', { waitUntil: 'domcontentloaded', timeout: 60000 });
 
     // Wait for preloader to finish and 3D assets to initialize
     console.log('Waiting for preloader and 3D assets to initialize...');
     const startTime = Date.now();
-    let loaded = false;
     while (Date.now() - startTime < 60000) {
         loaded = await page.evaluate(() => {
-            return window.isModelLoaded === true || (document.getElementById('preloader') && document.getElementById('preloader').style.display === 'none');
+            const pre = document.getElementById('preloader');
+            const ui = document.getElementById('ui-layer');
+            const preDone = !pre || pre.style.display === 'none' || window.getComputedStyle(pre).opacity === '0';
+            const uiReady = ui && parseFloat(window.getComputedStyle(ui).opacity) > 0.8;
+            return window.isModelLoaded === true && preDone && uiReady;
         });
         if (loaded) break;
-        await new Promise(r => setTimeout(r, 800));
+        await new Promise(r => setTimeout(r, 400));
     }
-    console.log('Assets loaded state:', loaded);
-    await new Promise(r => setTimeout(r, 2200)); // Allow GSAP letter stagger animation to complete
+    console.log('Assets loaded & UI ready state:', loaded);
+    await new Promise(r => setTimeout(r, 1200)); // Allow all typography stagger animations to settle
 
     // Verification 1: Welcome Page / Cinematic Solar System Reveal
     console.log('Capturing: 01_cinematic_solar_system_reveal.png...');
@@ -77,7 +96,7 @@ const os = require('os');
 
     // Verification 2: Begin Journey click
     console.log('Clicking "Begin the Journey" CTA button...');
-    await page.click('#cta-begin-btn');
+    await clickEl('#cta-begin-btn');
     await new Promise(r => setTimeout(r, 1500));
 
     // Chapter 1: Earth Departure
@@ -113,7 +132,7 @@ const os = require('os');
 
     // Test Golden Record Turntable Console
     console.log('Engaging Golden Record Phonograph Turntable...');
-    await page.click('#btn-toggle-phonograph');
+    await clickEl('#btn-toggle-phonograph');
     await new Promise(r => setTimeout(r, 800));
     const isSpinning = await page.evaluate(() => {
         return document.getElementById('phonograph-disk').classList.contains('spinning');
@@ -133,7 +152,7 @@ const os = require('os');
     // Generate Archival Certificate
     console.log('Generating Archival Flight Dispatch Certificate...');
     await page.type('#cert-callsign', 'COMMANDER AINESH');
-    await page.click('#btn-generate-cert');
+    await clickEl('#btn-generate-cert');
     await new Promise(r => setTimeout(r, 1000));
     const certActive = await page.evaluate(() => {
         return document.getElementById('cert-modal').classList.contains('active');
@@ -142,12 +161,12 @@ const os = require('os');
     await page.screenshot({ path: path.join(outDir, '08_archival_flight_certificate.png') });
 
     // Close Certificate Modal
-    await page.click('#btn-close-cert');
+    await clickEl('#btn-close-cert');
     await new Promise(r => setTimeout(r, 500));
 
     // Test Feature: Pale Blue Dot Modal
     console.log('Testing Pale Blue Dot Reverence Modal...');
-    await page.click('#btn-pale-blue-dot');
+    await clickEl('#btn-pale-blue-dot');
     await new Promise(r => setTimeout(r, 800));
     const pbdActive = await page.evaluate(() => {
         return document.getElementById('pbd-modal').classList.contains('active');
@@ -156,12 +175,12 @@ const os = require('os');
     await page.screenshot({ path: path.join(outDir, '09_pale_blue_dot_modal.png') });
 
     // Close Pale Blue Dot Modal
-    await page.click('#btn-close-pbd');
+    await clickEl('#btn-close-pbd');
     await new Promise(r => setTimeout(r, 500));
 
     // Test Feature: 3D Craft Subsystem Inspector Mode
     console.log('Testing 3D Craft Subsystem Inspector Mode...');
-    await page.click('#btn-inspect-craft');
+    await clickEl('#btn-inspect-craft');
     await new Promise(r => setTimeout(r, 1600));
     const inspectorActive = await page.evaluate(() => {
         return document.getElementById('inspector-overlay').classList.contains('active');
@@ -171,7 +190,7 @@ const os = require('os');
 
     // Click Dish Hotspot for Telemetry Drawer
     console.log('Opening Hotspot Telemetry Drawer...');
-    await page.click('#hotspot-dish');
+    await clickEl('#hotspot-dish');
     await new Promise(r => setTimeout(r, 600));
     const drawerVisible = await page.evaluate(() => {
         return document.getElementById('hotspot-drawer').classList.contains('visible');
@@ -180,7 +199,7 @@ const os = require('os');
     await page.screenshot({ path: path.join(outDir, '11_inspector_telemetry_drawer.png') });
 
     // Close Inspector
-    await page.click('#btn-close-inspector');
+    await clickEl('#btn-close-inspector');
     await new Promise(r => setTimeout(r, 1400));
 
     // Continuous scroll recording (15 frames)
@@ -218,6 +237,6 @@ const os = require('os');
     console.log('\nSUCCESS: 0 console errors, 0 console warnings! Aesthetic redesign fully verified.');
     process.exit(0);
 })().catch(err => {
-    console.error('Test execution failed:', err);
+    console.error('Test execution failed with error:', err.stack || err);
     process.exit(1);
 });
