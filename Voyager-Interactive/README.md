@@ -127,3 +127,11 @@ All spherical textures are 2K equirectangular projections (2048×1024):
 * `OrbitControls.js`, `EffectComposer.js`, `RenderPass.js`, `ShaderPass.js`, `UnrealBloomPass.js`, `CopyShader.js`, `LuminosityHighPassShader.js`
 * **Source:** Three.js addons repository (r128)
 * **License:** MIT License.
+
+---
+
+## 🤖 Full Context for AI Assistants
+
+For full technical specifications, 3D scene graph schemas, parametric spline coordinates, and Web Audio DSP diagrams, consult the dedicated context file:
+👉 **[`AI_CONTEXT.md`](AI_CONTEXT.md)**
+
