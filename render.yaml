@@ -1,0 +1,28 @@
+services:
+  # Dedicated Voyager 3D Model Interactive Site
+  - type: web
+    name: voyager-3d-model
+    runtime: static
+    buildCommand: ""
+    staticPublishPath: ./Voyager-Interactive
+    headers:
+      - path: /*
+        name: Access-Control-Allow-Origin
+        value: "*"
+      - path: /public/models/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /public/textures/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+
+  # Complete Developer Portfolio & Missions Hub
+  - type: web
+    name: ainesh-portfolio
+    runtime: static
+    buildCommand: ""
+    staticPublishPath: .
+    headers:
+      - path: /*
+        name: Access-Control-Allow-Origin
+        value: "*"

@@ -4,8 +4,8 @@
   "description": "Personal developer portfolio and introduction website for Ainesh Joel Hamilton (@Bloxi17)",
   "main": "index.html",
   "scripts": {
-    "dev": "npx serve . -p 3000",
-    "start": "npx serve . -p 3000"
+    "dev": "node server.js",
+    "start": "node server.js"
   },
   "keywords": [
     "portfolio",
@@ -21,6 +21,7 @@
     "gsap": "^3.15.0"
   },
   "devDependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "puppeteer-core": "^25.12.0"
   }
 }

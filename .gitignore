@@ -5,3 +5,5 @@ Cosmic-Engine/
 stage*_test.js
 Voyager-Interactive/tests/aesthetic/frames/
 Voyager-Interactive/3d models/*.zip
+.agents/
+brag-output/work/
