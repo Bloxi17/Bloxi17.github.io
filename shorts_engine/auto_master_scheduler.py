@@ -9,6 +9,7 @@ if hasattr(sys.stdout, "reconfigure"):
 
 from config import OUTPUT_DIR, CURATED_DIR
 from topic_memory import get_todays_category, generate_unique_topic, load_history, save_history
+from viral_trend_analyzer import run_viral_intelligence
 from multi_downloader import curate_trending_clips
 from multi_clip_editor import build_bridge_multiclip_short
 from youtube_uploader import upload_short, is_configured
@@ -16,11 +17,12 @@ from youtube_uploader import upload_short, is_configured
 def run_autonomous_pipeline(slot: str = "slot1", privacy: str = "public", force_category: str = None) -> dict:
     """
     MASTER AUTONOMOUS YOUTUBE SHORTS GENERATION & UPLOAD ENGINE
-    - Strict Weekly 4-Niche Schedule
-    - 100% Unique, Non-Repeating Topics
-    - Bridge-Only VO during transitions (Original raw clip audio plays uninterrupted during action)
-    - MrBeast/Komika Style Dynamic Subtitles, Gamified Badges, Top Banner & Progress Bar
-    - Automatic Headless YouTube Shorts Public Upload
+    - Step 0: Dashboard Review + Live Internet Trend Scraping + 'Why It Boomed' Deconstruction
+    - Step 1: Strict Weekly 4-Niche Schedule & Non-Repeating Viral Concept Synthesis
+    - Step 2: Curation of ≥ 6 High-Quality Video Clips Matching Live Breakout Queries
+    - Step 3: High-CTR ≥ 60s Video Compilation (Bridge VO, Raw Action Audio, Komika Badges & Subtitles)
+    - Step 4: Autonomous Headless YouTube Shorts Public Upload with High-Velocity SEO Tags
+    - Step 5: Persistent Telemetry & Learning History
     """
     print("\n" + "=" * 70)
     print("🔥 LAUNCHING MASTER YOUTUBE SHORTS AUTONOMOUS AI ENGINE 🔥")
@@ -36,15 +38,29 @@ def run_autonomous_pipeline(slot: str = "slot1", privacy: str = "public", force_
     else:
         cat_info["num_items"] = max(6, cat_info.get("num_items", 6))
 
-    print(f"\n[1/5] Scheduled Target: {cat_info['day']} | Niche: {cat_info['category']} | Clips: {cat_info['num_items']}")
+    print(f"\n[1/5] Scheduled Target: {cat_info['day']} | Niche: {cat_info['category']} | Target Items: {cat_info['num_items']}")
 
-    # 2. Generate a 100% unique, never-repeated topic
-    topic_data = generate_unique_topic(cat_info)
-    print(f"[2/5] Unique Concept Generated:")
-    print(f"      📌 Topic:  {topic_data['topic']}")
-    print(f"      📺 Title:  {topic_data['youtube_title']}")
-    print(f"      🔥 Hook:   {topic_data['hook']}")
-    print(f"      🏷️  Banner: {topic_data['banner']}")
+    # 2. Step 0: Review Dashboard & Internet Breakout Trends ("Why It Boomed")
+    print("\n[2/5] Running Viral Intelligence Engine (Dashboard + Live Trend Radar)...")
+    viral_intel = run_viral_intelligence(cat_info)
+    topic_data = viral_intel["concept"]
+    
+    # Ensure title / topic is unique in persistent history
+    history = load_history()
+    used_titles = set(history.get("used_titles", []))
+    if topic_data["youtube_title"] in used_titles:
+        topic_data = generate_unique_topic(cat_info)
+    else:
+        history.setdefault("used_topics", []).append(topic_data["topic"])
+        history.setdefault("used_titles", []).append(topic_data["youtube_title"])
+        save_history(history)
+
+    print(f"\n🎯 Synthesized Replicated Concept:")
+    print(f"      📌 Topic:   {topic_data['topic']}")
+    print(f"      📺 Title:   {topic_data['youtube_title']}")
+    print(f"      🔥 Hook:    {topic_data['hook']}")
+    print(f"      🏷️  Banner:  {topic_data['banner']}")
+    print(f"      🔍 Query:   {topic_data.get('search_query')}")
 
     # 3. Curate viral clips with original action audio
     query = topic_data.get("search_query", f"{cat_info['category']} 4k asmr")
@@ -62,7 +78,7 @@ def run_autonomous_pipeline(slot: str = "slot1", privacy: str = "public", force_
 
     print(f"[OK] {len(clips)} source clips ready.")
 
-    # 4. Compile Short with Bridge-Only VO & Raw Action Audio
+    # 4. Compile Short with Bridge-Only VO & Raw Action Audio (≥ 60s length)
     slug = "".join([c if c.isalnum() else "_" for c in topic_data['topic'].lower()])[:20]
     timestamp_str = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     final_output_path = os.path.join(OUTPUT_DIR, f"{slot}_{slug}_{timestamp_str}.mp4")
@@ -79,8 +95,12 @@ def run_autonomous_pipeline(slot: str = "slot1", privacy: str = "public", force_
     # 5. Autonomous Upload to YouTube Shorts
     print(f"\n[5/5] Autonomous Headless Upload to YouTube ({privacy.upper()})...")
     upload_result = None
+    tags = viral_intel["viral_factors"].get("extracted_high_velocity_tags", ["shorts", "viral", "trending"])
+    for default_tag in ["shorts", "viral", "trending", cat_info['category'].lower().replace(" ", "")]:
+        if default_tag not in tags:
+            tags.append(default_tag)
+
     if is_configured():
-        tags = ["shorts", "viral", "trending", cat_info['category'].lower().replace(" ", "")]
         upload_result = upload_short(
             video_path=final_output_path,
             title=topic_data["youtube_title"],
@@ -93,7 +113,7 @@ def run_autonomous_pipeline(slot: str = "slot1", privacy: str = "public", force_
     else:
         print("[Notice] client_secrets.json not configured for upload; video rendered locally.")
 
-    # Log to topic history
+    # Log to topic history with viral intelligence telemetry
     history = load_history()
     log_entry = {
         "timestamp": datetime.datetime.now().isoformat(),
@@ -101,7 +121,12 @@ def run_autonomous_pipeline(slot: str = "slot1", privacy: str = "public", force_
         "category": cat_info["category"],
         "title": topic_data["youtube_title"],
         "output_path": final_output_path,
-        "video_url": upload_result["url"] if upload_result else None
+        "video_url": upload_result["url"] if upload_result else None,
+        "viral_factors": {
+            "boomed_reference": viral_intel["viral_factors"].get("boomed_short_title"),
+            "hook_strategy": viral_intel["viral_factors"].get("hook_strategy"),
+            "tags": tags
+        }
     }
     history.setdefault("log", []).append(log_entry)
     save_history(history)
@@ -117,7 +142,8 @@ def run_autonomous_pipeline(slot: str = "slot1", privacy: str = "public", force_
         "status": "success",
         "topic": topic_data,
         "video_path": final_output_path,
-        "upload": upload_result
+        "upload": upload_result,
+        "viral_intel": viral_intel
     }
 
 if __name__ == "__main__":
