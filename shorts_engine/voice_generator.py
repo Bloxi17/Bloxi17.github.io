@@ -27,6 +27,7 @@ def get_ass_header() -> str:
     - Vibrant Yellow text (&H0000FFFF)
     - Heavy 14px black outline and 6px drop shadow
     - MarginV 680 (comfortably above YouTube's description and engagement UI)
+    - PopupSubscribe style for animated pre-Rank 1 CTA banner
     """
     return """[Script Info]
 ScriptType: v4.00+
@@ -37,6 +38,7 @@ ScaledBorderAndShadow: yes
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
 Style: ShortsStyle,Impact,88,&H0000FFFF,&H000000FF,&H00000000,&H90000000,-1,0,0,0,100,100,2,0,1,14,6,2,60,60,680,1
+Style: PopupSubscribe,Impact,64,&H00FFFFFF,&H000000FF,&H001111EE,&H90000000,-1,0,0,0,100,100,2,0,1,12,6,5,60,60,0,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -70,19 +72,23 @@ def build_master_bridge_ass(bridge_timing_list: list, output_ass_path: str):
     """
     Builds a single master ASS subtitle file for multi-clip videos where
     VO and subtitles appear ONLY during the bridge moments of each clip.
-    bridge_timing_list format:
-    [
-        {"offset_sec": 0.0, "words": [...]},
-        {"offset_sec": 7.5, "words": [...]},
-        ...
-    ]
+    Also injects high-CTR animated Subscribe & Like Pop-Up for Rank #1.
     """
     events = []
     chunk_size = 2
     
-    for item in bridge_timing_list:
+    for idx, item in enumerate(bridge_timing_list):
         offset_ms = int(item["offset_sec"] * 1000)
         words = item["words"]
+        is_rank_1 = item.get("is_rank_1", False) or (idx == len(bridge_timing_list) - 1)
+        
+        # Inject Animated Subscribe & Like popup card for Rank 1
+        if is_rank_1 and words:
+            pop_start = ms_to_ass_time(offset_ms)
+            pop_end = ms_to_ass_time(offset_ms + 2400)
+            events.append(
+                f"Dialogue: 1,{pop_start},{pop_end},PopupSubscribe,,0,0,0,,{{\\fad(150,150)\\t(0,250,\\fscx112\\fscy112)\\t(250,500,\\fscx100\\fscy100)}}🔴 AAGE DEKHNE KE LIYE LIKE & SUBSCRIBE KAREIN! 🔔"
+            )
         
         for i in range(0, len(words), chunk_size):
             chunk = words[i:i + chunk_size]
@@ -99,7 +105,7 @@ def build_master_bridge_ass(bridge_timing_list: list, output_ass_path: str):
             
     with open(output_ass_path, "w", encoding="utf-8") as f:
         f.write(get_ass_header() + "\n".join(events) + "\n")
-    print(f"[OK] Master bridge subtitles written to: {output_ass_path} ({len(events)} cards)")
+    print(f"[OK] Master bridge subtitles with CTA popup written to: {output_ass_path} ({len(events)} cards)")
 
 async def generate_speech_segment(text: str, output_audio: str, voice: str = DEFAULT_VOICE, rate: str = "+22%"):
     """

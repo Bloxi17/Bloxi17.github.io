@@ -11,7 +11,10 @@ from google.auth.transport.requests import Request
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
-SCOPES = ["https://www.googleapis.com/auth/youtube.upload"]
+SCOPES = [
+    "https://www.googleapis.com/auth/youtube.upload",
+    "https://www.googleapis.com/auth/youtube.force-ssl"
+]
 CREDENTIALS_FILE = os.path.join(os.path.dirname(__file__), "client_secrets.json")
 TOKEN_PICKLE = os.path.join(os.path.dirname(__file__), "token.pickle")
 
@@ -47,16 +50,44 @@ def get_authenticated_service():
             
     return build("youtube", "v3", credentials=creds)
 
+def post_engagement_comment(youtube, video_id: str, comment_text: str) -> str:
+    """
+    Posts a high-CTR engagement comment on the newly published Short.
+    Spikes algorithm velocity and encourages viewer discussions.
+    """
+    try:
+        req = youtube.commentThreads().insert(
+            part="snippet",
+            body={
+                "snippet": {
+                    "videoId": video_id,
+                    "topLevelComment": {
+                        "snippet": {
+                            "textOriginal": comment_text
+                        }
+                    }
+                }
+            }
+        )
+        resp = req.execute()
+        comment_id = resp.get("id")
+        print(f"[OK] Engagement comment posted: \"{comment_text[:50]}...\" (ID: {comment_id})")
+        return comment_id
+    except Exception as e:
+        print(f"[Notice] Auto-comment note: {e}")
+        return None
+
 def upload_short(
     video_path: str,
     title: str,
     description: str,
     tags: list = None,
     privacy_status: str = "private",  # 'public', 'private', or 'unlisted'
+    pinned_comment: str = None,
     progress_callback = None
 ):
     """
-    Uploads 9:16 vertical video to YouTube Shorts.
+    Uploads 9:16 vertical video to YouTube Shorts and posts auto-engagement comment.
     """
     if not os.path.exists(video_path):
         raise FileNotFoundError(f"Video file does not exist: {video_path}")
@@ -111,7 +142,13 @@ def upload_short(
     video_url = f"https://youtube.com/shorts/{video_id}"
     print(f"\n[SUCCESS] Upload complete!")
     print(f"🔗 YouTube Short URL: {video_url}")
-    return {"video_id": video_id, "url": video_url}
+    
+    # Auto-post engagement comment
+    comment_id = None
+    if pinned_comment:
+        comment_id = post_engagement_comment(youtube, video_id, pinned_comment)
+        
+    return {"video_id": video_id, "url": video_url, "comment_id": comment_id}
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:

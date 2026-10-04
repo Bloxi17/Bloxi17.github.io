@@ -13,6 +13,7 @@ from viral_trend_analyzer import run_viral_intelligence
 from multi_downloader import curate_trending_clips
 from multi_clip_editor import build_bridge_multiclip_short
 from youtube_uploader import upload_short, is_configured
+from social_syndicator import send_telegram_alert, post_to_instagram_reels
 
 def run_autonomous_pipeline(slot: str = "slot1", privacy: str = "public", force_category: str = None) -> dict:
     """
@@ -100,16 +101,42 @@ def run_autonomous_pipeline(slot: str = "slot1", privacy: str = "public", force_
         if default_tag not in tags:
             tags.append(default_tag)
 
+    # Formulate high-engagement pinned comment
+    if cat_info["category"] == "ASMR":
+        pinned_comment = "Aapko kaun sa sound sabse zyada satisfying laga? Rank 1 ya koi aur? Comment me batao aur Channel ko Subscribe zaroor karo! 🎧👇"
+    elif cat_info["category"] == "Funny Moments":
+        pinned_comment = "Number 1 dekh kar kis-kis ki hansi nahi ruki? 😂 Comment karke batao aur aise hi daily comedy ke liye Like & Subscribe karein! 🔥👇"
+    elif cat_info["category"] == "Accident & Crazy Moments":
+        pinned_comment = "Kismat ho toh aisi! 😱 Aapko kaun sa save sabse impossible laga? Comment karo aur Subscribe karo! 👇🔥"
+    else:
+        pinned_comment = "Aapke hisab se Number 1 par kaun hona chahiye tha? Comment your top pick & Subscribe for daily shorts! 👑👇"
+
     if is_configured():
         upload_result = upload_short(
             video_path=final_output_path,
             title=topic_data["youtube_title"],
             description=topic_data["description"],
             tags=tags,
-            privacy_status=privacy
+            privacy_status=privacy,
+            pinned_comment=pinned_comment
         )
         print(f"\n🎉 [LIVE] YouTube Short Published Successfully!")
         print(f"🔗 URL: {upload_result['url']}")
+        
+        # 6. Real-time Telegram Alert & Multi-Platform Syndication
+        try:
+            send_telegram_alert(
+                title=topic_data["youtube_title"],
+                category=cat_info["category"],
+                video_url=upload_result["url"],
+                viral_reference=viral_intel["viral_factors"].get("boomed_short_title")
+            )
+            post_to_instagram_reels(
+                video_url_or_path=final_output_path,
+                caption=f"{topic_data['youtube_title']}\n\n#shorts #reels #viral #trending"
+            )
+        except Exception as e:
+            print(f"[Notice] Syndication alert note: {e}")
     else:
         print("[Notice] client_secrets.json not configured for upload; video rendered locally.")
 

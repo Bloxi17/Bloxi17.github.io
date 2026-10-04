@@ -245,9 +245,11 @@ def build_bridge_multiclip_short(
         if not line:
             line = f"Number {rank_num}... Dekho dhyan se!"
             
-        # Prepend concise hook to the first clip's bridge
+        # Prepend concise hook to first clip, and Subscribe Pop-Up CTA before Rank 1
         if i == 0 and hook_text:
             spoken_text = f"{hook_text} {line}"
+        elif rank_num == 1:
+            spoken_text = f"Aage dekhne ke liye Like aur Subscribe karein! {line}"
         else:
             spoken_text = line
             
@@ -269,11 +271,23 @@ def build_bridge_multiclip_short(
     # 3. Build Master ASS Subtitle File with frame-accurate timeline offsets
     bridge_timings = []
     current_time_offset = 0.0
+    transition_cut_offsets = []
+    rank1_start_offset = 0.0
+    
     for i in range(num_clips):
+        is_r1 = (i == num_clips - 1)
+        if is_r1:
+            rank1_start_offset = current_time_offset
+            
         bridge_timings.append({
             "offset_sec": current_time_offset,
-            "words": temp_words_list[i]
+            "words": temp_words_list[i],
+            "is_rank_1": is_r1
         })
+        
+        if i < num_clips - 1:
+            transition_cut_offsets.append(current_time_offset + clip_durations[i] - transition_dur)
+            
         current_time_offset += clip_durations[i] - transition_dur
 
     master_ass_path = os.path.join(OUTPUT_DIR, "master_bridge_subs.ass")
@@ -313,7 +327,7 @@ def build_bridge_multiclip_short(
         transition_duration=transition_dur
     )
     
-    # 6. Master Composite: Top Yellow Banner + Animated Progress Bar + Subtitles + Subtle BGM
+    # 6. Master Composite: Top Yellow Banner + Animated Progress Bar + Subtitles + Dynamic SFX + Subtle BGM
     stitched_dur = get_media_duration(stitched_path)
     total_duration = stitched_dur if stitched_dur > 0 else (current_time_offset + transition_dur)
     
@@ -322,61 +336,72 @@ def build_bridge_multiclip_short(
     bg_music = music_path if (music_path and os.path.exists(music_path)) else DEFAULT_BGM
     has_music = os.path.exists(bg_music)
     
+    whoosh_path = os.path.join(ASSETS_DIR, "sfx", "whoosh.wav")
+    ding_path = os.path.join(ASSETS_DIR, "sfx", "ding.wav")
+    has_whoosh = os.path.exists(whoosh_path)
+    has_ding = os.path.exists(ding_path)
+    
+    # Base video overlay filter
+    v_filter = (
+        f"[0:v]drawbox=x=40:y=200:w=1000:h=120:color=0xFFE600@1:t=fill[b1];"
+        f"[b1]drawbox=x=36:y=196:w=1008:h=128:color=0x000000@1:t=4[b2];"
+        f"[b2]drawtext=text='{safe_header}':fontfile='{FONT_IMPACT}':fontsize=58:fontcolor=black:x=(w-text_w)/2:y=230[b3];"
+        f"[b3]drawbox=x=0:y=1900:w='1080*(t/{total_duration:.2f})':h=16:color=0xFFE600@1:t=fill[b4];"
+        f"[b4]ass='{escaped_ass}'[vfinal]"
+    )
+    
+    # Assemble audio graph with SFX and BGM
+    cmd_inputs = ["-i", stitched_path]
+    a_filters = ["[0:a]volume=1.0[main_a]"]
+    mix_inputs = ["[main_a]"]
+    input_idx = 1
+    
+    # Add BGM if present
     if has_music:
-        print(f"[*] Adding subtle background rhythm ({bg_music}) at 0.12x volume...")
-        filter_complex = (
-            f"[0:v]drawbox=x=40:y=200:w=1000:h=120:color=0xFFE600@1:t=fill[b1];"
-            f"[b1]drawbox=x=36:y=196:w=1008:h=128:color=0x000000@1:t=4[b2];"
-            f"[b2]drawtext=text='{safe_header}':fontfile='{FONT_IMPACT}':fontsize=58:fontcolor=black:x=(w-text_w)/2:y=230[b3];"
-            f"[b3]drawbox=x=0:y=1900:w='1080*(t/{total_duration:.2f})':h=16:color=0xFFE600@1:t=fill[b4];"
-            f"[b4]ass='{escaped_ass}'[vfinal];"
-            # Background beat mixed low so raw action audio shines
-            f"[0:a]volume=1.0[main_a];"
-            f"[1:a]volume=0.12[bgm_a];"
-            f"[main_a][bgm_a]amix=inputs=2:duration=first:dropout_transition=2[afinal]"
-        )
-        cmd = [
-            FFMPEG_PATH,
-            "-y",
-            "-i", stitched_path,
-            "-stream_loop", "-1",
-            "-i", bg_music,
-            "-filter_complex", filter_complex,
-            "-map", "[vfinal]",
-            "-map", "[afinal]",
-            "-t", f"{total_duration:.2f}",
-            "-c:v", "libx264",
-            "-preset", "faster",
-            "-crf", "18",
-            "-c:a", "aac",
-            "-b:a", "192k",
-            "-pix_fmt", "yuv420p",
-            output_path
-        ]
-    else:
-        filter_complex = (
-            f"[0:v]drawbox=x=40:y=200:w=1000:h=120:color=0xFFE600@1:t=fill[b1];"
-            f"[b1]drawbox=x=36:y=196:w=1008:h=128:color=0x000000@1:t=4[b2];"
-            f"[b2]drawtext=text='{safe_header}':fontfile='{FONT_IMPACT}':fontsize=58:fontcolor=black:x=(w-text_w)/2:y=230[b3];"
-            f"[b3]drawbox=x=0:y=1900:w='1080*(t/{total_duration:.2f})':h=16:color=0xFFE600@1:t=fill[b4];"
-            f"[b4]ass='{escaped_ass}'[vfinal]"
-        )
-        cmd = [
-            FFMPEG_PATH,
-            "-y",
-            "-i", stitched_path,
-            "-filter_complex", filter_complex,
-            "-map", "[vfinal]",
-            "-map", "0:a",
-            "-t", f"{total_duration:.2f}",
-            "-c:v", "libx264",
-            "-preset", "faster",
-            "-crf", "18",
-            "-c:a", "aac",
-            "-b:a", "192k",
-            "-pix_fmt", "yuv420p",
-            output_path
-        ]
+        cmd_inputs.extend(["-stream_loop", "-1", "-i", bg_music])
+        a_filters.append(f"[{input_idx}:a]volume=0.10[bgm_a]")
+        mix_inputs.append("[bgm_a]")
+        input_idx += 1
+        
+    # Add Ding SFX at Rank 1 Subscribe popup
+    if has_ding and rank1_start_offset > 0:
+        cmd_inputs.extend(["-i", ding_path])
+        delay_ms = int(rank1_start_offset * 1000)
+        a_filters.append(f"[{input_idx}:a]adelay={delay_ms}|{delay_ms},volume=0.9[ding_sfx]")
+        mix_inputs.append("[ding_sfx]")
+        input_idx += 1
+        
+    # Add Whoosh SFX on transitions
+    if has_whoosh and transition_cut_offsets:
+        for cut_t in transition_cut_offsets[:3]:
+            cmd_inputs.extend(["-i", whoosh_path])
+            delay_ms = int(max(0, cut_t) * 1000)
+            a_filters.append(f"[{input_idx}:a]adelay={delay_ms}|{delay_ms},volume=0.7[whoosh_{input_idx}]")
+            mix_inputs.append(f"[whoosh_{input_idx}]")
+            input_idx += 1
+
+    a_filters.append(f"{''.join(mix_inputs)}amix=inputs={len(mix_inputs)}:duration=first:dropout_transition=2[afinal]")
+    
+    full_filter_complex = f"{v_filter};{';'.join(a_filters)}"
+    
+    cmd = [
+        FFMPEG_PATH,
+        "-y",
+        *cmd_inputs,
+        "-filter_complex", full_filter_complex,
+        "-map", "[vfinal]",
+        "-map", "[afinal]",
+        "-t", f"{total_duration:.2f}",
+        "-c:v", "libx264",
+        "-preset", "faster",
+        "-crf", "18",
+        "-c:a", "aac",
+        "-b:a", "192k",
+        "-pix_fmt", "yuv420p",
+        output_path
+    ]
+
+    print(f"[*] Rendering master video with SFX and Subscribe CTA to: {output_path}...")
 
     print(f"[*] Rendering final video to: {output_path}...")
     res = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
