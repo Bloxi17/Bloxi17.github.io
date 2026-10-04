@@ -7,3 +7,13 @@ Voyager-Interactive/tests/aesthetic/frames/
 Voyager-Interactive/3d models/*.zip
 .agents/
 brag-output/work/
+shorts_engine/token.pickle
+shorts_engine/client_secrets.json
+shorts_engine/output/*.mp4
+shorts_engine/output/*.mp3
+shorts_engine/output/*.ass
+shorts_engine/curated_clips/*.mp4
+shorts_engine/assets/*.mp4
+shorts_engine/assets/*.mp3
+shorts_engine/assets/*.webm
+shorts_engine/__pycache__/

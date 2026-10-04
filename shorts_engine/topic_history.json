@@ -1,0 +1,42 @@
+{
+  "used_topics": [
+    "ASMR - EXTREME ASMR SLICING - 1",
+    "Funny Moments - TOP 3 COMEDY CLIPS - 2",
+    "Top 10 Beauties - TOP 10 BEAUTY QUEENS - 3",
+    "ASMR - CRUNCHY ASMR 10/10 - 4",
+    "ASMR - PURE SATISFACTION 10/10 - 5",
+    "ASMR - PURE SATISFACTION 10/10 - 6",
+    "ASMR - PURE SATISFACTION 10/10 - 7",
+    "ASMR - PURE SATISFACTION 10/10 - 8",
+    "ASMR - TOP 6 ODDLY SATISFYING - 9"
+  ],
+  "used_titles": [
+    "Aisa Sound Zindagi Me Pehle Kabhi Nahi Suna Hoga! 🎧🤤 #shorts",
+    "Instant Regret Moments Caught On Camera 💀😂 #shorts",
+    "Top 10 Most Beautiful Faces In The World 2026 😱🔥 #shorts",
+    "Bhai Sahab! Ye Sound Kaan Ko Thandak De Dega 🤤💥 #shorts",
+    "Bhai Ye Kya Cheez Hai! Oddly Satisfying ASMR 🤯🔪 #shorts",
+    "Duniya Ka Sabse Crispy Aur Satisfying Video! 🤤✨ #shorts",
+    "Headphones Pehno Aur Jadoo Dekho 🎧🤤 #shorts",
+    "Extreme Satisfying ASMR (Don't Miss #1) 🤤🔥 #shorts",
+    "Is Video Ko Dekh Kar Dimag Ka Stress Gayab Ho Jayega 🧘‍♂️✨ #shorts"
+  ],
+  "log": [
+    {
+      "timestamp": "2026-10-04T21:48:06.349747",
+      "slot": "slot1",
+      "category": "ASMR",
+      "title": "Headphones Pehno Aur Jadoo Dekho 🎧🤤 #shorts",
+      "output_path": "G:\\Portfolio ainesh\\shorts_engine\\output\\slot1_asmr___pure_satisfac_20261004_212631.mp4",
+      "video_url": "https://youtube.com/shorts/IsjBRlPWq00"
+    },
+    {
+      "timestamp": "2026-10-04T22:40:58.478989",
+      "slot": "slot1",
+      "category": "ASMR",
+      "title": "Is Video Ko Dekh Kar Dimag Ka Stress Gayab Ho Jayega 🧘‍♂️✨ #shorts",
+      "output_path": "G:\\Portfolio ainesh\\shorts_engine\\output\\slot1_asmr___top_6_oddly_s_20261004_221815.mp4",
+      "video_url": "https://youtube.com/shorts/VgVE6UX9jVc"
+    }
+  ]
+}

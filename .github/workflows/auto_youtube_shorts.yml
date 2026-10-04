@@ -1,0 +1,97 @@
+name: Autonomous 24/7 YouTube Shorts Engine
+
+on:
+  schedule:
+    # 07:00 UTC = 12:30 PM IST (Slot 1: Morning)
+    - cron: '0 7 * * *'
+    # 14:00 UTC = 07:30 PM IST (Slot 2: Evening)
+    - cron: '0 14 * * *'
+    # 09:30 UTC = 03:00 PM IST on Sunday (Sunday Extra Special: Top 10 Beauties)
+    - cron: '30 9 * * 0'
+
+  workflow_dispatch:
+    inputs:
+      slot:
+        description: 'Upload Slot to run'
+        required: true
+        default: 'slot1'
+        type: choice
+        options:
+          - slot1
+          - slot2
+          - special
+      privacy:
+        description: 'YouTube Video Privacy Setting'
+        required: true
+        default: 'public'
+        type: choice
+        options:
+          - public
+          - private
+
+jobs:
+  render_and_publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install System FFmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+          ffmpeg -version
+
+      - name: Install Python Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r shorts_engine/requirements.txt
+
+      - name: Restore YouTube OAuth Credentials
+        run: |
+          echo "${{ secrets.YOUTUBE_TOKEN_PICKLE }}" | base64 -d > shorts_engine/token.pickle
+          echo "${{ secrets.YOUTUBE_CLIENT_SECRETS }}" | base64 -d > shorts_engine/client_secrets.json
+          python -c "import os; print('Credentials restored:', os.path.exists('shorts_engine/token.pickle'))"
+
+      - name: Run Autonomous Shorts Engine
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          # Determine slot based on trigger
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TARGET_SLOT="${{ github.event.inputs.slot }}"
+            PRIVACY="${{ github.event.inputs.privacy }}"
+          else
+            # Check current hour in UTC
+            CURRENT_HOUR=$(date -u +%H)
+            CURRENT_DOW=$(date -u +%u) # 7 is Sunday
+            if [ "$CURRENT_DOW" = "7" ] && [ "$CURRENT_HOUR" = "09" ]; then
+              TARGET_SLOT="special"
+            elif [ "$CURRENT_HOUR" -lt "12" ]; then
+              TARGET_SLOT="slot1"
+            else
+              TARGET_SLOT="slot2"
+            fi
+            PRIVACY="public"
+          fi
+          
+          echo "Executing target slot: $TARGET_SLOT with privacy: $PRIVACY"
+          cd shorts_engine
+          python auto_master_scheduler.py "$TARGET_SLOT" "$PRIVACY"
+
+      - name: Persist Topic History (Anti-Repetition)
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add shorts_engine/topic_history.json
+          git commit -m "chore(history): update topic history log [skip ci]" || echo "No changes to commit"
+          git push

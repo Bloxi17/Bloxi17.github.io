@@ -1,0 +1,6 @@
+edge-tts>=6.1.12
+yt-dlp>=2024.08.06
+google-api-python-client>=2.140.0
+google-auth-oauthlib>=1.2.1
+google-auth-httplib2>=0.2.0
+flask>=3.0.0
