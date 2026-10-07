@@ -11,6 +11,7 @@
     "ASMR - TOP 6 ODDLY SATISFYING - 9",
     "ASMR - CRUNCHY ASMR 10/10 - 10",
     "Viral AI: Accident & Crazy Moments - MIRACLE ESCAPES 10/10",
+    "Viral AI: Accident & Crazy Moments - TOP 6 INSANE CLOSE CALLS",
     "Viral AI: Accident & Crazy Moments - TOP 6 INSANE CLOSE CALLS"
   ],
   "used_titles": [
@@ -25,7 +26,8 @@
     "Is Video Ko Dekh Kar Dimag Ka Stress Gayab Ho Jayega 🧘‍♂️✨ #shorts",
     "Wait For Number 1! 100% Pure Ear Candy 🤤🔊 #shorts",
     "Miracle Close Calls Caught On Camera! 😱⚡ #shorts",
-    "Superhuman Reflexes Saves (Wait for #1) 🤯🔥 #shorts"
+    "Superhuman Reflexes Saves (Wait for #1) 🤯🔥 #shorts",
+    "Kismat Ho Toh Aisi! बाल बाल बचे (Top 6) 😱 #shorts"
   ],
   "log": [
     {
@@ -53,6 +55,25 @@
       "video_url": "https://youtube.com/shorts/I1VZsOyzwtQ",
       "viral_factors": {
         "boomed_reference": "Top 100 Best Hydraulic Press Moments | Satisfying Crushing Compilation",
+        "hook_strategy": "Pure Visual Dopamine & Auditory Immersion",
+        "tags": [
+          "shorts",
+          "viral",
+          "trending2026",
+          "accident&crazymoments",
+          "trending"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-10-07T19:45:53.206187",
+      "slot": "slot2",
+      "category": "Accident & Crazy Moments",
+      "title": "Kismat Ho Toh Aisi! बाल बाल बचे (Top 6) 😱 #shorts",
+      "output_path": "/home/runner/work/Bloxi17.github.io/Bloxi17.github.io/shorts_engine/output/slot2_viral_ai__accident___20261007_194257.mp4",
+      "video_url": "https://youtube.com/shorts/A_4qH2soK-0",
+      "viral_factors": {
+        "boomed_reference": "Top 10 Crashes of the Decade",
         "hook_strategy": "Pure Visual Dopamine & Auditory Immersion",
         "tags": [
           "shorts",
