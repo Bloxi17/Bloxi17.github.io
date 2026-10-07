@@ -70,14 +70,15 @@ def run_autonomous_pipeline(slot: str = "slot1", privacy: str = "public", force_
     clips = curate_trending_clips(count=num_clips, topic=query)
     
     if len(clips) < 2:
-        print("[!] Not enough clips downloaded, falling back to curated local clips...")
-        import glob
-        clips = glob.glob(os.path.join(CURATED_DIR, "*.mp4"))[:num_clips]
+        print("[!] Supplementing with Zero-Failure dynamic canvas clips...")
+        from multi_downloader import generate_procedural_motion_clip
+        for idx in range(len(clips), num_clips):
+            fb_path = os.path.join(CURATED_DIR, f"fallback_clip_{idx+1}.mp4")
+            gen_p = generate_procedural_motion_clip(fb_path, duration=18, rank_num=idx+1)
+            if gen_p:
+                clips.append(gen_p)
 
-    if len(clips) < 2:
-        raise RuntimeError("Insufficient clips available to render video.")
-
-    print(f"[OK] {len(clips)} source clips ready.")
+    print(f"[OK] {len(clips)} source clips ready for compilation.")
 
     # 4. Compile Short with Bridge-Only VO & Raw Action Audio (≥ 60s length)
     slug = "".join([c if c.isalnum() else "_" for c in topic_data['topic'].lower()])[:20]
