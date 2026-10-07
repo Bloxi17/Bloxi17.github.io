@@ -84,10 +84,10 @@ def normalize_clip_with_bridge(
     safe_badge = badge_text.replace("'", "").replace(":", "")
     clip_has_audio = has_audio_stream(input_path)
     
-    # Video graph
+    # Video graph: 10x fast ambient background blur + centered crisp foreground
     video_filters = (
-        f"[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=25:5,eq=brightness=-0.3,fps=30[bg];"
-        f"[0:v]scale=1080:-2:force_original_aspect_ratio=decrease,fps=30[fg];"
+        f"[0:v]trim=0:{duration:.2f},setpts=PTS-STARTPTS,scale=270:480:force_original_aspect_ratio=increase,crop=270:480,boxblur=8:2,scale=1080:1920:flags=lanczos,eq=brightness=-0.3,fps=30[bg];"
+        f"[0:v]trim=0:{duration:.2f},setpts=PTS-STARTPTS,scale=1080:-2:force_original_aspect_ratio=decrease,fps=30[fg];"
         f"[bg][fg]overlay=(W-w)/2:(H-h)/2[base];"
         f"[base]drawbox=x=60:y=520:w=580:h=78:color=0xFF1133@0.95:t=fill[b1];"
         f"[b1]drawbox=x=56:y=516:w=588:h=86:color=white@1:t=3[b2];"
@@ -98,7 +98,7 @@ def normalize_clip_with_bridge(
     safe_bd = max(0.5, float(bridge_duration))
     if clip_has_audio:
         audio_filters = (
-            f"[0:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,"
+            f"[0:a]atrim=0:{duration:.2f},asetpts=PTS-STARTPTS,aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,"
             f"volume=enable='between(t,0,{safe_bd:.2f})':volume=0.20,"
             f"volume=enable='gte(t,{safe_bd:.2f})':volume=1.0[clip_a];"
             f"[1:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=1.4[vo_a];"
@@ -117,7 +117,7 @@ def normalize_clip_with_bridge(
     cmd = [
         FFMPEG_PATH,
         "-y",
-        "-stream_loop", "-1",
+        "-t", f"{duration:.2f}",
         "-i", input_path,
         "-i", bridge_audio_path,
         "-filter_complex", filter_complex,
@@ -126,8 +126,8 @@ def normalize_clip_with_bridge(
         "-t", f"{duration:.2f}",
         "-r", "30",
         "-c:v", "libx264",
-        "-preset", "faster",
-        "-crf", "18",
+        "-preset", "veryfast",
+        "-crf", "20",
         "-c:a", "aac",
         "-b:a", "192k",
         "-pix_fmt", "yuv420p",
@@ -197,8 +197,8 @@ def stitch_clips_with_transitions(
         "-map", "[v_final]",
         "-map", "[a_final]",
         "-c:v", "libx264",
-        "-preset", "faster",
-        "-crf", "18",
+        "-preset", "veryfast",
+        "-crf", "20",
         "-c:a", "aac",
         "-b:a", "192k",
         "-pix_fmt", "yuv420p",
@@ -402,8 +402,8 @@ def build_bridge_multiclip_short(
         "-map", "[afinal]",
         "-t", f"{total_duration:.2f}",
         "-c:v", "libx264",
-        "-preset", "faster",
-        "-crf", "18",
+        "-preset", "veryfast",
+        "-crf", "20",
         "-c:a", "aac",
         "-b:a", "192k",
         "-pix_fmt", "yuv420p",
