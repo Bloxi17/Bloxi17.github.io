@@ -8,7 +8,10 @@
     "ASMR - PURE SATISFACTION 10/10 - 6",
     "ASMR - PURE SATISFACTION 10/10 - 7",
     "ASMR - PURE SATISFACTION 10/10 - 8",
-    "ASMR - TOP 6 ODDLY SATISFYING - 9"
+    "ASMR - TOP 6 ODDLY SATISFYING - 9",
+    "ASMR - CRUNCHY ASMR 10/10 - 10",
+    "Viral AI: Accident & Crazy Moments - MIRACLE ESCAPES 10/10",
+    "Viral AI: Accident & Crazy Moments - TOP 6 INSANE CLOSE CALLS"
   ],
   "used_titles": [
     "Aisa Sound Zindagi Me Pehle Kabhi Nahi Suna Hoga! 🎧🤤 #shorts",
@@ -19,7 +22,10 @@
     "Duniya Ka Sabse Crispy Aur Satisfying Video! 🤤✨ #shorts",
     "Headphones Pehno Aur Jadoo Dekho 🎧🤤 #shorts",
     "Extreme Satisfying ASMR (Don't Miss #1) 🤤🔥 #shorts",
-    "Is Video Ko Dekh Kar Dimag Ka Stress Gayab Ho Jayega 🧘‍♂️✨ #shorts"
+    "Is Video Ko Dekh Kar Dimag Ka Stress Gayab Ho Jayega 🧘‍♂️✨ #shorts",
+    "Wait For Number 1! 100% Pure Ear Candy 🤤🔊 #shorts",
+    "Miracle Close Calls Caught On Camera! 😱⚡ #shorts",
+    "Superhuman Reflexes Saves (Wait for #1) 🤯🔥 #shorts"
   ],
   "log": [
     {
@@ -37,6 +43,25 @@
       "title": "Is Video Ko Dekh Kar Dimag Ka Stress Gayab Ho Jayega 🧘‍♂️✨ #shorts",
       "output_path": "G:\\Portfolio ainesh\\shorts_engine\\output\\slot1_asmr___top_6_oddly_s_20261004_221815.mp4",
       "video_url": "https://youtube.com/shorts/VgVE6UX9jVc"
+    },
+    {
+      "timestamp": "2026-10-07T22:28:50.701933",
+      "slot": "slot2",
+      "category": "Accident & Crazy Moments",
+      "title": "Miracle Close Calls Caught On Camera! 😱⚡ #shorts",
+      "output_path": "G:\\Portfolio ainesh\\shorts_engine\\output\\slot2_viral_ai__accident___20261007_215620.mp4",
+      "video_url": "https://youtube.com/shorts/I1VZsOyzwtQ",
+      "viral_factors": {
+        "boomed_reference": "Top 100 Best Hydraulic Press Moments | Satisfying Crushing Compilation",
+        "hook_strategy": "Pure Visual Dopamine & Auditory Immersion",
+        "tags": [
+          "shorts",
+          "viral",
+          "trending2026",
+          "accident&crazymoments",
+          "trending"
+        ]
+      }
     }
   ]
 }

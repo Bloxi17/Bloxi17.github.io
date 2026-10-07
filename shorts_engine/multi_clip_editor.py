@@ -10,10 +10,19 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
 # Cross-platform fonts (Windows / Linux / Cloud)
-LOCAL_IMPACT = os.path.join(ASSETS_DIR, "fonts", "impact.ttf")
-LOCAL_ARIAL = os.path.join(ASSETS_DIR, "fonts", "arialbd.ttf")
-FONT_IMPACT = LOCAL_IMPACT.replace("\\", "/").replace(":", "\\:") if os.path.exists(LOCAL_IMPACT) else "C\\:/Windows/Fonts/impact.ttf"
-FONT_ARIAL_BOLD = LOCAL_ARIAL.replace("\\", "/").replace(":", "\\:") if os.path.exists(LOCAL_ARIAL) else "C\\:/Windows/Fonts/arialbd.ttf"
+LOCAL_FONTS_DIR = os.path.join(ASSETS_DIR, "fonts")
+LOCAL_LUCKIEST = os.path.join(LOCAL_FONTS_DIR, "LuckiestGuy.ttf")
+LOCAL_ANTON = os.path.join(LOCAL_FONTS_DIR, "Anton.ttf")
+LOCAL_BEBAS = os.path.join(LOCAL_FONTS_DIR, "BebasNeue.ttf")
+LOCAL_IMPACT = os.path.join(LOCAL_FONTS_DIR, "impact.ttf")
+LOCAL_ARIAL = os.path.join(LOCAL_FONTS_DIR, "arialbd.ttf")
+
+FONT_LUCKIEST = LOCAL_LUCKIEST.replace("\\", "/").replace(":", "\\:") if os.path.exists(LOCAL_LUCKIEST) else LOCAL_IMPACT.replace("\\", "/").replace(":", "\\:")
+FONT_ANTON = LOCAL_ANTON.replace("\\", "/").replace(":", "\\:") if os.path.exists(LOCAL_ANTON) else LOCAL_IMPACT.replace("\\", "/").replace(":", "\\:")
+FONT_HEADER = FONT_ANTON
+FONT_BADGE = FONT_LUCKIEST
+ESCAPED_FONTS_DIR = LOCAL_FONTS_DIR.replace("\\", "/").replace(":", "\\:")
+
 DEFAULT_BGM = os.path.join(ASSETS_DIR, "music", "viral_beat_1.mp3")
 WHOOSH_SFX = os.path.join(ASSETS_DIR, "sfx", "whoosh.wav")
 
@@ -67,7 +76,7 @@ def normalize_clip_with_bridge(
     """
     Normalizes a single clip into 9:16 vertical (1080x1920), 30fps:
     1. Ambient blurred background + centered crisp foreground.
-    2. Gamified Rating Badge (Red Pill with White Border).
+    2. Gamified Rating Badge (Red Pill with White Border and Luckiest Guy font).
     3. Strict Audio Separation:
        - 0.0s to {bridge_duration}s: Voiceover plays loud (1.4x), raw clip audio ducked to 0.20x.
        - {bridge_duration}s to end: NO VOICEOVER. Raw clip audio plays at 100% full volume!
@@ -82,7 +91,7 @@ def normalize_clip_with_bridge(
         f"[bg][fg]overlay=(W-w)/2:(H-h)/2[base];"
         f"[base]drawbox=x=60:y=520:w=580:h=78:color=0xFF1133@0.95:t=fill[b1];"
         f"[b1]drawbox=x=56:y=516:w=588:h=86:color=white@1:t=3[b2];"
-        f"[b2]drawtext=text='{safe_badge}':fontfile='{FONT_ARIAL_BOLD}':fontsize=36:fontcolor=white:x=85:y=542[v_out]"
+        f"[b2]drawtext=text='{safe_badge}':fontfile='{FONT_BADGE}':fontsize=36:fontcolor=white:x=85:y=542[v_out]"
     )
     
     # Audio graph: Bridge VO + Raw clip audio ducking
@@ -345,9 +354,9 @@ def build_bridge_multiclip_short(
     v_filter = (
         f"[0:v]drawbox=x=40:y=200:w=1000:h=120:color=0xFFE600@1:t=fill[b1];"
         f"[b1]drawbox=x=36:y=196:w=1008:h=128:color=0x000000@1:t=4[b2];"
-        f"[b2]drawtext=text='{safe_header}':fontfile='{FONT_IMPACT}':fontsize=58:fontcolor=black:x=(w-text_w)/2:y=230[b3];"
+        f"[b2]drawtext=text='{safe_header}':fontfile='{FONT_HEADER}':fontsize=62:fontcolor=black:x=(w-text_w)/2:y=226[b3];"
         f"[b3]drawbox=x=0:y=1900:w='1080*(t/{total_duration:.2f})':h=16:color=0xFFE600@1:t=fill[b4];"
-        f"[b4]ass='{escaped_ass}'[vfinal]"
+        f"[b4]ass='{escaped_ass}':fontsdir='{ESCAPED_FONTS_DIR}'[vfinal]"
     )
     
     # Assemble audio graph with SFX and BGM

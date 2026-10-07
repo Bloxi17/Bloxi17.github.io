@@ -22,12 +22,11 @@ def ms_to_ass_time(ms: int) -> str:
 
 def get_ass_header() -> str:
     """
-    Returns an ASS header optimized for high-CTR YouTube Shorts:
-    - Bold Impact font
-    - Vibrant Yellow text (&H0000FFFF)
-    - Heavy 14px black outline and 6px drop shadow
-    - MarginV 680 (comfortably above YouTube's description and engagement UI)
-    - PopupSubscribe style for animated pre-Rank 1 CTA banner
+    Returns an ASS header optimized for viral high-CTR YouTube Shorts:
+    - Floating Cool Fonts: Luckiest Guy & Anton
+    - Vibrant Electric Yellow, Neon Green & Laser Cyan
+    - Heavy 16px outline + 8px shadow for maximum contrast
+    - Center-aligned (Alignment 5) with smooth dynamic \move floating drift & bounce
     """
     return """[Script Info]
 ScriptType: v4.00+
@@ -37,45 +36,65 @@ ScaledBorderAndShadow: yes
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: ShortsStyle,Impact,88,&H0000FFFF,&H000000FF,&H00000000,&H90000000,-1,0,0,0,100,100,2,0,1,14,6,2,60,60,680,1
-Style: PopupSubscribe,Impact,64,&H00FFFFFF,&H000000FF,&H001111EE,&H90000000,-1,0,0,0,100,100,2,0,1,12,6,5,60,60,0,1
+Style: FloatingCool,Luckiest Guy,96,&H0000FFFF,&H000000FF,&H00000000,&HA0000000,-1,0,0,0,100,100,2,0,1,16,8,5,60,60,0,1
+Style: FloatingAlt,Anton,96,&H0033FF55,&H000000FF,&H00000000,&HA0000000,-1,0,0,0,100,100,2,0,1,16,8,5,60,60,0,1
+Style: PopupSubscribe,Anton,68,&H00FFFFFF,&H000000FF,&H001111EE,&HA0000000,-1,0,0,0,100,100,2,0,1,14,8,5,60,60,0,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """
 
+# Dynamic color rotations for viral punchy subtitles:
+# 1: Electric Yellow, 2: Laser Cyan, 3: Neon Green, 4: Pure White
+PUNCH_COLORS = [
+    r"{\c&H0000FFFF&}",  # Electric Yellow
+    r"{\c&H00FFFF00&}",  # Laser Cyan
+    r"{\c&H0033FF55&}",  # Neon Lime Green
+    r"{\c&H00FFFFFF&}",  # Crisp White
+]
+
+ROTATION_ANGLES = [-2.5, 2.5, -1.5, 1.5, 0.0]
+
 def generate_ass_subtitles(words_with_timing, output_ass_path: str):
     """
-    Generate an ASS subtitle file from timed words.
-    Groups words into punchy 2-word cards (MrBeast style).
+    Generate an ASS subtitle file with floating kinetic font animations.
+    Groups words into punchy 2-word cards (MrBeast style) with floating drift.
     """
     events = []
     chunk_size = 2
-    for i in range(0, len(words_with_timing), chunk_size):
+    for card_idx, i in enumerate(range(0, len(words_with_timing), chunk_size)):
         chunk = words_with_timing[i:i + chunk_size]
         if not chunk:
             continue
         start_ms = chunk[0]["start"]
         end_ms = chunk[-1]["end"]
-        # Maintain caption visibility for at least 350ms
-        end_ms = max(end_ms, start_ms + 350)
+        # Maintain caption visibility for at least 380ms
+        end_ms = max(end_ms, start_ms + 380)
             
         text = " ".join([w["word"] for w in chunk]).upper()
         start_str = ms_to_ass_time(start_ms)
         end_str = ms_to_ass_time(end_ms)
-        events.append(f"Dialogue: 0,{start_str},{end_str},ShortsStyle,,0,0,0,,{text}")
+        
+        # Kinetic floating tags: slight upward drift + scale pop bounce + dynamic color
+        color_tag = PUNCH_COLORS[card_idx % len(PUNCH_COLORS)]
+        rot_deg = ROTATION_ANGLES[card_idx % len(ROTATION_ANGLES)]
+        rot_tag = f"\\frz{rot_deg}" if rot_deg != 0 else ""
+        float_tags = f"{{\\move(540,1185,540,1155)\\fad(50,50)\\t(0,120,\\fscx114\\fscy114)\\t(120,240,\\fscx100\\fscy100){rot_tag}{color_tag}}}"
+        
+        events.append(f"Dialogue: 0,{start_str},{end_str},FloatingCool,,0,0,0,,{float_tags}{text}")
         
     with open(output_ass_path, "w", encoding="utf-8") as f:
         f.write(get_ass_header() + "\n".join(events) + "\n")
 
 def build_master_bridge_ass(bridge_timing_list: list, output_ass_path: str):
     """
-    Builds a single master ASS subtitle file for multi-clip videos where
-    VO and subtitles appear ONLY during the bridge moments of each clip.
+    Builds a single master ASS subtitle file with floating kinetic font animations.
+    Subtitles appear ONLY during bridge moments with floating pop-in and glowing outline.
     Also injects high-CTR animated Subscribe & Like Pop-Up for Rank #1.
     """
     events = []
     chunk_size = 2
+    card_counter = 0
     
     for idx, item in enumerate(bridge_timing_list):
         offset_ms = int(item["offset_sec"] * 1000)
@@ -86,8 +105,9 @@ def build_master_bridge_ass(bridge_timing_list: list, output_ass_path: str):
         if is_rank_1 and words:
             pop_start = ms_to_ass_time(offset_ms)
             pop_end = ms_to_ass_time(offset_ms + 2400)
+            popup_tags = r"{\move(540,990,540,965)\fad(120,120)\t(0,220,\fscx118\fscy118)\t(220,440,\fscx100\fscy100)\c&H0000FFFF&}"
             events.append(
-                f"Dialogue: 1,{pop_start},{pop_end},PopupSubscribe,,0,0,0,,{{\\fad(150,150)\\t(0,250,\\fscx112\\fscy112)\\t(250,500,\\fscx100\\fscy100)}}🔴 AAGE DEKHNE KE LIYE LIKE & SUBSCRIBE KAREIN! 🔔"
+                f"Dialogue: 1,{pop_start},{pop_end},PopupSubscribe,,0,0,0,,{popup_tags}🔴 AAGE DEKHNE KE LIYE LIKE & SUBSCRIBE KAREIN! 🔔"
             )
         
         for i in range(0, len(words), chunk_size):
@@ -96,16 +116,24 @@ def build_master_bridge_ass(bridge_timing_list: list, output_ass_path: str):
                 continue
             start_ms = offset_ms + chunk[0]["start"]
             end_ms = offset_ms + chunk[-1]["end"]
-            end_ms = max(end_ms, start_ms + 350)
+            end_ms = max(end_ms, start_ms + 380)
             
             text = " ".join([w["word"] for w in chunk]).upper()
             start_str = ms_to_ass_time(start_ms)
             end_str = ms_to_ass_time(end_ms)
-            events.append(f"Dialogue: 0,{start_str},{end_str},ShortsStyle,,0,0,0,,{text}")
+            
+            # Floating upward drift + scale pop bounce + color rotation + subtle tilt
+            color_tag = PUNCH_COLORS[card_counter % len(PUNCH_COLORS)]
+            rot_deg = ROTATION_ANGLES[card_counter % len(ROTATION_ANGLES)]
+            rot_tag = f"\\frz{rot_deg}" if rot_deg != 0 else ""
+            float_tags = f"{{\\move(540,1185,540,1155)\\fad(50,50)\\t(0,120,\\fscx114\\fscy114)\\t(120,240,\\fscx100\\fscy100){rot_tag}{color_tag}}}"
+            
+            events.append(f"Dialogue: 0,{start_str},{end_str},FloatingCool,,0,0,0,,{float_tags}{text}")
+            card_counter += 1
             
     with open(output_ass_path, "w", encoding="utf-8") as f:
         f.write(get_ass_header() + "\n".join(events) + "\n")
-    print(f"[OK] Master bridge subtitles with CTA popup written to: {output_ass_path} ({len(events)} cards)")
+    print(f"[OK] Master floating bridge subtitles with CTA popup written to: {output_ass_path} ({len(events)} cards)")
 
 async def generate_speech_segment(text: str, output_audio: str, voice: str = DEFAULT_VOICE, rate: str = "+22%"):
     """
