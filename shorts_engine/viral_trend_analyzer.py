@@ -157,7 +157,8 @@ class ViralTrendAnalyzer:
         try:
             cmd = [
                 "python", "-m", "yt_dlp",
-                f"ytsearch8:{selected_term}",
+                "--extractor-args", "youtube:player_client=android,web",
+                f"ytsearch8:{selected_term} 2026",
                 "--flat-playlist",
                 "-J"
             ]

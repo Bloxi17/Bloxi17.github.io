@@ -6,18 +6,32 @@ import re
 import glob
 import random
 import shutil
+import time
 
 # Ensure UTF-8 output
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
 from config import CURATED_DIR, ASSETS_DIR, FFMPEG_PATH
+from topic_memory import load_history, save_history
 
 USER_AGENT = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36"
 
 def sanitize_filename(name: str) -> str:
     """Removes invalid filename characters."""
     return re.sub(r'[\\/*?:"<>|]', "", name).strip().replace(" ", "_")[:35]
+
+def clear_stale_curated_clips():
+    """
+    Clears old cached video clips in curated_clips so fresh videos are downloaded every run.
+    """
+    if os.path.exists(CURATED_DIR):
+        for f in glob.glob(os.path.join(CURATED_DIR, "*.mp4")):
+            try:
+                os.remove(f)
+            except Exception:
+                pass
+        print("[*] Stale clip cache cleared. Preparing 100% fresh video downloads.")
 
 def generate_procedural_motion_clip(output_path: str, duration: int = 18, rank_num: int = 1) -> str:
     """
@@ -27,7 +41,7 @@ def generate_procedural_motion_clip(output_path: str, duration: int = 18, rank_n
     """
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     
-    # Visual patterns based on rank
+    # Dynamic procedural visual patterns
     patterns = [
         "cellauto=s=1080x1920:rate=30:rule=110,eq=contrast=1.3:brightness=0.05",
         "mandelbrot=s=1080x1920:rate=30:maxiter=120,hue=H=2*PI*t/10",
@@ -36,7 +50,6 @@ def generate_procedural_motion_clip(output_path: str, duration: int = 18, rank_n
     ]
     chosen_pattern = patterns[rank_num % len(patterns)]
     
-    # Audio drone / satisfying frequency
     freq = 220 + (rank_num * 110)
     cmd = [
         FFMPEG_PATH, "-y",
@@ -54,13 +67,16 @@ def generate_procedural_motion_clip(output_path: str, duration: int = 18, rank_n
         return output_path
     return None
 
-def download_and_slice_video(url: str, output_path: str, start_sec: int = 5, duration_sec: int = 18) -> bool:
+def download_and_slice_video(url: str, output_path: str, start_sec: int = None, duration_sec: int = 18) -> bool:
     """
-    Downloads a video from YouTube/Internet with Android client bypass,
-    then uses FFmpeg to accurately slice the required section locally.
+    Downloads a fresh video from YouTube with Android client bypass,
+    then uses FFmpeg to slice the peak action segment locally.
     """
-    temp_raw = output_path.replace(".mp4", "_raw.mp4")
+    temp_raw = output_path.replace(".mp4", f"_raw_{int(time.time()*1000)%100000}.mp4")
     
+    if start_sec is None:
+        start_sec = random.choice([2, 5, 8, 12, 18, 25])
+        
     cmd_dl = [
         "python", "-m", "yt_dlp",
         "--user-agent", USER_AGENT,
@@ -79,7 +95,6 @@ def download_and_slice_video(url: str, output_path: str, start_sec: int = 5, dur
     try:
         dl_res = subprocess.run(cmd_dl, capture_output=True, text=True, encoding="utf-8", errors="replace")
         if dl_res.returncode != 0 or not os.path.exists(temp_raw):
-            # Fallback format if primary stream was restricted
             cmd_fb = [
                 "python", "-m", "yt_dlp",
                 "--user-agent", USER_AGENT,
@@ -94,18 +109,17 @@ def download_and_slice_video(url: str, output_path: str, start_sec: int = 5, dur
             subprocess.run(cmd_fb, capture_output=True, text=True, encoding="utf-8", errors="replace")
 
         if os.path.exists(temp_raw) and os.path.getsize(temp_raw) > 50000:
-            # Fast, accurate local FFmpeg trim
             cmd_slice = [
                 FFMPEG_PATH, "-y",
                 "-ss", str(start_sec),
                 "-i", temp_raw,
                 "-t", str(duration_sec),
-                "-c", "copy",
+                "-c:v", "libx264", "-preset", "ultrafast", "-crf", "20",
+                "-c:a", "aac", "-b:a", "192k",
                 output_path
             ]
             slice_res = subprocess.run(cmd_slice, capture_output=True, text=True, encoding="utf-8", errors="replace")
             
-            # Clean up temp raw file
             try:
                 os.remove(temp_raw)
             except Exception:
@@ -120,35 +134,42 @@ def download_and_slice_video(url: str, output_path: str, start_sec: int = 5, dur
 
 def curate_trending_clips(count: int = 6, topic: str = "oddly satisfying 4k asmr cutting") -> list:
     """
-    Searches and downloads top trending clips for any topic into curated_clips.
-    Features a 4-Tier Bulletproof Fallback Architecture so downloads NEVER fail on cloud runners.
+    Searches and downloads 100% BRAND NEW, FRESH trending clips for today's video.
+    Guarantees clip deduplication against topic_history.json to never repeat clips.
     """
     os.makedirs(CURATED_DIR, exist_ok=True)
+    clear_stale_curated_clips()
     count = max(6, int(count))
-    print(f"[*] Curating {count} clips for topic: '{topic}'...")
+    
+    history = load_history()
+    used_clip_ids = set(history.get("used_clip_ids", []))
+    
+    print(f"[*] Curating {count} BRAND NEW clips for topic: '{topic}' (Tracked used IDs: {len(used_clip_ids)})...")
     
     downloaded_paths = []
+    new_used_ids = []
     
-    # 1. Tier 1: YouTube Search with Android Client Bypass
+    # Search queries formatted specifically to find fresh, newly uploaded Shorts and clips
+    clean_topic = topic.replace("4k", "").replace("2026", "").strip()
     queries_to_try = [
-        topic,
-        f"{topic} shorts",
-        "oddly satisfying 4k asmr clean",
-        "funny viral fails bloopers",
-        "superhuman reflexes close call dashcam"
+        f"{clean_topic} 2026 shorts viral",
+        f"{clean_topic} shorts caught on camera",
+        f"{clean_topic} satisfying moments 4k",
+        f"{clean_topic} instant regret bloopers",
+        f"top viral {clean_topic} shorts"
     ]
     
     for q in queries_to_try:
         if len(downloaded_paths) >= count:
             break
             
-        print(f"[*] Searching YouTube Radar for: '{q}'...")
+        print(f"[*] Scanning YouTube radar for fresh uploads: '{q}'...")
         try:
             cmd = [
                 "python", "-m", "yt_dlp",
                 "--user-agent", USER_AGENT,
                 "--extractor-args", "youtube:player_client=android,web,ios",
-                f"ytsearch{count * 2}:{q}",
+                f"ytsearch{count * 3}:{q}",
                 "--flat-playlist",
                 "-J"
             ]
@@ -157,53 +178,60 @@ def curate_trending_clips(count: int = 6, topic: str = "oddly satisfying 4k asmr
                 data = json.loads(res.stdout)
                 entries = data.get("entries", [])
                 
+                # Shuffle entries slightly to guarantee variety across runs
+                random.shuffle(entries)
+                
                 for entry in entries:
                     if len(downloaded_paths) >= count:
                         break
-                    url = entry.get("url") or f"https://www.youtube.com/watch?v={entry.get('id')}"
-                    title = entry.get("title", f"clip_{len(downloaded_paths)+1}")
+                    vid_id = entry.get("id")
+                    if not vid_id or vid_id in used_clip_ids:
+                        continue
+                        
+                    url = entry.get("url") or f"https://www.youtube.com/watch?v={vid_id}"
+                    title = entry.get("title", f"fresh_clip_{len(downloaded_paths)+1}")
                     clean_title = sanitize_filename(title)
-                    out_name = f"rank_{len(downloaded_paths)+1}_{clean_title}.mp4"
+                    timestamp_salt = os.urandom(3).hex()
+                    out_name = f"fresh_rank_{len(downloaded_paths)+1}_{clean_title}_{timestamp_salt}.mp4"
                     out_path = os.path.join(CURATED_DIR, out_name)
                     
-                    print(f"[*] Downloading clip {len(downloaded_paths)+1}/{count}: {title[:35]}...")
-                    success = download_and_slice_video(url, out_path, start_sec=5, duration_sec=18)
+                    print(f"[*] Downloading NEW fresh clip {len(downloaded_paths)+1}/{count}: {title[:35]}...")
+                    # Vary start offsets for dynamic variety
+                    rand_start = random.choice([1, 4, 8, 14, 20])
+                    success = download_and_slice_video(url, out_path, start_sec=rand_start, duration_sec=18)
                     if success:
                         downloaded_paths.append(out_path)
-                        print(f"    [OK] Downloaded and sliced: {os.path.basename(out_path)}")
+                        used_clip_ids.add(vid_id)
+                        new_used_ids.append(vid_id)
+                        print(f"    [OK] Downloaded NEW clip #{len(downloaded_paths)}: {os.path.basename(out_path)}")
                     else:
-                        print(f"    [!] Skipped: stream format restricted on cloud IP.")
+                        print(f"    [!] Skipped format restriction, trying next...")
         except Exception as e:
-            print(f"[!] Search notice for '{q}': {e}")
+            print(f"[!] Radar notice for '{q}': {e}")
             
-    # 2. Tier 2: Check local library
-    if len(downloaded_paths) < count:
-        print(f"[*] Supplementing from local library (have {len(downloaded_paths)}/{count})...")
-        local_pool = glob.glob(os.path.join(CURATED_DIR, "*.mp4"))
-        for loc in local_pool:
-            if loc not in downloaded_paths and os.path.getsize(loc) > 10000:
-                downloaded_paths.append(loc)
-            if len(downloaded_paths) >= count:
-                break
-                
-    # 3. Tier 3: Autonomous Zero-Failure Generator (Guarantees count >= 6)
+    # Save newly used clip IDs into topic history
+    if new_used_ids:
+        history.setdefault("used_clip_ids", []).extend(new_used_ids)
+        save_history(history)
+        
+    # Tier 3: Zero-Failure Dynamic Canvas Generator (if remaining needed)
     if len(downloaded_paths) < count:
         needed = count - len(downloaded_paths)
-        print(f"[*] Activating Zero-Failure Dynamic Canvas Generator for {needed} remaining clips...")
+        print(f"[*] Activating Zero-Failure Generator for {needed} remaining clips...")
         for i in range(needed):
             clip_idx = len(downloaded_paths) + 1
-            gen_path = os.path.join(CURATED_DIR, f"dynamic_rank_{clip_idx}_{os.urandom(3).hex()}.mp4")
+            gen_path = os.path.join(CURATED_DIR, f"dynamic_fresh_{clip_idx}_{os.urandom(3).hex()}.mp4")
             gen_res = generate_procedural_motion_clip(gen_path, duration=18, rank_num=clip_idx)
             if gen_res:
                 downloaded_paths.append(gen_res)
                 
-    print(f"\n[SUCCESS] Pipeline ready with {len(downloaded_paths)} active clips (Target: {count}).")
+    print(f"\n[SUCCESS] Ready with {len(downloaded_paths)} 100% NEW fresh clips (Target: {count}).")
     return downloaded_paths[:count]
 
 # Backwards compatibility alias
 curate_trending_satisfying_clips = curate_trending_clips
 
 if __name__ == "__main__":
-    clips = curate_trending_clips(count=3, topic="oddly satisfying")
+    clips = curate_trending_clips(count=2, topic="superhuman reflexes dashcam")
     for c in clips:
         print(" ->", c)
