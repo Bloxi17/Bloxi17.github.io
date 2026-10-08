@@ -12,7 +12,8 @@
     "ASMR - CRUNCHY ASMR 10/10 - 10",
     "Viral AI: Accident & Crazy Moments - MIRACLE ESCAPES 10/10",
     "Viral AI: Accident & Crazy Moments - TOP 6 INSANE CLOSE CALLS",
-    "Viral AI: Accident & Crazy Moments - TOP 6 INSANE CLOSE CALLS"
+    "Viral AI: Accident & Crazy Moments - TOP 6 INSANE CLOSE CALLS",
+    "Viral AI: ASMR - PURE SATISFACTION 10/10"
   ],
   "used_titles": [
     "Aisa Sound Zindagi Me Pehle Kabhi Nahi Suna Hoga! 🎧🤤 #shorts",
@@ -27,7 +28,8 @@
     "Wait For Number 1! 100% Pure Ear Candy 🤤🔊 #shorts",
     "Miracle Close Calls Caught On Camera! 😱⚡ #shorts",
     "Superhuman Reflexes Saves (Wait for #1) 🤯🔥 #shorts",
-    "Kismat Ho Toh Aisi! बाल बाल बचे (Top 6) 😱 #shorts"
+    "Kismat Ho Toh Aisi! बाल बाल बचे (Top 6) 😱 #shorts",
+    "Duniya Ka Sabse Crispy & Oddly Satisfying ASMR 🤤✨ #shorts"
   ],
   "log": [
     {
@@ -80,6 +82,25 @@
           "viral",
           "trending2026",
           "accident&crazymoments",
+          "trending"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-10-08T14:28:18.470904",
+      "slot": "slot2",
+      "category": "ASMR",
+      "title": "Duniya Ka Sabse Crispy & Oddly Satisfying ASMR 🤤✨ #shorts",
+      "output_path": "/home/runner/work/Bloxi17.github.io/Bloxi17.github.io/shorts_engine/output/slot2_viral_ai__asmr___pur_20261008_142503.mp4",
+      "video_url": "https://youtube.com/shorts/KB8LAVx4vR4",
+      "viral_factors": {
+        "boomed_reference": "1 hours 🎨 Text To Speech 🎨 ASMR Satisfying @thejessicakaylee   POVs Tiktok Compilations 2025 #63",
+        "hook_strategy": "Pure Visual Dopamine & Auditory Immersion",
+        "tags": [
+          "shorts",
+          "viral",
+          "trending2026",
+          "asmr",
           "trending"
         ]
       }
