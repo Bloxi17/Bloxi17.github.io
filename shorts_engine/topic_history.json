@@ -13,7 +13,8 @@
     "Viral AI: Accident & Crazy Moments - MIRACLE ESCAPES 10/10",
     "Viral AI: Accident & Crazy Moments - TOP 6 INSANE CLOSE CALLS",
     "Viral AI: Accident & Crazy Moments - TOP 6 INSANE CLOSE CALLS",
-    "Viral AI: ASMR - PURE SATISFACTION 10/10"
+    "Viral AI: ASMR - PURE SATISFACTION 10/10",
+    "ASMR - CRUNCHY ASMR 10/10 - 15"
   ],
   "used_titles": [
     "Aisa Sound Zindagi Me Pehle Kabhi Nahi Suna Hoga! 🎧🤤 #shorts",
@@ -29,7 +30,8 @@
     "Miracle Close Calls Caught On Camera! 😱⚡ #shorts",
     "Superhuman Reflexes Saves (Wait for #1) 🤯🔥 #shorts",
     "Kismat Ho Toh Aisi! बाल बाल बचे (Top 6) 😱 #shorts",
-    "Duniya Ka Sabse Crispy & Oddly Satisfying ASMR 🤤✨ #shorts"
+    "Duniya Ka Sabse Crispy & Oddly Satisfying ASMR 🤤✨ #shorts",
+    "Bhai Ye Kya Cheez Hai! Oddly Satisfying ASMR 🤯🔪 #shorts"
   ],
   "log": [
     {
@@ -93,6 +95,25 @@
       "title": "Duniya Ka Sabse Crispy & Oddly Satisfying ASMR 🤤✨ #shorts",
       "output_path": "/home/runner/work/Bloxi17.github.io/Bloxi17.github.io/shorts_engine/output/slot2_viral_ai__asmr___pur_20261008_142503.mp4",
       "video_url": "https://youtube.com/shorts/KB8LAVx4vR4",
+      "viral_factors": {
+        "boomed_reference": "1 hours 🎨 Text To Speech 🎨 ASMR Satisfying @thejessicakaylee   POVs Tiktok Compilations 2025 #63",
+        "hook_strategy": "Pure Visual Dopamine & Auditory Immersion",
+        "tags": [
+          "shorts",
+          "viral",
+          "trending2026",
+          "asmr",
+          "trending"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-10-08T19:42:05.553177",
+      "slot": "slot2",
+      "category": "ASMR",
+      "title": "Bhai Ye Kya Cheez Hai! Oddly Satisfying ASMR 🤯🔪 #shorts",
+      "output_path": "/home/runner/work/Bloxi17.github.io/Bloxi17.github.io/shorts_engine/output/slot2_asmr___crunchy_asmr__20261008_193913.mp4",
+      "video_url": "https://youtube.com/shorts/JXhmtaeO2EI",
       "viral_factors": {
         "boomed_reference": "1 hours 🎨 Text To Speech 🎨 ASMR Satisfying @thejessicakaylee   POVs Tiktok Compilations 2025 #63",
         "hook_strategy": "Pure Visual Dopamine & Auditory Immersion",
