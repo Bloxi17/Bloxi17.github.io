@@ -14,7 +14,8 @@
     "Viral AI: Accident & Crazy Moments - TOP 6 INSANE CLOSE CALLS",
     "Viral AI: Accident & Crazy Moments - TOP 6 INSANE CLOSE CALLS",
     "Viral AI: ASMR - PURE SATISFACTION 10/10",
-    "ASMR - CRUNCHY ASMR 10/10 - 15"
+    "ASMR - CRUNCHY ASMR 10/10 - 15",
+    "Viral AI: Funny Moments - INSTANT REGRET MOMENTS"
   ],
   "used_titles": [
     "Aisa Sound Zindagi Me Pehle Kabhi Nahi Suna Hoga! 🎧🤤 #shorts",
@@ -31,7 +32,8 @@
     "Superhuman Reflexes Saves (Wait for #1) 🤯🔥 #shorts",
     "Kismat Ho Toh Aisi! बाल बाल बचे (Top 6) 😱 #shorts",
     "Duniya Ka Sabse Crispy & Oddly Satisfying ASMR 🤤✨ #shorts",
-    "Bhai Ye Kya Cheez Hai! Oddly Satisfying ASMR 🤯🔪 #shorts"
+    "Bhai Ye Kya Cheez Hai! Oddly Satisfying ASMR 🤯🔪 #shorts",
+    "Number 1 Dekh Kar Pet Me Dard Ho Jayega! 😭😂 #shorts"
   ],
   "log": [
     {
@@ -122,6 +124,25 @@
           "viral",
           "trending2026",
           "asmr",
+          "trending"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-10-09T14:13:36.250019",
+      "slot": "slot2",
+      "category": "Funny Moments",
+      "title": "Number 1 Dekh Kar Pet Me Dard Ho Jayega! 😭😂 #shorts",
+      "output_path": "/home/runner/work/Bloxi17.github.io/Bloxi17.github.io/shorts_engine/output/slot2_viral_ai__funny_mome_20261009_141033.mp4",
+      "video_url": "https://youtube.com/shorts/dv9QvpMU6u0",
+      "viral_factors": {
+        "boomed_reference": "PINOY MEMES 2026 (Try Not To Laugh Challenge) Pinoy Funny Videos - Part 13",
+        "hook_strategy": "Gamified Challenge / Micro-Commitment",
+        "tags": [
+          "shorts",
+          "viral",
+          "trending2026",
+          "funnymoments",
           "trending"
         ]
       }
