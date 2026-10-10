@@ -16,7 +16,8 @@
     "Viral AI: ASMR - PURE SATISFACTION 10/10",
     "ASMR - CRUNCHY ASMR 10/10 - 15",
     "Viral AI: Funny Moments - INSTANT REGRET MOMENTS",
-    "Funny Moments - TOP 6 COMEDY CLIPS - 17"
+    "Funny Moments - TOP 6 COMEDY CLIPS - 17",
+    "Viral AI: Accident & Crazy Moments - SUPERHUMAN REFLEXES"
   ],
   "used_titles": [
     "Aisa Sound Zindagi Me Pehle Kabhi Nahi Suna Hoga! 🎧🤤 #shorts",
@@ -35,7 +36,8 @@
     "Duniya Ka Sabse Crispy & Oddly Satisfying ASMR 🤤✨ #shorts",
     "Bhai Ye Kya Cheez Hai! Oddly Satisfying ASMR 🤯🔪 #shorts",
     "Number 1 Dekh Kar Pet Me Dard Ho Jayega! 😭😂 #shorts",
-    "Duniya Ke Sabse Khurafaati Log! 🤣🔥 #shorts"
+    "Duniya Ke Sabse Khurafaati Log! 🤣🔥 #shorts",
+    "Driver Ka Dimag Dekh Kar Hosh Ud Jayenge! 🤯🚗 #shorts"
   ],
   "log": [
     {
@@ -164,6 +166,25 @@
           "viral",
           "trending2026",
           "funnymoments",
+          "trending"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-10-10T13:23:14.702500",
+      "slot": "slot2",
+      "category": "Accident & Crazy Moments",
+      "title": "Driver Ka Dimag Dekh Kar Hosh Ud Jayenge! 🤯🚗 #shorts",
+      "output_path": "/home/runner/work/Bloxi17.github.io/Bloxi17.github.io/shorts_engine/output/slot2_viral_ai__accident___20261010_131958.mp4",
+      "video_url": "https://youtube.com/shorts/5vC-O0pZoS0",
+      "viral_factors": {
+        "boomed_reference": "Top 10 Crashes of the Decade",
+        "hook_strategy": "Pure Visual Dopamine & Auditory Immersion",
+        "tags": [
+          "shorts",
+          "viral",
+          "trending2026",
+          "accident&crazymoments",
           "trending"
         ]
       }
